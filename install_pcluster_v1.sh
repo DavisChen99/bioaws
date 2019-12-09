@@ -5,7 +5,7 @@ uname -s
 echo "READEME
 - pcluster build guide on AWS - by Davis 20191208
 
-1. launch a instance to install pcluster
+1. launch an instance to install pcluster
 - c5.large
 - remember your keypair name \"eg. mykey.pem\"
 
