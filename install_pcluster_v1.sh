@@ -69,7 +69,14 @@ pip3 install aws-parallelcluster --upgrade
 
 pcluster version
 
-sleep 2
+read -t 30 -p "input your cluster name:  " clustername
+if [ $clustername ];
+then
+        echo "your cluster name is: $clustername"
+else
+        echo "wrong clustername, try again..."
+        exit 1
+fi
 
 echo "#!/bin/sh
 sleep 60
@@ -80,14 +87,14 @@ echo "[aws]
 aws_region_name = cn-northwest-1 # change if you want
 
 [global]
-cluster_template = god # change if you want, MUST remember this name!
+cluster_template = $clustername # change if you want, MUST remember this name!
 update_check = true
 sanity_check = true
 
 [aliases]
 ssh = ssh {CFN_USER}@{MASTER_IP} {ARGS}
 
-[cluster god] # change if you changed the name of cluster_template in global settings above
+[cluster $clustername] # change if you changed the name of cluster_template in global settings above
 key_name = newbjs # change to your keypair name
 master_instance_type = c5.large  # change if you want
 compute_instance_type = c5.2xlarge  # change if you want
@@ -125,7 +132,7 @@ scaledown_idletime = 30  # change to your favorate cooldown time (min) " > /root
 
 echo "now configure the pcluster config file according to your demand..."
 
-sleep 3
+sleep 5
 
 vim /root/.parallelcluster/config
 
@@ -140,11 +147,10 @@ aws configure
 read -t 30 -p "start to build pcluster? <yes/no>:  " answer
 if [ $answer = "yes" ];
 then
-        read -t 30 -p "please input your cluster name?  " cname
-        pcluster create -c /root/.parallelcluster/config $cname
+        pcluster create -c /root/.parallelcluster/config $clustername
 elif [ $answer = "no" ];
 then
-        echo "please build manually:pcluster create -c /root/.parallelcluster/config <cluster_template>."
+        echo "please build manually:pcluster create $clustername"
 else
         echo "What???"
         exit 1
