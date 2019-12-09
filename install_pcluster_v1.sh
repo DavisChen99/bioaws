@@ -19,7 +19,7 @@ echo "READEME
 
 3. build & check
 - pcluster create <cluster_template>
-- if you want to delete : \"pcluster delete <cluster_template>\" 
+- if you want to delete : \"pcluster delete <cluster_template>\"
 - go to console & check your nodes
 - log in master ndoes to check:
 -- \"qhost\" to check your queue
@@ -30,15 +30,15 @@ echo "READEME
 read -t 30 -p "README created, Continue or Readme? <c/r>:  " rnext
 if [ $rnext = "c" ];
 then
-	echo "continue..."
+        echo "continue..."
 elif [ $rnext = "r" ];
 then
-	cat README.md
-	echo "please run me again..."
-	exit 0
+        cat README.md
+        echo "please run me again..."
+        exit 0
 else
-	echo "What???"
-	exit 1
+        echo "What???"
+        exit 1
 fi
 
 yum update -y
@@ -47,9 +47,10 @@ yum install python3
 
 python3 --version
 
-curl -O https://bootstrap.pypa.io/get-pip.py
+# curl -O https://bootstrap.pypa.io/get-pip.py
+# python3 get-pip.py
 
-python3 get-pip.py
+yum install -y python3-pip.noarch
 
 echo 'export PATH=~/.local/bin:/usr/local/bin:$PATH' >> ~/.bash_profile
 
@@ -57,10 +58,12 @@ source ~/.bash_profile
 
 pip3 --version
 
-#pip3 install awscli --upgrade
-curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
+# pip3 install awscli --upgrade
+# curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+# unzip awscliv2.zip
+# sudo ./aws/install
 
 pip3 install aws-parallelcluster --upgrade
 
@@ -69,9 +72,6 @@ pcluster version
 sleep 2
 
 echo "#!/bin/sh
-#PBS –N mytask
-#PBS -l walltime=1:00:00
-#PBS -l select=ncpus=3:mem=1000mb
 sleep 60
 echo \"test done!\"
 " > /root/.parallelcluster/test.sh
@@ -80,14 +80,14 @@ echo "[aws]
 aws_region_name = cn-northwest-1 # change if you want
 
 [global]
-cluster_template = god # change if you want
+cluster_template = god # change if you want, MUST remember this name!
 update_check = true
 sanity_check = true
 
 [aliases]
 ssh = ssh {CFN_USER}@{MASTER_IP} {ARGS}
 
-[cluster god] # change if you changed the name of cluster_template in global settings
+[cluster god] # change if you changed the name of cluster_template in global settings above
 key_name = newbjs # change to your keypair name
 master_instance_type = c5.large  # change if you want
 compute_instance_type = c5.2xlarge  # change if you want
@@ -140,13 +140,12 @@ aws configure
 read -t 30 -p "start to build pcluster? <yes/no>:  " answer
 if [ $answer = "yes" ];
 then
-	read -t 30 -p "please input your cluster name?  " cname
-	pcluster create -c /root/.parallelcluster/config $cname
+        read -t 30 -p "please input your cluster name?  " cname
+        pcluster create -c /root/.parallelcluster/config $cname
 elif [ $answer = "no" ];
 then
-	echo "please build manually:pcluster create -c /root/.parallelcluster/config <cluster_template>." 
+        echo "please build manually:pcluster create -c /root/.parallelcluster/config <cluster_template>."
 else
-	echo "What???"
-	exit 1
+        echo "What???"
+        exit 1
 fi
-
