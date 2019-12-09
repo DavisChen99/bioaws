@@ -125,7 +125,7 @@ scaledown_idletime = 30  # change to your favorate cooldown time (min) " > /root
 
 echo "now configure the pcluster config file according to your demand..."
 
-sleep 5
+sleep 3
 
 vim /root/.parallelcluster/config
 
