@@ -15,7 +15,7 @@
 - `unzip master.zip && cd aws-master`
 - `cat README.md`
 - add permission `chmod 667 install_pcluster_v1.sh`
-- run `bash install_pcluster.sh`
+- run `bash install_pcluster_v1.sh`
 
 ### build manually (after first build)
 - `vim config` as you want
