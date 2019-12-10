@@ -85,6 +85,9 @@ sleep 60
 echo \"test done!\"
 " > /root/.parallelcluster/test.sh
 
+read -t 30 -p "start to configure cluster? <yes/no>:  " configcheck
+if [ $configcheck = "yes" ];
+then
 echo "[aws]
 aws_region_name = cn-northwest-1 # change if you want
 
@@ -132,15 +135,16 @@ master_subnet_id = subnet-ee6dde87  # change to your subnet id
 [scaling custom]
 scaledown_idletime = 30  # change to your favorate cooldown time (min) " > /root/.parallelcluster/config
 
-echo "now configure the pcluster config file according to your demand..."
+vim /root/.parallelcluster/config 
 
-sleep 5
+elif [ $configcheck = "no" ];
+then
+        echo "please configure according to your demand： /root/.parallelcluster/config"
+else
+        echo "What???"
+fi
 
-vim /root/.parallelcluster/config
-
-sleep 2
-
-echo "configue your aws by AKSK..."
+echo "configure your aws by AKSK..."
 
 sleep 2
 
