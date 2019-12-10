@@ -2,7 +2,7 @@
 *aws tools for daily easy use*
 ***
 
-## 1. pcluster build guide on aws
+## pcluster quick-build
 
 ### launch an instance to install pcluster
 - c5.large
