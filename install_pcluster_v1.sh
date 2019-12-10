@@ -54,6 +54,8 @@ yum install -y python3-pip.noarch
 
 echo 'export PATH=~/.local/bin:/usr/local/bin:$PATH' >> ~/.bash_profile
 
+sleep 1
+
 source ~/.bash_profile
 
 pip3 --version
