@@ -117,6 +117,8 @@ then
         echo "skip...configure manually： /root/.parallelcluster/config"
 else
         echo "What???"
+        exit 1
+
 fi
 
 echo "configure your aws by AKSK..."
