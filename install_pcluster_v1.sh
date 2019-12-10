@@ -2,7 +2,7 @@
 
 uname -s
 
-read -t 30 -p "README created, Continue or Readme? <c/r>:  " rnext
+read -t 30 -p "Continue or Readme? <c/r>:  " rnext
 if [ $rnext = "c" ];
 then
         echo "continue..."
@@ -60,7 +60,7 @@ sleep 60
 echo \"test done!\"
 " > /root/.parallelcluster/test.sh
 
-read -t 30 -p "start to configure cluster? <yes/no>:  " configcheck
+read -t 30 -p "start to configure? <yes/no>:  " configcheck
 if [ $configcheck = "yes" ];
 then
 echo "[aws]
