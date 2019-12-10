@@ -2,7 +2,7 @@
 *aws tools for daily easy use*
 ***
 
-## 1. pcluster build guide on AWS
+## 1. pcluster build guide on aws
 
 ### launch an instance to install pcluster
 - c5.large
@@ -14,7 +14,7 @@
 - `wget https://github.com/DavisChen99/aws/archive/master.zip`
 - `unzip master.zip && cd aws-master`
 - `cat README.md`
-- add permission `chmod 667 install_pcluster.sh`
+- add permission `chmod 667 install_pcluster_v1.sh`
 - run `bash install_pcluster.sh`
 
 ### build manually (after first build)
