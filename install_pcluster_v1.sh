@@ -2,31 +2,6 @@
 
 uname -s
 
-echo "READEME
-- pcluster build guide on AWS - by Davis 20191208
-
-1. launch an instance to install pcluster
-- c5.large
-- remember your keypair name \"eg. mykey.pem\"
-
-2. be root
-- \"sudo su -\"
-- copy install_pcluster.sh into /root
-- run \"chmod 667 install_pcluster.sh\"
-- run \"bash install_pcluster.sh\"
-- modify config file
-- aws configure
-
-3. build & check
-- pcluster create <cluster_template>
-- if you want to delete : \"pcluster delete <cluster_template>\"
-- go to console & check your nodes
-- log in master ndoes to check:
--- \"qhost\" to check your queue
--- \"df -h\" to check your volumns
--- \"qsub test.sh\" to check your cluster function
--- \"qstat -f \" to see job status" > README.md
-
 read -t 30 -p "README created, Continue or Readme? <c/r>:  " rnext
 if [ $rnext = "c" ];
 then
