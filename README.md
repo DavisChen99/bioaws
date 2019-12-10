@@ -7,6 +7,7 @@
 ### launch an instance to install pcluster
 - c5.large
 - remember your keypair name `eg. mykey.pem`
+- launch & login
 
 ### be root
 - `sudo su -`
