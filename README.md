@@ -12,7 +12,7 @@
 ### be root
 - `sudo su -`
 - `wget https://github.com/DavisChen99/aws/archive/master.zip`
-- `unzip master.zip` then `cd aws-master`
+- `unzip master.zip && cd aws-master`
 - `cat README.md`
 - add permission `chmod 667 install_pcluster.sh`
 - run `bash install_pcluster.sh`
