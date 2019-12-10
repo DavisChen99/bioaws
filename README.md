@@ -30,4 +30,4 @@
   * `qsub test.sh` to check your cluster function
   * `qstat -f` to see job status
 
-*by Davis 20191210*
+*updated 20191210*
