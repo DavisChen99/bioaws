@@ -92,14 +92,14 @@ echo "[aws]
 aws_region_name = cn-northwest-1 # change if you want
 
 [global]
-cluster_template = $clustername # change if you want, MUST remember this name!
+cluster_template = $clustername # change if you want
 update_check = true
 sanity_check = true
 
 [aliases]
 ssh = ssh {CFN_USER}@{MASTER_IP} {ARGS}
 
-[cluster $clustername] # change if you changed the name of cluster_template in global settings above
+[cluster $clustername] # keep the same as the name of cluster_template in global settings above
 key_name = newbjs # change to your keypair name
 master_instance_type = c5.large  # change if you want
 compute_instance_type = c5.2xlarge  # change if you want
@@ -139,14 +139,12 @@ vim /root/.parallelcluster/config
 
 elif [ $configcheck = "no" ];
 then
-        echo "please configure according to your demand： /root/.parallelcluster/config"
+        echo "skip...configure manually： /root/.parallelcluster/config"
 else
         echo "What???"
 fi
 
 echo "configure your aws by AKSK..."
-
-sleep 2
 
 aws configure
 
