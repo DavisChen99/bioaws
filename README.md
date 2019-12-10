@@ -2,7 +2,7 @@
 *aws tools for daily easy use*
 ***
 
-## 1. pcluster build guide on AWS - by Davis 20191208
+## 1. pcluster build guide on AWS
 
 ### launch an instance to install pcluster
 - c5.large
@@ -29,4 +29,5 @@
   * `df -h` to check your volumns
   * `qsub test.sh` to check your cluster function
   * `qstat -f` to see job status
-- enjoy :)
+
+*by Davis 20191210*
