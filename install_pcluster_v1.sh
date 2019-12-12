@@ -35,7 +35,7 @@ source ~/.bash_profile
 
 pip3 --version
 
-pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
 # pip3 install awscli --upgrade
 # curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -75,7 +75,7 @@ sanity_check = true
 ssh = ssh {CFN_USER}@{MASTER_IP} {ARGS}
 
 [cluster $clustername] # keep the same as the name of cluster_template in global settings above
-key_name = newbjs # change to your keypair name
+key_name = newbjs # MUST change to your keypair name
 master_instance_type = c5.large  # change if you want
 compute_instance_type = c5.2xlarge  # change if you want
 initial_queue_size = 3  # change if you want
@@ -84,7 +84,7 @@ maintain_initial_size = true
 master_root_volume_size = 30  # change if you want, 17G by default
 compute_root_volume_size = 30  # change if you want, 17G by default
 cluster_type = spot  # change if you want, ondemand/spot
-spot_price = 1.20   # change if you want use spot as compute nodes, get latest price of specific instance in your console
+spot_price = 1.30   # change if you want use spot as compute nodes, get latest price of specific instance in your console
 base_os = alinux
 custom_ami = ami-0ab8a54fbf54abb1f   # change to your customized AMI based on pcluster ami(eg. ami-0ab8a54fbf54abb1f [cn-northwest-1])
 s3_read_resource = NONE
