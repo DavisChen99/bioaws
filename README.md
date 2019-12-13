@@ -24,7 +24,7 @@
 
 ### check service
 - go to aws console & check your nodes
-- log in master ndoes to check:
+- log in master nodes to check:
   * `qhost` to check your queue
   * `df -h` to check your volumns
   * `qsub test.sh` to check your cluster function
