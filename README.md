@@ -5,7 +5,7 @@
 ## pcluster quick-build
 
 ### launch an instance to install pcluster
-- c5.large
+- `eg. c5.large`
 - remember your keypair name `eg. mykey.pem`
 - launch & login
 
