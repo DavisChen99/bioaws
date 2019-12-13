@@ -18,7 +18,7 @@ fi
 
 yum update -y
 
-yum install python3
+yum install -y python3
 
 python3 --version
 
@@ -41,7 +41,7 @@ pip3 --version
 # unzip awscliv2.zip
 # sudo ./aws/install
 
-pip3 install aws-parallelcluster --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip3 install aws-parallelcluster --upgrade
 
 pcluster version
 
