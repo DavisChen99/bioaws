@@ -43,7 +43,10 @@ pip3 --version
 
 pip3 install aws-parallelcluster --upgrade
 
+echo "your pcluster version is:"
 pcluster version
+
+sleep 1
 
 read -t 30 -p "input your cluster name:  " clustername
 if [ $clustername ];
