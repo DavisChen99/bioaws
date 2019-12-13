@@ -15,7 +15,7 @@
 - `unzip master.zip && cd aws-master`
 - `cat README.md` & refer to https://aws-parallelcluster.readthedocs.io/en/latest/configuration.html#scheduler
 - add permission `chmod 667 install_pcluster_v1.sh`
-- run `bash install_pcluster_v1.sh`
+- run `bash install_pcluster_v1.sh`, try again if you meet HTTPS connect problem - usually network issue.
 
 ### build manually (after first build)
 - `vim config` as you want
