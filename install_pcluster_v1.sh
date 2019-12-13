@@ -35,14 +35,13 @@ source ~/.bash_profile
 
 pip3 --version
 
-pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-
+# pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 # pip3 install awscli --upgrade
 # curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 # unzip awscliv2.zip
 # sudo ./aws/install
 
-pip3 install aws-parallelcluster --upgrade
+pip3 install aws-parallelcluster --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 pcluster version
 
