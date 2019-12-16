@@ -41,7 +41,7 @@ pip3 --version
 # unzip awscliv2.zip
 # sudo ./aws/install
 
-pip3 install aws-parallelcluster --upgrade
+pip3 install aws-parallelcluster --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 echo "your pcluster version is:"
 pcluster version
