@@ -29,5 +29,6 @@
   * `df -h` to check your volumns
   * `qsub test.sh` to check your cluster function
   * `qstat -f` to see job status
+- submit your jobs using command like `qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 4 -o output -e output -q all.q script.sh`
 
 *updated 20191210*
