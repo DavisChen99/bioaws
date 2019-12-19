@@ -4,7 +4,7 @@
 
 ## pcluster quick-build
 
-### launch an instance to install pcluster
+### launch an instance to install pcluster (v2.5.1)
 - `eg. t2.micro`
 - remember your keypair name `eg. mykey.pem`
 - launch & login
