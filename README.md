@@ -5,7 +5,7 @@
 ## pcluster quick-build
 
 ### launch an instance to install pcluster
-- `eg. c5.large`(`t2.micro` by defalut)
+- `eg. t2.micro`
 - remember your keypair name `eg. mykey.pem`
 - launch & login
 
