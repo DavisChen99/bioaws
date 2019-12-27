@@ -30,6 +30,13 @@
   * `df -h` to check your volumns
   * `qsub test.sh` to check your cluster function
   * `qstat -f` to see job status
-- submit your jobs using command like `qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 4 -o output -e output -q all.q script.sh`
+- submit your jobs using command like `qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 4 -o output -e output -q all.q yourscript.sh`
 
-*updated 20191210*
+### for DEBUG
+- `vi ~/.bashrc`
+- add `export SGE_ROOT=/opt/sge`
+- add `PATH=/opt/sge/bin:/opt/sge/bin/lx-amd64:/opt/amazon/openmpi/bin:$PATH`
+- `source ~/.bashrc`
+- `sudo /etc/init.d/sgemaster.p6444 <start/stop/restart>`
+
+*updated 20191227*
