@@ -32,7 +32,7 @@
   * `qstat -f` to see job status
 - submit your jobs using command like `qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 4 -o output -e output -q all.q yourscript.sh`
 
-### for DEBUG
+### for debug
 - `vi ~/.bashrc`
 - add `export SGE_ROOT=/opt/sge`
 - add `PATH=/opt/sge/bin:/opt/sge/bin/lx-amd64:/opt/amazon/openmpi/bin:$PATH`
