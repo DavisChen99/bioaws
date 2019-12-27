@@ -78,7 +78,7 @@ ssh = ssh {CFN_USER}@{MASTER_IP} {ARGS}
 
 [cluster $clustername] # keep the same as the name of cluster_template in global settings above
 key_name = newbjs # MUST change to your keypair name
-master_instance_type = c5.large  # change if you want
+#master_instance_type = c5.large  # change to c/m/r series, t2.micro by default
 compute_instance_type = c5.2xlarge  # change if you want
 initial_queue_size = 1  # change if you want
 max_queue_size = 10  # change if you want
