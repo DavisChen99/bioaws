@@ -2,23 +2,24 @@
 *aws tools for daily easy use*
 ***
 
-## pcluster quick-build
+## pcluster quick-build within 10 min
 
 ### launch an instance to install pcluster (v2.5.1)
 - `eg. t2.micro`
 - remember your keypair name `eg. mykey.pem`
 - launch & login
 
-### be root
-- `sudo su -`
+### install packages & launch cluster
 - `wget https://github.com/DavisChen99/aws/archive/master.zip`
 - `unzip master.zip && cd aws-master`
 - `cat README.md` & refer to https://aws-parallelcluster.readthedocs.io/en/latest/configuration.html#scheduler
 - add permission `chmod 667 install_pcluster_v1.sh`
-- run `bash install_pcluster_v1.sh`, try again if you meet HTTPS connect problem - usually network issue.
+- run `sudo bash install_pcluster_v1.sh`, try again if you meet HTTPS connect problem - usually network issue.
 
 ### build manually (after first build)
-- `vim config` as you want
+- `sudo su -`
+- `cd /root/.parallelcluster`
+- `vim config` edit as you want
 - `aws configure` with your AKSK keys
 - `pcluster <create/delete> <cluster_template>`
 
