@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://davischen99.github.io/aws/blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>10分钟打造云上集群 - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome-4.5.0.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="../../css/highlight.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+	
+	<script src="../../js/jquery-1.10.2.min.js"></script>
+        <script src="../../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../../js/highlight.pack.js"></script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../..">BioAWS</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                    <li >
+                        <a href="../..">首页</a>
+                    </li>
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">文章 <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li class="active">
+    <a href="./">10分钟打造云上集群</a>
+</li>
+                        </ul>
+                    </li>
+                    <li >
+                        <a href="../../about/">关于此站</a>
+                    </li>
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                    <li >
+                        <a rel="next" href="../..">
+                            <i class="fa fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../../about/">
+                            Next <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#pcluster-quick-build-within-10-min">pcluster quick-build within 10 min</a></li>
+            <li><a href="#launch-an-instance-to-install-pcluster-v251">launch an instance to install pcluster (v2.5.1)</a></li>
+            <li><a href="#install-packages-launch-cluster">install packages &amp; launch cluster</a></li>
+            <li><a href="#build-manually-after-first-build">build manually (after first build)</a></li>
+            <li><a href="#check-service">check service</a></li>
+            <li><a href="#for-debug">for debug</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h2 id="pcluster-quick-build-within-10-min">pcluster quick-build within 10 min</h2>
+<h3 id="launch-an-instance-to-install-pcluster-v251">launch an instance to install pcluster (v2.5.1)</h3>
+<ul>
+<li><code>eg. t2.micro</code></li>
+<li>remember your keypair name <code>eg. mykey.pem</code></li>
+<li>launch &amp; login</li>
+</ul>
+<h3 id="install-packages-launch-cluster">install packages &amp; launch cluster</h3>
+<ul>
+<li><code>wget https://github.com/DavisChen99/aws/archive/master.zip</code></li>
+<li><code>unzip master.zip &amp;&amp; cd aws-master</code></li>
+<li><code>cat README.md</code> &amp; refer to https://aws-parallelcluster.readthedocs.io/en/latest/configuration.html#scheduler</li>
+<li>add permission <code>chmod 667 install_pcluster_v1.sh</code></li>
+<li>run <code>sudo bash install_pcluster_v1.sh</code>, try again if you meet HTTPS connect problem - usually network issue.</li>
+</ul>
+<h3 id="build-manually-after-first-build">build manually (after first build)</h3>
+<ul>
+<li><code>sudo su -</code></li>
+<li><code>cd /root/.parallelcluster</code></li>
+<li><code>vim config</code> edit as you want</li>
+<li><code>aws configure</code> with your AKSK keys</li>
+<li><code>pcluster &lt;create/delete&gt; &lt;cluster_template&gt;</code></li>
+</ul>
+<h3 id="check-service">check service</h3>
+<ul>
+<li>go to aws console &amp; check your nodes</li>
+<li>log in master nodes to check:</li>
+<li><code>qhost</code> to check your queue</li>
+<li><code>df -h</code> to check your volumns</li>
+<li><code>qsub test.sh</code> to check your cluster function</li>
+<li><code>qstat -f</code> to see job status</li>
+<li>submit your jobs using command like <code>qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 4 -o output -e output -q all.q yourscript.sh</code></li>
+</ul>
+<h3 id="for-debug">for debug</h3>
+<ul>
+<li><code>vi ~/.bashrc</code></li>
+<li>add <code>export SGE_ROOT=/opt/sge</code></li>
+<li>add <code>PATH=/opt/sge/bin:/opt/sge/bin/lx-amd64:/opt/amazon/openmpi/bin:$PATH</code></li>
+<li><code>source ~/.bashrc</code></li>
+<li><code>sudo /etc/init.d/sgemaster.p6444 &lt;start/stop/restart&gt;</code></li>
+</ul></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>var base_url = '../..';</script>
+        <script data-main="../../mkdocs/js/search.js" src="../../mkdocs/js/require.js"></script>
+        <script src="../../js/base.js"></script><div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
