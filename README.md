@@ -1,2 +1,2 @@
 # bioaws blog
-*share best practice of life science on aws*
+*share best practices of life science on aws*
