@@ -6,9 +6,9 @@
 - launch & login
 
 ### install packages & launch cluster
-- `wget https://github.com/DavisChen99/aws/archive/master.zip`
-- `unzip master.zip && cd aws-master`
-- `cat README.md` & refer to https://aws-parallelcluster.readthedocs.io/en/latest/configuration.html#scheduler
+- `wget https://github.com/DavisChen99/awspac/archive/master.zip`
+- `unzip awspac-master.zip && cd awspac-master`
+- refer to https://aws-parallelcluster.readthedocs.io/en/latest/configuration.html#scheduler
 - add permission `chmod 667 install_pcluster_v1.sh`
 - run `sudo bash install_pcluster_v1.sh`, try again if you meet HTTPS connect problem - usually network issue.
 
