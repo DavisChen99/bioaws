@@ -1,7 +1,7 @@
 # 一键部署面向基因分析的 Cromwell-on-AWS-Batch 解决方案（中国区域）
 *Cromwell-on-AWS-Batch是AWS在生命科学领域联合Broad研究院推出的解决方案，已有很多AWS海外区域的客户在使用该解决方案进行基因分析。AWS Batch服务于2019年10月在AWS中国区域上线之后，我们随即根据AWS中国区域的特点对该解决方案进行了适应修改和优化提升，本文通过一个测试示例和一个GATK实际例子来演示在中国区域一键部署的过程，为国内基因分析客户快速上手使用该解决方案加速分析效率提供参考。*
 
-*原帖地址：https://amazonaws-china.com/cn/blogs/china/one-click-deployment-of-cromwell-on-aws-batch-solution-for-genetic-analysis-in-aws-china/?from=timeline&isappinstalled=0&scene=1&clicktime=1577935970&enterid=1577935970*
+[原帖地址](https://amazonaws-china.com/cn/blogs/china/one-click-deployment-of-cromwell-on-aws-batch-solution-for-genetic-analysis-in-aws-china/?from=timeline&isappinstalled=0&scene=1&clicktime=1577935970&enterid=1577935970)
 
 ## 基本介绍
 Cromwell 是由Broad研究院面向科研领域开发的一套工作流管理框架，目前在基因分析领域更为常用。Cromwell目前已支持对接AWS Batch作为其集群管理后端，云端基础资源的调度管理由AWS Batch完成。
