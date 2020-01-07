@@ -16,6 +16,11 @@
      <changefreq>daily</changefreq>
     </url>
     <url>
+     <loc></loc>
+     
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
      <loc>https://davischen99.github.io/aws/about/</loc>
      <lastmod>2020-01-08</lastmod>
      <changefreq>daily</changefreq>
