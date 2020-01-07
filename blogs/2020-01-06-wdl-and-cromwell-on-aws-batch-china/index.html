@@ -101,7 +101,7 @@
 
 <h1 id="cromwell-on-aws-batch">一键部署面向基因分析的 Cromwell-on-AWS-Batch 解决方案（中国区域）</h1>
 <p><em>Cromwell-on-AWS-Batch是AWS在生命科学领域联合Broad研究院推出的解决方案，已有很多AWS海外区域的客户在使用该解决方案进行基因分析。AWS Batch服务于2019年10月在AWS中国区域上线之后，我们随即根据AWS中国区域的特点对该解决方案进行了适应修改和优化提升，本文通过一个测试示例和一个GATK实际例子来演示在中国区域一键部署的过程，为国内基因分析客户快速上手使用该解决方案加速分析效率提供参考。</em></p>
-<p><em>原帖地址：https://amazonaws-china.com/cn/blogs/china/one-click-deployment-of-cromwell-on-aws-batch-solution-for-genetic-analysis-in-aws-china/?from=timeline&amp;isappinstalled=0&amp;scene=1&amp;clicktime=1577935970&amp;enterid=1577935970</em></p>
+<p><a href="https://amazonaws-china.com/cn/blogs/china/one-click-deployment-of-cromwell-on-aws-batch-solution-for-genetic-analysis-in-aws-china/?from=timeline&amp;isappinstalled=0&amp;scene=1&amp;clicktime=1577935970&amp;enterid=1577935970">原帖地址</a></p>
 <h2 id="_1">基本介绍</h2>
 <p>Cromwell 是由Broad研究院面向科研领域开发的一套工作流管理框架，目前在基因分析领域更为常用。Cromwell目前已支持对接AWS Batch作为其集群管理后端，云端基础资源的调度管理由AWS Batch完成。</p>
 <p>Cromwell-on-AWS-Batch的组成架构图如下图所示。由生信工程师编写wdl或cwl格式的基因分析工作流脚本，作为Cromwell的输入，通过API调用（或图形管理界面）的方式提交任务，分析过程中可通过AWS Batch服务的控制面板和CloudWatch-Log记录可以查看任务的执行状态，分析的结果保存在Amazon S3存储上。分析中支持调用Spot竞价实例来降低样本分析的成本。此外Cromwell还支持通过Amazon Aurora数据库服务来管理作业数据记录。</p>
