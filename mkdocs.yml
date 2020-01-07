@@ -1,7 +1,7 @@
 site_name: BioAWS
 site_url: http://www.bioaws.com/
 pages:
-  - 首页: index.md
+  - 首页: head.md
   - 文章: index.md
 #    - 10分钟打造云上集群: blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws.md
   - 关于此站: about.md
