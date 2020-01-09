@@ -13,8 +13,7 @@
 - run `sudo bash install_pcluster_v1.sh`, try again if you meet HTTPS connect problem - usually network issue.
 
 ### build manually (after first build)
-- `sudo su -`
-- `cd /root/.parallelcluster`
+- `cd ~/.parallelcluster`
 - `vim config` edit as you want
 - `aws configure` with your AKSK keys
 - `pcluster <create/delete> <cluster_template>`
