@@ -39,7 +39,7 @@ AWS Batch 服务来简化并加速测序分析的处理过程， 以批量处理
 ![workflow][1]
 
 
-## Let's do it! 利用 AWS Batch 搭建高性能集群
+## Let's do it 利用 AWS Batch 搭建高性能集群
 
 **你够格了么：**
 
