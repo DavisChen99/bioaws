@@ -17,6 +17,7 @@ AWS Batch 让开发人员、科学家和工程师能够轻松高效地在 AWS �
 级来进行任务安排，具有集成的监控和日志记录。
 
 AWS Batch 具有的优势包括：
+
 - 全托管——AWS Batch 可为您管理所有基础设施，从而避免了预置、管理、监控和
 扩展您的批处理计算作业所带来的复杂性。
 - 与 AWS 原生集成——AWS Batch 已与 AWS 平台原生集成，让您能够利用 AWS 的
@@ -28,6 +29,7 @@ Amazon S3 和 Amazon DynamoDB）中检索数据并向其写入作业的数据。
 实例进一步降低批处理作业的费用。
 
 ## 应用场景（基因）
+
 生命科学中 DNA 测序场景——生物信息学家进行基因组序列的二级分析时，利用
 AWS Batch 服务来简化并加速测序分析的处理过程， 以批量处理的方式将原始 DNA
 读数装配成完整基因组序列， 同时减少测序分析的数据偏差。
@@ -44,10 +46,9 @@ AWS Batch 服务来简化并加速测序分析的处理过程， 以批量处理
 - 掌握 Amazon EC2 启动、 SSH 登录 EC2、创建 S3 存储桶的基本操作。
 
 本实验利用 Batch 搭建一个简单抓取脚本运行的 Demo， 原理如下图流程所示。
-- Batch
-执行的任务是以 Docker 容器方式运行的，容器镜像基于 Amazon ECS 服务来管理。
-- 实
-验中生成的简单镜像里包含一个辅助程序，负责从 S3 存储中下载名为 myjob.sh 的自
+
+- Batch执行的任务是以 Docker 容器方式运行的，容器镜像基于 Amazon ECS 服务来管理。
+- 实验中生成的简单镜像里包含一个辅助程序，负责从 S3 存储中下载名为 myjob.sh 的自
 定义任务脚本（同时也支持 zip 文件），由 Batch 负责启动 EC2 实例来装载容器具体执
 行。
 - 实验中的任务脚本会输出打印一些演示信息，在 CloudWatch 的 Log 日志记录中可
@@ -57,6 +58,7 @@ myjob.sh 的脚步执行内容。
 ![workflow][2]
 
 上图中几个aws服务简单解释下：
+
 - ECR: 注册保存容器镜像的地方，打好docker之后要推到这里，统一托管。
 - ECS： 帮你运行和管理容器的服务
 - Batch： 根据你预设的计算资源和队列，帮你提交分析任务到docker，并调度作业队列。
@@ -75,6 +77,7 @@ myjob.sh 的脚步执行内容。
   ![ami][3]
 
   然后一大波命令行来袭：
+
   1. EC2 就绪后在本地通过 SSH 方式登录（putty,xshell,gitbash...）
 
   `ssh -i yourkey.pem ec2-user@your-ec2-public-ip`
@@ -85,9 +88,10 @@ myjob.sh 的脚步执行内容。
 
   3. 执行一次更新并安装 docker 服务：
 
-  `sudo yum update -y`
-
-  `sudo yum install docker`
+  ```
+  sudo yum update -y
+  sudo yum install docker
+  ```
 
   4. 启动 Docker 服务：
 
@@ -95,9 +99,10 @@ myjob.sh 的脚步执行内容。
 
   5. 下载实验包的 github 源码：
 
-  `wget https://github.com/awslabs/aws-batch-helpers/archive/master.zip`
-
-  `unzip master.zip`
+  ```
+  wget https://github.com/awslabs/aws-batch-helpers/archive/master.zip\
+  unzip master.zip
+  ```
 
   6. 解压进入路径后查看[Dockerfile](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)文件：
 
@@ -238,6 +243,7 @@ myjob.sh 的脚步执行内容。
 #### Batch 服务的作业配置。
 
   Batch 的作业配置依次包括：
+
   - **计算环境(Compute Environment)配置**: 在 Batch 控制台中选择 Compute Environment 页点击创建。其中计算环境参数组的配置如下图，环境类型选择托管，将由 Batch 来负责管理实例的选择和调度。计算资源参数组可指定需要的实例类型，其中最小 vCPU 数填 1，所需 vCPU 填2，最大 vCPU 填 4， 选择已有 EC2 密钥对， 其他保持默认并点击创建。
 
   ![batch1][9]
@@ -286,6 +292,7 @@ Job Type 中选择 Array 类型并填入一个测试数量值，同样可在 Clo
 #### 回收资源
 
 动手实验完成后记得回收释放相应资源，释放的资源包括：
+
 - 禁用并删除 Batch 服务中的作业队列和计算环境中的配置资源。
 - 终止制作 Docker 镜像所用的 EC2 实例。
 - 删除 ECR 存储库中的 Image 镜像。
