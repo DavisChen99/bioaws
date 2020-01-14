@@ -4,8 +4,8 @@
 * md文件 + 相关图片, 打包发到本B站邮箱，并在群里提醒站长起床~
 * B站邮箱: <22342969@qq.com>
 * 不知道怎么写？
-  + [男生点这里](http://xianbai.me/learn-md/article/about/readme.html)
-  + 女生找站长
+  ** [男生点这里](http://xianbai.me/learn-md/article/about/readme.html)
+  ** 女生找站长
 * 积极投稿者会收到不定期约饭邀请+神秘礼物+年度颁奖
 
 ![about1][xiaoxin]

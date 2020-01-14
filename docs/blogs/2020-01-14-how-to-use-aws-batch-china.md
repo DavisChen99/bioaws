@@ -78,207 +78,204 @@ myjob.sh 的脚步执行内容。
 
   然后一大波命令行来袭：
 
-  1. EC2 就绪后在本地通过 SSH 方式登录（putty,xshell,gitbash...）
+1. EC2 就绪后在本地通过 SSH 方式登录（putty,xshell,gitbash...）
 
-  `ssh -i yourkey.pem ec2-user@your-ec2-public-ip`
+`ssh -i yourkey.pem ec2-user@your-ec2-public-ip`
 
-  2. 配置 CLI 的权限，根据命令提示输入 AK 和 SK 密钥值，默认：
+2. 配置 CLI 的权限，根据命令提示输入 AK 和 SK 密钥值，默认：
 
-  `aws configure`
+`aws configure`
 
-  3. 执行一次更新并安装 docker 服务：
+3. 执行一次更新并安装 docker 服务：
 
-  ```
-  sudo yum update -y
-  sudo yum install docker
-  ```
+```
+sudo yum update -y
+sudo yum install docker
+```
 
-  4. 启动 Docker 服务：
+4. 启动 Docker 服务：
 
-  `sudo service docker start`
+`sudo service docker start`
 
-  5. 下载实验包的 github 源码：
+5. 下载实验包的 github 源码：
 
-  ```
-  wget https://github.com/awslabs/aws-batch-helpers/archive/master.zip\
-  unzip master.zip
-  ```
+```
+wget https://github.com/awslabs/aws-batch-helpers/archive/master.zip\
+unzip master.zip
+```
 
-  6. 解压进入路径后查看[Dockerfile](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)文件：
+6. 解压进入路径后查看[Dockerfile](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)文件：
 
-  `vim aws-batch-helpers-master/fetch-and-run/Dockerfile`
+`vim aws-batch-helpers-master/fetch-and-run/Dockerfile`
 
-  文件内容如下所示：
+文件内容如下所示：
 
-  ```
-  FROM amazonlinux:latest   # 指定操作系统镜像
-  RUN yum -y install unzip aws-cli  # 安装aws 命令行工具
-  ADD fetch_and_run.sh /usr/local/bin/fetch_and_run.sh  # 把
-  fetch_and_run.sh 脚本拷贝至/usr/local/bin 路径下
-  WORKDIR /tmp # 指定工作目录
-  USER nobody  # 指定user
-  ENTRYPOINT ["/usr/local/bin/fetch_and_run.sh"]  # 指定容器运行的入口是调用/usr/local/bin/fetch_and_run.sh 脚本
-  ```
+```
+FROM amazonlinux:latest   # 指定操作系统镜像
+RUN yum -y install unzip aws-cli  # 安装aws 命令行工具
+ADD fetch_and_run.sh /usr/local/bin/fetch_and_run.sh  # 把
+fetch_and_run.sh 脚本拷贝至/usr/local/bin 路径下
+WORKDIR /tmp # 指定工作目录
+USER nobody  # 指定user
+ENTRYPOINT ["/usr/local/bin/fetch_and_run.sh"]  # 指定容器运行的入口是调用/usr/local/bin/fetch_and_run.sh 脚本
+```
 
-  7. 在**中国区**实验时需要修改一下 fetch_and_run.sh 脚本内容（Global 区域跳过此步）
+7. 在**中国区**实验时需要修改一下 fetch_and_run.sh 脚本内容（Global 区域跳过此步）
 
-  `vim aws-batch-helpers-master/fetch-and-run/fetch_and_run.sh`
+`vim aws-batch-helpers-master/fetch-and-run/fetch_and_run.sh`
 
-  将 fetch_and_run_script()函数的第一句改成如下并保存退出编辑(修改中国区的S3地址)：
+将 fetch_and_run_script()函数的第一句改成如下并保存退出编辑(修改中国区的S3地址)：
 
-  `aws s3 cp "${BATCH_FILE_S3_URL}" - > "${TMPFILE}" --endpoint
-  "https://s3.cn-northwest-1.amazonaws.com.cn" || error_exit
-  "Failed to download S3 script." `
+`aws s3 cp "${BATCH_FILE_S3_URL}" - > "${TMPFILE}" --endpoint
+"https://s3.cn-northwest-1.amazonaws.com.cn" || error_exit
+"Failed to download S3 script." `
 
-  8. 把 ec2-user 加到 docker 组里（免得后续每次 docker 命令前都要加 sudo） , 执行完退出 SSH
+8. 把 ec2-user 加到 docker 组里（免得后续每次 docker 命令前都要加 sudo） , 执行完退出 SSH
 
-  `sudo usermod -a -G docker ec2-user`
+`sudo usermod -a -G docker ec2-user`
 
 ### Docker 镜像传入 ECR 存储库
 
-  1. 进入 ECR 控制台选择“Repositories”页，点击“创建存储库”，填写名称为
+1. 进入 ECR 控制台选择“Repositories”页，点击“创建存储库”，填写名称为
 “awsbatch/fetch_and_run”后点击创建，如下图所示。
 
-  ![ecrbuild][4]
+![ecrbuild][4]
 
-  2. 创建完成后，在“存储库”列表中选中“awsbatch/fetch_and_run”这一栏，点击右上
+2. 创建完成后，在“存储库”列表中选中“awsbatch/fetch_and_run”这一栏，点击右上
 角“查看推送命令”按钮，即出现如下界面，里面详细列出了推送至 ECR 的步骤。
 
-  ![ecr][5]
+![ecr][5]
 
-  3. 重新 SSH 登录到 EC2 上并进入 fetch-and-run 路径:
-
-  ```
-  ssh -i yourkey.pem ec2-user@your-ec2-public-ip
-  cd aws-batch-helpers-master/fetch-and-run
-  ```
-
-  4. 逐个执行上述第2步“查看推送命令” 图中的四条命令：
-
-  ```
-  $(aws ecr get-login --no-include-email --region cn-northwest-1)
-  docker build -t awsbatch/fetch_and_run .
-  ```
-
-  正常编译完成的输出信息如下：
+3. 重新 SSH 登录到 EC2 上并进入 fetch-and-run 路径:
 
 ```
-  Sending build context to Docker daemon 373.8 kB
-  Step 1/6 : FROM amazonlinux:latest
-  latest: Pulling from library/amazonlinux
-  c9141092a50d: Pull complete
-  Digest: sha256:2010c88ac1****…
-  Status: Downloaded newer image for amazonlinux:latest
-  ---> 8ae6f52035b5
-  Step 2/6 : RUN yum -y install unzip aws-cli
-  ---> Running in e49cba995ea6
-  Loaded plugins: ovl, priorities
-  Resolving Dependencies
-  --> Running transaction check
-  ---> Package aws-cli.noarch 0:1.11.29-1.45.amzn1 will be installed
-  << removed for brevity >>
-  Complete!
+ssh -i yourkey.pem ec2-user@your-ec2-public-ip
+cd aws-batch-helpers-master/fetch-and-run
 ```
 
-  输入命令验证下镜像信息：
+4. 逐个执行上述第2步“查看推送命令” 图中的四条命令：
 
-  ```
-  $ docker images
-  REPOSITORY  TAG IMAGE ID  CREATED
-  awsbatch/fetch_and_run  latest  9aa226c28efc  19 seconds ago
-  amazonlinux latest  8ae6f52035b5  5 weeks ago
-  ```
+```
+$(aws ecr get-login --no-include-email --region cn-northwest-1)
+docker build -t awsbatch/fetch_and_run .
+```
 
-  继续输入以下命令给镜像添加标签：
+正常编译完成的输出信息如下：
+```
+Sending build context to Docker daemon 373.8 kB
+Step 1/6 : FROM amazonlinux:latest
+latest: Pulling from library/amazonlinux
+c9141092a50d: Pull complete
+Digest: sha256:2010c88ac1****…
+Status: Downloaded newer image for amazonlinux:latest
+---> 8ae6f52035b5
+Step 2/6 : RUN yum -y install unzip aws-cli
+---> Running in e49cba995ea6
+Loaded plugins: ovl, priorities
+Resolving Dependencies
+--> Running transaction check
+---> Package aws-cli.noarch 0:1.11.29-1.45.amzn1 will be installed
+<< removed for brevity >>
+Complete!
+```
 
-  `docker tag awsbatch/fetch_and_run:latest
-  112233445566.dkr.ecr.cn-northwest-
-  1.amazonaws.com/awsbatch/fetch_and_run:latest`
+输入命令验证下镜像信息：
 
-  执行 docker 镜像推送命令：
+```
+$ docker images
+REPOSITORY  TAG IMAGE ID  CREATED
+awsbatch/fetch_and_run  latest  9aa226c28efc  19 seconds ago
+amazonlinux latest  8ae6f52035b5  5 weeks ago
+```
 
-  `docker push 112233445566.dkr.ecr.cn-northwest-
-  1.amazonaws.com/awsbatch/fetch_and_run:latest`
+继续输入以下命令给镜像添加标签：
 
-  待提示信息中 pushed 完成后可在 ECR 存储库中查看到镜像的信息，拷贝记录下该 URI
-  名称。
+`docker tag awsbatch/fetch_and_run:latest
+112233445566.dkr.ecr.cn-northwest-
+1.amazonaws.com/awsbatch/fetch_and_run:latest`
 
-  ![images][6]
+执行 docker 镜像推送命令：
 
+`docker push 112233445566.dkr.ecr.cn-northwest-
+1.amazonaws.com/awsbatch/fetch_and_run:latest`
 
-### 上传作业脚本至 S3 存储并配置对应 IAM 权限
+待提示信息中 pushed 完成后可在 ECR 存储库中查看到镜像的信息，拷贝记录下该 URI
+名称。
 
-  拷贝以下代码存入本地文件命名为 myjob.sh。
-
-  ```
-  #!/bin/bash
-  date
-  echo "Args: $@"
-  env
-  echo "This is my simple test job!."
-  echo "jobId: $AWS_BATCH_JOB_ID"
-  echo "jobQueue: $AWS_BATCH_JQ_NAME"
-  echo "computeEnvironment: $AWS_BATCH_CE_NAME"
-  sleep $1
-  date
-  echo "bye bye!!"
-  ```
-
-  输入以下命令上传脚本至已事先创建好的 S3 存储桶。
-
-  `aws s3 cp myjob.sh s3://testbucket/myjob.sh`
-
-  由于镜像 fetch_and_run 作为 Batch 作业执行过程中要访问 S3 下载任务脚本，所以需要给 Batch 中的容器配置一个能读取 S3 存储桶的 IAM 权限角色。控制台搜索“IAM”并打开IAM，分别点击角色->创建角色。受信任实体选“AWS 产品”，并在服务中选择 “Elastic Container Service”：
-
-  ![iam][7]
-
-
-  然后在随之出现的使用案例列表里，选择“Elastic Container Service Task”一项，点击下一步权限。
-
-  ![policy][8]
+![images][6]
 
 
-  在 Attach 权限策略页中的搜索栏中输入 AmazonS3ReadOnlyAccess 搜索并选取该权限策略，点击下一步标签填写（可选）标签内容，再点击下一步审核，在角色名称中填入 batchJobRole 后，点击创建角色按钮。
+### 上传作业脚本至 S3 存储并配置对应 IAM 权限拷贝以下代码存入本地文件命名为 myjob.sh。
+
+```
+#!/bin/bash
+date
+echo "Args: $@"
+env
+echo "This is my simple test job!."
+echo "jobId: $AWS_BATCH_JOB_ID"
+echo "jobQueue: $AWS_BATCH_JQ_NAME"
+echo "computeEnvironment: $AWS_BATCH_CE_NAME"
+sleep $1
+date
+echo "bye bye!!"
+```
+
+输入以下命令上传脚本至已事先创建好的 S3 存储桶。
+
+`aws s3 cp myjob.sh s3://testbucket/myjob.sh`
+
+由于镜像 fetch_and_run 作为 Batch 作业执行过程中要访问 S3 下载任务脚本，所以需要给 Batch 中的容器配置一个能读取 S3 存储桶的 IAM 权限角色。控制台搜索“IAM”并打开IAM，分别点击角色->创建角色。受信任实体选“AWS 产品”，并在服务中选择 “Elastic Container Service”：
+
+![iam][7]
+
+
+然后在随之出现的使用案例列表里，选择“Elastic Container Service Task”一项，点击下一步权限。
+
+![policy][8]
+
+
+在 Attach 权限策略页中的搜索栏中输入 AmazonS3ReadOnlyAccess 搜索并选取该权限策略，点击下一步标签填写（可选）标签内容，再点击下一步审核，在角色名称中填入 batchJobRole 后，点击创建角色按钮。
 
 ### Batch 服务的作业配置。
 
-  Batch 的作业配置依次包括：
+Batch 的作业配置依次包括：
 
-  - **计算环境(Compute Environment)配置**: 在 Batch 控制台中选择 Compute Environment 页点击创建。其中计算环境参数组的配置如下图，环境类型选择托管，将由 Batch 来负责管理实例的选择和调度。计算资源参数组可指定需要的实例类型，其中最小 vCPU 数填 1，所需 vCPU 填2，最大 vCPU 填 4， 选择已有 EC2 密钥对， 其他保持默认并点击创建。
+- **计算环境(Compute Environment)配置**: 在 Batch 控制台中选择 Compute Environment 页点击创建。其中计算环境参数组的配置如下图，环境类型选择托管，将由 Batch 来负责管理实例的选择和调度。计算资源参数组可指定需要的实例类型，其中最小 vCPU 数填 1，所需 vCPU 填2，最大 vCPU 填 4， 选择已有 EC2 密钥对， 其他保持默认并点击创建。
 
-  ![batch1][9]
+![batch1][9]
 
-  - **作业队列
-  （JobQueue）配置**:作业队列的配置是在 Batch 控制台中选择 Job Queue 页点击创建。指定队列名称queFetchRun， Priority 优先级填 1，下方计算环境选择列表里选择刚创建的计算环境配置名称 envFetchRun，选取后会显示其摘要信息，如下图所示。
+- **作业队列
+（JobQueue）配置**:作业队列的配置是在 Batch 控制台中选择 Job Queue 页点击创建。指定队列名称queFetchRun， Priority 优先级填 1，下方计算环境选择列表里选择刚创建的计算环境配置名称 envFetchRun，选取后会显示其摘要信息，如下图所示。
 
-  ![batch2][10]
+![batch2][10]
 
-  - **作业定义(Job Definition)的配置**: 作业定义配置是在 Batch 控制台中选择 Job Definition 页点击创建。输入 Job 名称，例如 defFetchRun。 Job role 里选取刚创建的 IAM 角色 batchJobRole。 Environment 中的Container image 一栏填入之前创建的 Dock 镜像的 URI 名称，例如112233445566.dkr.ecr.cn-northwest-1.amazonaws.com/awsbatch/fetch_and_run。 此处Command 一栏保持为空， vCPU 填 1， Memory 填 500， Security 中的 User 栏填nobody。全部填写完成后点击创建作业定义。
+- **作业定义(Job Definition)的配置**: 作业定义配置是在 Batch 控制台中选择 Job Definition 页点击创建。输入 Job 名称，例如 defFetchRun。 Job role 里选取刚创建的 IAM 角色 batchJobRole。 Environment 中的Container image 一栏填入之前创建的 Dock 镜像的 URI 名称，例如112233445566.dkr.ecr.cn-northwest-1.amazonaws.com/awsbatch/fetch_and_run。 此处Command 一栏保持为空， vCPU 填 1， Memory 填 500， Security 中的 User 栏填nobody。全部填写完成后点击创建作业定义。
 
-  ![batch3][11]
+![batch3][11]
 
 ### 提交 Batch 任务并查看执行状态。（是时候展现真正的实力了）
 
-  在 Batch 控制台选择 Jobs 页面点击“提交任务”按钮。 Jobname 栏输入指定的 Job 名称， Job definition 中选择前一步设置好的作业定义defFetchRun:1(冒号后是版本号)， Job queue 一栏选取前一步设好的作业队列名称queFetchRun。 Command 命令里面输入“myjob.sh 60”，设置好的信息如下图所示。
+在 Batch 控制台选择 Jobs 页面点击“提交任务”按钮。 Jobname 栏输入指定的 Job 名称， Job definition 中选择前一步设置好的作业定义defFetchRun:1(冒号后是版本号)， Job queue 一栏选取前一步设好的作业队列名称queFetchRun。 Command 命令里面输入“myjob.sh 60”，设置好的信息如下图所示。
 
-  ![run][12]
+![run][12]
 
-  在环境变量一栏中添加环境变量的键值对：
+在环境变量一栏中添加环境变量的键值对：
 
-  ```
-  Key=BATCH_FILE_TYPE, Value=script
-  Key=BATCH_FILE_S3_URL, Value=s3://testbucket/myjob.sh
-  ```
+```
+Key=BATCH_FILE_TYPE, Value=script
+Key=BATCH_FILE_S3_URL, Value=s3://testbucket/myjob.sh
+```
 
-  ![runme][13]
+![runme][13]
 
-  任务提交后在 Batch 控制台可以查看其最新状态，任务会经历 submitted、 pending、runnable、 starting、 running 各个状态。任务执行完成后会在 succeeded 一页下，如下图所示：
+任务提交后在 Batch 控制台可以查看其最新状态，任务会经历 submitted、 pending、runnable、 starting、 running 各个状态。任务执行完成后会在 succeeded 一页下，如下图所示：
 
-  ![done][14]
+![done][14]
 
-  点击作业 ID 链接的详情页面中可点击“CloudWatch 日志” 的链接查看详细日志信息，其中就可以看到 myjob.sh 中 echo 输出的信息内容。如下图所示:
+点击作业 ID 链接的详情页面中可点击“CloudWatch 日志” 的链接查看详细日志信息，其中就可以看到 myjob.sh 中 echo 输出的信息内容。如下图所示:
 
-  ![log][15]
+![log][15]
 
 
 ### （可选）如果需要批量提交更多数量的作业任务，可在提交任务参数页面中的Job Type 中选择 Array 类型并填入一个测试数量值，同样可在 CloudWatch 中查看批量任务执行的情况，并在 EC2 的资源列表里可以看对应的实例扩展情况。
