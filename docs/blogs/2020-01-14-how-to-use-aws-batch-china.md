@@ -78,33 +78,33 @@ t2.micro。
 
 然后一大波命令行来袭：
 
-1. EC2 就绪后在本地通过 SSH 方式登录（putty,xshell,gitbash...）
+* EC2 就绪后在本地通过 SSH 方式登录（putty,xshell,gitbash...）
 
 `ssh -i yourkey.pem ec2-user@your-ec2-public-ip`
 
-2. 配置 CLI 的权限，根据命令提示输入 AK 和 SK 密钥值，默认：
+* 配置 CLI 的权限，根据命令提示输入 AK 和 SK 密钥值，默认：
 
 `aws configure`
 
-3. 执行一次更新并安装 docker 服务：
+* 执行一次更新并安装 docker 服务：
 
 ```
 sudo yum update -y
 sudo yum install docker
 ```
 
-4. 启动 Docker 服务：
+* 启动 Docker 服务：
 
 `sudo service docker start`
 
-5. 下载实验包的 github 源码：
+* 下载实验包的 github 源码：
 
 ```
 wget https://github.com/awslabs/aws-batch-helpers/archive/master.zip\
 unzip master.zip
 ```
 
-6. 解压进入路径后查看[Dockerfile](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)文件：
+* 解压进入路径后查看[Dockerfile](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)文件：
 
 `vim aws-batch-helpers-master/fetch-and-run/Dockerfile`
 
@@ -120,7 +120,7 @@ USER nobody  # 指定user
 ENTRYPOINT ["/usr/local/bin/fetch_and_run.sh"]  # 指定容器运行的入口是调用/usr/local/bin/fetch_and_run.sh 脚本
 ```
 
-7. 在**中国区**实验时需要修改一下 fetch_and_run.sh 脚本内容（Global 区域跳过此步）
+* 在**中国区**实验时需要修改一下 fetch_and_run.sh 脚本内容（Global 区域跳过此步）
 
 `vim aws-batch-helpers-master/fetch-and-run/fetch_and_run.sh`
 
@@ -130,30 +130,30 @@ ENTRYPOINT ["/usr/local/bin/fetch_and_run.sh"]  # 指定容器运行的入口是
 "https://s3.cn-northwest-1.amazonaws.com.cn" || error_exit
 "Failed to download S3 script." `
 
-8. 把 ec2-user 加到 docker 组里（免得后续每次 docker 命令前都要加 sudo） , 执行完退出 SSH
+* 把 ec2-user 加到 docker 组里（免得后续每次 docker 命令前都要加 sudo） , 执行完退出 SSH
 
 `sudo usermod -a -G docker ec2-user`
 
 ### Docker 镜像传入 ECR 存储库
 
-1. 进入 ECR 控制台选择“Repositories”页，点击“创建存储库”，填写名称为
+* 进入 ECR 控制台选择“Repositories”页，点击“创建存储库”，填写名称为
 “awsbatch/fetch_and_run”后点击创建，如下图所示。
 
 ![ecrbuild][4]
 
-2. 创建完成后，在“存储库”列表中选中“awsbatch/fetch_and_run”这一栏，点击右上
+* 创建完成后，在“存储库”列表中选中“awsbatch/fetch_and_run”这一栏，点击右上
 角“查看推送命令”按钮，即出现如下界面，里面详细列出了推送至 ECR 的步骤。
 
 ![ecr][5]
 
-3. 重新 SSH 登录到 EC2 上并进入 fetch-and-run 路径:
+* 重新 SSH 登录到 EC2 上并进入 fetch-and-run 路径:
 
 ```
 ssh -i yourkey.pem ec2-user@your-ec2-public-ip
 cd aws-batch-helpers-master/fetch-and-run
 ```
 
-4. 逐个执行上述第2步“查看推送命令” 图中的四条命令：
+* 逐个执行上述第2步“查看推送命令” 图中的四条命令：
 
 ```
 $(aws ecr get-login --no-include-email --region cn-northwest-1)
