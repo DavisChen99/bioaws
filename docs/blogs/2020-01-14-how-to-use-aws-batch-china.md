@@ -78,7 +78,7 @@ t2.micro。
 
 ![ami][3]
 
-然后一大波命令行来袭：
+**[高能]一大波命令行来袭**：
 
 * EC2 就绪后在本地通过 SSH 方式登录（putty,xshell,gitbash...）
 
@@ -128,9 +128,7 @@ ENTRYPOINT ["/usr/local/bin/fetch_and_run.sh"]  # 指定容器运行的入口是
 
 将 fetch_and_run_script()函数的第一句改成如下并保存退出编辑(修改中国区的S3地址)：
 
-`aws s3 cp "${BATCH_FILE_S3_URL}" - > "${TMPFILE}" --endpoint
-"https://s3.cn-northwest-1.amazonaws.com.cn" || error_exit
-"Failed to download S3 script." `
+`aws s3 cp "${BATCH_FILE_S3_URL}" - > "${TMPFILE}" --endpoint "https://s3.cn-northwest-1.amazonaws.com.cn" || error_exit "Failed to download S3 script." `
 
 * 把 ec2-user 加到 docker 组里（免得后续每次 docker 命令前都要加 sudo） , 执行完退出 SSH
 
@@ -138,13 +136,11 @@ ENTRYPOINT ["/usr/local/bin/fetch_and_run.sh"]  # 指定容器运行的入口是
 
 ### Docker 镜像传入 ECR 存储库
 
-* 进入 ECR 控制台选择“Repositories”页，点击“创建存储库”，填写名称为
-“awsbatch/fetch_and_run”后点击创建，如下图所示。
+* 进入 ECR 控制台选择“Repositories”页，点击“创建存储库”，填写名称为 “awsbatch/fetch_and_run”后点击创建，如下图所示。
 
 ![ecrbuild][4]
 
-* 创建完成后，在“存储库”列表中选中“awsbatch/fetch_and_run”这一栏，点击右上
-角“查看推送命令”按钮，即出现如下界面，里面详细列出了推送至 ECR 的步骤。
+* 创建完成后，在“存储库”列表中选中“awsbatch/fetch_and_run”这一栏，点击右上角“查看推送命令”按钮，即出现如下界面，里面详细列出了推送至 ECR 的步骤。
 
 ![ecr][5]
 
@@ -192,17 +188,13 @@ amazonlinux latest  8ae6f52035b5  5 weeks ago
 
 继续输入以下命令给镜像添加标签：
 
-`docker tag awsbatch/fetch_and_run:latest
-112233445566.dkr.ecr.cn-northwest-
-1.amazonaws.com/awsbatch/fetch_and_run:latest`
+`docker tag awsbatch/fetch_and_run:latest 112233445566.dkr.ecr.cn-northwest-1.amazonaws.com/awsbatch/fetch_and_run:latest`
 
 执行 docker 镜像推送命令：
 
-`docker push 112233445566.dkr.ecr.cn-northwest-
-1.amazonaws.com/awsbatch/fetch_and_run:latest`
+`docker push 112233445566.dkr.ecr.cn-northwest-1.amazonaws.com/awsbatch/fetch_and_run:latest`
 
-待提示信息中 pushed 完成后可在 ECR 存储库中查看到镜像的信息，拷贝记录下该 URI
-名称。
+待提示信息中 pushed 完成后可在 ECR 存储库中查看到镜像的信息，拷贝记录下该 URI名称。
 
 ![images][6]
 
