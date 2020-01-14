@@ -128,7 +128,9 @@ ENTRYPOINT ["/usr/local/bin/fetch_and_run.sh"]  # 指定容器运行的入口是
 
 将 fetch_and_run_script()函数的第一句改成如下并保存退出编辑(修改中国区的S3地址)：
 
-`aws s3 cp "${BATCH_FILE_S3_URL}" - > "${TMPFILE}" --endpoint "https://s3.cn-northwest-1.amazonaws.com.cn" || error_exit "Failed to download S3 script." `
+```
+aws s3 cp "${BATCH_FILE_S3_URL}" - > "${TMPFILE}" --endpoint "https://s3.cn-northwest-1.amazonaws.com.cn" || error_exit "Failed to download S3 script."
+```
 
 * 把 ec2-user 加到 docker 组里（免得后续每次 docker 命令前都要加 sudo） , 执行完退出 SSH
 
@@ -188,11 +190,15 @@ amazonlinux latest  8ae6f52035b5  5 weeks ago
 
 继续输入以下命令给镜像添加标签：
 
-`docker tag awsbatch/fetch_and_run:latest 112233445566.dkr.ecr.cn-northwest-1.amazonaws.com/awsbatch/fetch_and_run:latest`
+```
+docker tag awsbatch/fetch_and_run:latest 112233445566.dkr.ecr.cn-northwest-1.amazonaws.com/awsbatch/fetch_and_run:latest
+```
 
 执行 docker 镜像推送命令：
 
-`docker push 112233445566.dkr.ecr.cn-northwest-1.amazonaws.com/awsbatch/fetch_and_run:latest`
+```
+docker push 112233445566.dkr.ecr.cn-northwest-1.amazonaws.com/awsbatch/fetch_and_run:latest
+```
 
 待提示信息中 pushed 完成后可在 ECR 存储库中查看到镜像的信息，拷贝记录下该 URI名称。
 
