@@ -5,6 +5,8 @@
 业务场景中。本文通过一个只需五个步骤的动手实践来示例如何利用 AWS Batch 快速
 搭建 HPC 集群， 以帮助您快速上手运用 AWS Batch 服务*
 
+[aws batch文档](https://docs.aws.amazon.com/zh_cn/batch/index.html)
+
 ## [AWS Batch](https://www.amazonaws.cn/batch/?nc2=h_l3_dm) 基本介绍
 **一句话理解：把分析流程打包成docker，批量提交到aws，不用去管开什么机器，batch会帮你搞定，跑完自动释放资源，随用随开，用完就关。**
 
