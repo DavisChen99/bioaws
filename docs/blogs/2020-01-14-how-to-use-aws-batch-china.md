@@ -70,13 +70,13 @@ myjob.sh 的脚步执行内容。
 
 ### 准备处理任务的 Docker 镜像。
 
-  本实验需要启动一个 EC2 实例来制作 Docker 镜像。 在中国区域实验时选择宁夏区域，
-  启动 EC2 环境时选取 Amazon Linux 2 类型的 AMI，如下图所示。 实例类型选择
-  t2.micro。
+本实验需要启动一个 EC2 实例来制作 Docker 镜像。 在中国区域实验时选择宁夏区域，
+启动 EC2 环境时选取 Amazon Linux 2 类型的 AMI，如下图所示。 实例类型选择
+t2.micro。
 
-  ![ami][3]
+![ami][3]
 
-  然后一大波命令行来袭：
+然后一大波命令行来袭：
 
 1. EC2 就绪后在本地通过 SSH 方式登录（putty,xshell,gitbash...）
 
