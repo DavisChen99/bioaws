@@ -102,7 +102,7 @@ sudo yum install docker
 * 下载实验包的 github 源码：
 
 ```
-wget https://github.com/awslabs/aws-batch-helpers/archive/master.zip\
+wget https://github.com/awslabs/aws-batch-helpers/archive/master.zip
 unzip master.zip
 ```
 
