@@ -29,7 +29,7 @@
   | c    | 1:2       | 计算优化型，CPU比较牛b         |
   | r    | 1:8       | 内存优化型，吃内存的分析就找他 |
 
-    更多信息请参照：[实例类型](https://amazonaws-china.com/cn/ec2/instance-types/?nc1=h_ls)
+    更多信息请参照：[实例类型](https://amazonaws-china.com/cn/ec2/instance-types/?nc1=h_ls) 
 
 - step3: 配置实例。 这里有很多选项，看官可能看到头疼，但是在入门阶段你可以不用修改任何地方！直接点击下一步：添加存储。
 
@@ -83,13 +83,16 @@
 - 打开你的本地ssh工具，比如我的是gitbash, 进到你key所在的文件夹下:
 
   ```
+  
   $ ls *.pem
   mytest.pem
+  
   ```
 
 - 在aws控制台上，选中你启动的那台机器，点击**Connect** ，跳窗的信息会详细告诉你如何亵玩你的机器，你只要copy就好，实在是太方便了！ 为了满足我们等宅男，aws真是用心良苦。
 
   ```
+  
   $ chmod 400 mytest.pem
   $ ssh -i "mytest.pem" ec2-user@ec2-不-告-诉-你.cn-northwest-1.compute.amazonaws.com.cn
   The authenticity of host 'ec2-不-告-诉-你.cn-northwest-1.compute.amazonaws.com.cn (不-告-诉-你)' can't be established.
@@ -111,6 +114,7 @@
 - 至此，你已经成功进入了服务器，接下来就随便你了。
 
   ```
+  
   [ec2-user@ip-不-告-诉-你 ~]$ ping 8.8.8.8
   PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
   64 bytes from 8.8.8.8: icmp_seq=1 ttl=46 time=54.8 ms
