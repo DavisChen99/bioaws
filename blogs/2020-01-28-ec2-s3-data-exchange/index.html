@@ -82,6 +82,7 @@
                 <div class="col-md-9" role="main">
 
 <h1 id="ec2s3">如何帮EC2摸到S3上的数据</h1>
+<p><em>一般来说，因为s3的存储成本优势，我们都会把数据如bcl，fastq，bam，sam等全部丢到s3上长期保存，然后需要分析的时候，开启一台服务器EC2，拷贝这些数据到EC2连接的EBS/EFS上，再进行下一步的分析，那么问题来了，我怎么才能帮EC2摸到s3上的数据呢？</em> </p>
 <h2 id="_1">你该知道的</h2>
 <ul>
 <li>EC2的AMI实际上保存在S3上，AMI是为了快速启动几十上百台同样分析环境的机器</li>
@@ -90,9 +91,15 @@
 </ul>
 <h2 id="_2">你该掌握的</h2>
 <ul>
-<li>[x] 如何创建虚拟机EC2</li>
-<li>[x] 如何用CLI登录EC2</li>
-<li>[x] 如何上传数据到S3</li>
+<li>
+<p>如何创建虚拟机EC2</p>
+</li>
+<li>
+<p>如何用CLI登录EC2</p>
+</li>
+<li>
+<p>如何上传数据到S3</p>
+</li>
 </ul>
 <h2 id="1-get-wget">方式1 - GET 或 wget</h2>
 <p>这两个命令我们一定不陌生吧，wget是HTTP和FTP客户端的常用下载方式，默认在Amazon Linux中都安装好的。所以如果我们知道要下载对象的URL，就可以用这个命令下载：</p>
@@ -104,7 +111,8 @@
 <li>访问的对象包括对象所在的桶权限是公开的，否则会收到错误信息“ERROR 403: Forbidden”</li>
 </ul>
 <h2 id="2-aksk">方式2 - AKSK访问</h2>
-<p>其实就是通过EC2上的AWS CLI 访问S3上的桶和文件。在这台EC2上配置好CLI的AKSK信息，就可以向S3进行数据交互了，而且无须申请S3的ICP备案 白名单，缺点是每台EC2都要配置一次AKSK密钥信息，不太安全。</p>
+<p>什么是AKSK? 简单来说，我们在aws账户下新建user的时候，都会给我们一个csv格式文件，里面保存的就是AKSK两个key，在向云端发起访问时向它证明你就是你。</p>
+<p>通过配置EC2上的AWS CLI 访问S3上的桶和文件，AWS CLI默认都在EC2上装好的。在这台EC2上配置好CLI的AKSK信息，就可以向S3进行数据交互了，而且无须申请S3的ICP备案 白名单，缺点是每台EC2都要配置一次AKSK密钥信息，不太安全。</p>
 <pre><code>$ aws configure
 AWS Access Key ID [****************xxxx]:   # 输入你的AK key
 AWS Secret Access Key [****************xxxx]: # 输入你的SK key
@@ -131,7 +139,7 @@ Default output format [json]:   # 默认json
 </ul>
 <p><code>aws s3 sync myfolder s3://remote_S3_bucket/myfolder</code></p>
 <h2 id="3-iam">方式3 - IAM角色设置(推荐)</h2>
-<p>以上两种方式有利有弊，用IAM角色来控制EC2的权限是官方推荐的最佳实践哦。</p>
+<p>以上两种方式有利有弊，用IAM角色来控制EC2的权限是官方推荐的<strong>最佳实践</strong> 哦。</p>
 <p>什么是AWS IAM？全程<strong>AWS Identity and Access Management</strong> ，用于集中管理用户、访问密钥等安全凭证，以及控制用户和应用程序可以访问哪些 AWS 资源的权限。（这里仅作简要介绍，后面会开专贴详解）</p>
 <ul>
 <li>登录aws control console，搜索IAM，点击进入</li>
