@@ -6,7 +6,7 @@
 
 - EC2的AMI实际上保存在S3上，AMI是为了快速启动几十上百台同样分析环境的机器
 - EBS的snapshot实际上也保存在S3上，snapshot可以让我们快速恢复数据，如数据库，分析流程，还可以作为模板，快速创建同样类型的磁盘，如预置好特定IOPS的io1型EBS。
-- S3上的每个文件都是一个object对象，桶是这个对象最高的命名空间（namespace）,类似于访问internet的域名，如果开通的ICP备案白名单，并将访问权限开放，那么这个对象就可以用http的URL (Uniform Resource Locator)进行访问，比如：`http://aws-s3-bucket1.s3.amazonaws.com/photos/mygarden.jpg` 
+- S3上的每个文件都是一个object对象，桶是这个对象最高的命名空间（namespace）,类似于访问internet的域名，如果开通了ICP备案白名单，并将这个对象和所在桶的访问权限开放，那么这个对象就可以用http的URL (Uniform Resource Locator)进行访问，比如：`http://aws-s3-bucket1.s3.amazonaws.com/photos/mygarden.jpg` 
 
 ## 你该掌握的 
 
