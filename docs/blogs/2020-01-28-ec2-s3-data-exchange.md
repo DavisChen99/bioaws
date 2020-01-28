@@ -67,7 +67,7 @@ Default output format [json]: 	# 默认json
 
 以上两种方式有利有弊，用IAM角色来控制EC2的权限是官方推荐的**最佳实践** 哦。
 
-什么是AWS IAM？全程**AWS Identity and Access Management** ，用于集中管理用户、访问密钥等安全凭证，以及控制用户和应用程序可以访问哪些 AWS 资源的权限。（这里仅作简要介绍，后面会开专贴详解）
+什么是AWS IAM？全称**AWS Identity and Access Management** ，用于集中管理用户、访问密钥等安全凭证，以及控制用户和应用程序可以访问哪些 AWS 资源的权限。（这里仅作简要介绍，后面会开专贴详解）
 
 - 登录aws control console，搜索IAM，点击进入
 - 选择左侧角色（Roles），然后选择创建角色（Create role）
