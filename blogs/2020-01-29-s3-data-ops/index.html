@@ -181,32 +181,32 @@
 <tbody>
 <tr>
 <td><strong>S3 标准存储(宁夏为例）</strong><br /><strong>S3 Standard</strong></td>
-<td>访问：活动，频繁访问<br/>延迟：毫秒级访问<br/>备份：≥ 3 AZ<br/>起算: $0.0210/GB</td>
+<td>访问：活动，频繁访问<br/>延迟：毫秒级访问<br/>备份：≥ 3 AZ<br/>起算:   ¥0.1629/GB</td>
 <td>待分析的fastq，bam，vcf等数据</td>
 </tr>
 <tr>
 <td><strong>S3 智能分层存储</strong><br /><strong>S3 Intelligent-Tiering</strong></td>
-<td>访问：访问频率可变<br/>延迟：毫秒级访问<br/>备份：≥ 3 AZ<br/>起算: $0.0210 至 $0.0125/GB<br/>逐对象监控计费：连续 30 天未访问的对象移至不频繁访问层，一旦被访问又移回频繁访问层 <br/>最小存储期限：30天 (没存满30天就删除，收取30天的费用，考虑好哦！)<br />最小对象大小：128KB（小于128KB 始终放在频繁访问层）</td>
+<td>访问：访问频率可变<br/>延迟：毫秒级访问<br/>备份：≥ 3 AZ<br/>起算: ¥0.1030029/GB 至 ¥0.1629/GB<br/>逐对象监控计费：连续 30 天未访问的对象移至不频繁访问层，一旦被访问又移回频繁访问层 <br/>最小存储期限：30天 (没存满30天就删除，收取30天的费用，考虑好哦！)<br />最小对象大小：128KB（小于128KB 始终放在频繁访问层）</td>
 <td>懒人模式，不确定1-3个月会不会分析的bam，vcf等数据</td>
 </tr>
 <tr>
 <td><strong>S3 标准存储，不频繁访问</strong><br /><strong>S3 Standard-IA</strong></td>
-<td>访问：不常访问<br/>延迟：毫秒级访问<br/>备份：≥ 3 AZ<br/>起算: $0.0125/GB<br/>数据获取按GB计费<br/>最小存储时长: 30天<br/>最小对象大小：128KB （小于 128 KB，S3 会收取 128 KB 的费用）</td>
+<td>访问：不常访问<br/>延迟：毫秒级访问<br/>备份：≥ 3 AZ<br/>起算: ¥0.1030029/GB <br/>数据获取按GB计费<br/>最小存储时长: 30天<br/>最小对象大小：128KB （小于 128 KB，S3 会收取 128 KB 的费用）</td>
 <td>1-3个月内还可能访问的fastq，bam，vcf等数据</td>
 </tr>
 <tr>
 <td><strong>S3 单区 – 不频繁访问</strong><br /><strong>S3 One Zone-IA</strong></td>
-<td>访问：不常访问数据，易重构建，<br/>延迟：毫秒级访问<br/>备份：1 AZ，数据无法灵活地应对由于地震和洪水灾害而造成可用区物理丢失的情况。<br/>起算: $0.0100/GB<br/>数据获取按GB计费<br/>最小存储时长：30天<br/>最小对象大小：128KB</td>
+<td>访问：不常访问数据，易重构建，<br/>延迟：毫秒级访问<br/>备份：1 AZ，数据无法灵活地应对由于地震和洪水灾害而造成可用区物理丢失的情况。<br/>起算: ¥0.08240232/GB<br/>数据获取按GB计费<br/>最小存储时长：30天<br/>最小对象大小：128KB</td>
 <td>bam，vcf等可再生数据</td>
 </tr>
 <tr>
 <td><strong>Amazon S3 Glacier 存储</strong><br /><strong>S3 Glacier</strong></td>
-<td>访问：归档数据<br/>延迟：恢复在线延时3-5小时<br/>备份：≥ 3 AZ<br/>起算: $0.0040/GB<br/>数据获取按GB计费<br/>最小存储时长： 90天<br/>最小对象大小：40KB</td>
+<td>访问：归档数据<br/>延迟：恢复在线延时3-5小时<br/>备份：≥ 3 AZ<br/>起算: ¥0.03006/GB<br/>数据获取按GB计费<br/>最小存储时长： 90天<br/>最小对象大小：40KB</td>
 <td>bcl，至少3个月内不会再碰的fastq，bam，vcf等数据</td>
 </tr>
 <tr>
 <td><strong>Amazon S3 Glacier Deep Archive 存储</strong><br /><strong>S3 Glacier Deep Archive</strong></td>
-<td>访问：深度归档数据<br/>延迟：恢复在线延时10+小时<br/>备份：≥  3 AZ<br/>起算: $0.00099/GB<br/>数据获取按GB计费<br/>最小存储时长：180天<br/>最小对象大小： 40KB</td>
+<td>访问：深度归档数据<br/>延迟：恢复在线延时10+小时<br/>备份：≥  3 AZ<br/>起算: ¥0.01082/GB<br/>数据获取按GB计费<br/>最小存储时长：180天<br/>最小对象大小： 40KB</td>
 <td>bcl，至少半年内不会再碰的fastq，bam，vcf等数据，目前全行业最便宜。</td>
 </tr>
 </tbody>
