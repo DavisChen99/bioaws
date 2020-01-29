@@ -1,6 +1,6 @@
 ## pcluster quick-build within 10 min
 
-> brief introduction of pcluter on aws
+> brief introduction of pcluster on aws
 >
 > -- D.C
 
