@@ -1,5 +1,9 @@
 ## pcluster quick-build within 10 min
 
+> brief introduction of pcluter on aws
+>
+> -- D.C
+
 ### launch an instance to install pcluster (v2.5.1)
 - `eg. t2.micro`
 - remember your keypair name `eg. mykey.pem`

@@ -6,7 +6,9 @@
 
 - [入门系列3 关于S3,EBS,EFS的三角关系](blogs/2020-01-26-s3-ebs-efs-compare.md)
 
-- [入门系列4 如何帮EC2摸到S3上的数据](blogs/2020-01-28-ec2-s3-data-exchange.md)
+- [入门系列4 如何上传数据到S3服务-Web界面](blogs/2020-01-29-s3-data-ops.md)
+
+- [入门系列5 如何帮EC2摸到S3上的数据](blogs/2020-01-28-ec2-s3-data-exchange.md)
 
 - [10分钟打造云上集群](blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws.md)
 

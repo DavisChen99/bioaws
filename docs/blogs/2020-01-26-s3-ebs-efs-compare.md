@@ -1,6 +1,8 @@
 # 关于S3,EBS,EFS的三角关系
 
-*我们知道，aws提供的存储服务有S3，EBS，EFS，有些同学在使用的时候会有些困扰，哪个才是最适合我自己的云存储方案呢，现在我就和大家一起来学习下aws的三个常用存储服务：Amazon Elastic Block Store (Amazon EBS), Amazon Simple Storage Service (Amazon S3), 和Amazon Elastic File System (Amazon EFS)*
+> *我们知道，aws提供的存储服务有S3，EBS，EFS，有些同学在使用的时候会有些困扰，哪个才是最适合我自己的云存储方案呢，现在我就和大家一起来学习下aws的三个常用存储服务：Amazon Elastic Block Store (Amazon EBS), Amazon Simple Storage Service (Amazon S3), 和Amazon Elastic File System (Amazon EFS)*
+>
+> -- D.C
 
 ## 什么是Amazon EFS？
 
