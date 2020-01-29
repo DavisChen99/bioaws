@@ -82,7 +82,10 @@
                 <div class="col-md-9" role="main">
 
 <h1 id="ec2s3">如何帮EC2摸到S3上的数据</h1>
+<blockquote>
 <p><em>一般来说，因为s3的存储成本优势，我们都会把数据如bcl，fastq，bam，sam等全部丢到s3上长期保存，然后需要分析的时候，开启一台服务器EC2，拷贝这些数据到EC2连接的EBS/EFS上，再进行下一步的分析，那么问题来了，我怎么才能帮EC2摸到s3上的数据呢？</em> </p>
+<p>-- D.C</p>
+</blockquote>
 <h2 id="_1">你该知道的</h2>
 <ul>
 <li>EC2的AMI实际上保存在S3上，AMI是为了快速启动几十上百台同样分析环境的机器</li>
