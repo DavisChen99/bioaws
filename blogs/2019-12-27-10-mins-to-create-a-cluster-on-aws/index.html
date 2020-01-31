@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>2019 12 27 10 mins to create a cluster on aws - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="../../head/">首页</a>
+                            </li>
+                            <li >
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#pcluster-quick-build-within-10-min">pcluster quick-build within 10 min</a></li>
+            <li><a href="#launch-an-instance-to-install-pcluster-v251">launch an instance to install pcluster (v2.5.1)</a></li>
+            <li><a href="#install-packages-launch-cluster">install packages &amp; launch cluster</a></li>
+            <li><a href="#build-manually-after-first-build">build manually (after first build)</a></li>
+            <li><a href="#check-service">check service</a></li>
+            <li><a href="#for-debug">for debug</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h2 id="pcluster-quick-build-within-10-min">pcluster quick-build within 10 min</h2>
+<blockquote>
+<p>brief introduction of pcluster on aws</p>
+<p>-- D.C</p>
+</blockquote>
+<h3 id="launch-an-instance-to-install-pcluster-v251">launch an instance to install pcluster (v2.5.1)</h3>
+<ul>
+<li><code>eg. t2.micro</code></li>
+<li>remember your keypair name <code>eg. mykey.pem</code></li>
+<li>launch &amp; login</li>
+</ul>
+<h3 id="install-packages-launch-cluster">install packages &amp; launch cluster</h3>
+<ul>
+<li><code>wget https://github.com/DavisChen99/awspac/archive/master.zip</code></li>
+<li><code>unzip awspac-master.zip &amp;&amp; cd awspac-master</code></li>
+<li>refer to <a href="https://aws-parallelcluster.readthedocs.io/en/latest/configuration.html#scheduler">doc</a></li>
+<li>add permission <code>chmod 667 install_pcluster_v1.sh</code></li>
+<li>run <code>sudo bash install_pcluster_v1.sh</code>, try again if you meet HTTPS connect problem - usually network issue.</li>
+</ul>
+<h3 id="build-manually-after-first-build">build manually (after first build)</h3>
+<ul>
+<li><code>cd ~/.parallelcluster</code></li>
+<li><code>vim config</code> edit as you want</li>
+<li><code>aws configure</code> with your AKSK keys</li>
+<li><code>pcluster &lt;create/delete&gt; &lt;cluster_template&gt;</code></li>
+</ul>
+<h3 id="check-service">check service</h3>
+<ul>
+<li>go to aws console &amp; check your nodes</li>
+<li>log in master nodes to check:</li>
+<li><code>qhost</code> to check your queue</li>
+<li><code>df -h</code> to check your volumns</li>
+<li><code>qsub test.sh</code> to check your cluster function</li>
+<li><code>qstat -f</code> to see job status</li>
+<li>submit your jobs using command like <code>qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 4 -o output -e output -q all.q yourscript.sh</code></li>
+</ul>
+<h3 id="for-debug">for debug</h3>
+<ul>
+<li><code>vi ~/.bashrc</code></li>
+<li>add <code>export SGE_ROOT=/opt/sge</code></li>
+<li>add <code>PATH=/opt/sge/bin:/opt/sge/bin/lx-amd64:/opt/amazon/openmpi/bin:$PATH</code></li>
+<li><code>source ~/.bashrc</code></li>
+<li><code>sudo /etc/init.d/sgemaster.p6444 &lt;start/stop/restart&gt;</code></li>
+</ul></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
