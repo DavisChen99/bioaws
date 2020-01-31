@@ -10,6 +10,8 @@
 
 - [入门系列5 如何帮EC2摸到S3上的数据](blogs/2020-01-28-ec2-s3-data-exchange.md)
 
+- [入门系列6 神器EFS终于来了！弹性共享存储！](blogs/2020-01-31-efs-user-guide-101.md)
+
 - [BAM文件放云上好了，本地IGV很方便](blogs/2020-01-31-put-bam-on-s3.md)
 
 - [10分钟打造云上集群](blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws.md)
