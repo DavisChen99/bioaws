@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2020-01-31-put-bam-on-s3/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>BAM文件放云上好了，本地IGV很方便 - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="../../head/">首页</a>
+                            </li>
+                            <li >
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#bamigv">BAM文件放云上好了，本地IGV很方便</a></li>
+            <li><a href="#igv">平常怎么用IGV看基因组比对图？</a></li>
+            <li><a href="#_1">文件存储为什么要放在云上？</a></li>
+            <li><a href="#igvs3bam">IGV能打开存在S3上的BAM文件吗？</a></li>
+            <li><a href="#_2">遗留问题</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="bamigv">BAM文件放云上好了，本地IGV很方便</h1>
+<h2 id="igv">平常怎么用IGV看基因组比对图？</h2>
+<p>相信对于做基因组变异分析的人来说，比对完基因组后用<a href="http://software.broadinstitute.org/software/igv/">IGV</a>查看比对情况，以及肉眼确认<a href="https://gatk.broadinstitute.org/hc/en-us">GATK</a>等软件分析出来的变异等工作再熟悉不过。</p>
+<p>通常情况下，在以前没有适用云的时候，我是通过自己的电脑SSH登陆到公司的数据中心，一顿命令行操作将FQ文件分析成我想要的BAM，然后输入命令<code>java -jar -Xmx4g igv.jar</code>，电脑就会为我打开IGV的图形界面。</p>
+<p><em>当然，由于打开IGV的服务器是Linux系统，其使用的图形界面服务是X11，如果你是Windows操作系统，多半你需要安装<a href="https://sourceforge.net/projects/xming">Xming</a>，如果是OSX操作系统，可能你需要安装<a href="https://www.xquartz.org">XQuartz</a>。</em></p>
+<p>这样做一般来说是下意识就能想到的，我这么做了好多年。但有一些缺点：</p>
+<ol>
+<li>
+<p>需要有一台服务器一直开着，就会有资源浪费的可能。对于有本地数据中心的来说也没什么，反正本来就会浪费的：）））但是对于使用云服务器的，这个开销还是挺可观的。</p>
+</li>
+<li>
+<p>X11在Mac电脑OSX系统上的官方支持早已是过去式，通过XQuartz实现该功能显得过于繁琐。我最近一台新电脑升级了OSX 10.15之后耗费了我很长时间，最终我放弃了，因为我不想把我的电脑弄得很乱：）））</p>
+</li>
+<li>
+<p>BAM文件一般都比较大，Panel的数据也要1GB多，全基因组要几十上百GB。这么大的文件放在存储服务器上，高速存储浪费资源，低俗存储反应又慢，对于维护而言的确比较麻烦。</p>
+</li>
+</ol>
+<h2 id="_1">文件存储为什么要放在云上？</h2>
+<p>当然，云不是万能的，也存在很多种情况本地数据中心更加高效节省。</p>
+<p>对于生信界，目前我个人认为文件存储放在云上比较合适的，我的理由有以下几个：</p>
+<ol>
+<li>
+<p>放心。别笑我，如果做好信息的隔离，云上的数据是 <strong>相当</strong> 安全的。我们要强迫自己理性思维，比如你为什么觉得放在云上不安全。从数据隐私保护、可用性等方面来看，数字可以告诉我们大厂的云存储比绝大多数数据中心安装。</p>
+</li>
+<li>
+<p>省心。一般云服务提供商都提供了多种规格、适用多种应用场景的存储方案及价格，这样可以根据业务场景选择不同的存储级别。之前的文章<a href="../2020-01-26-s3-ebs-efs-compare/">入门系列3 关于S3,EBS,EFS的三角关系</a>中以AWS S3为例列举了标准、非频繁访问、归档等多种存储方案及价格体系。</p>
+</li>
+<li>
+<p>贴心。AWS S3提供了众多权限管理、访问管理等功能，可以帮助我们设定不同数据的访问权限，以及在出问题的时候查找问题原因。</p>
+</li>
+</ol>
+<h2 id="igvs3bam">IGV能打开存在S3上的BAM文件吗？</h2>
+<p><a href="http://software.broadinstitute.org/software/igv/LoadData">IGV官方文档</a>上说IGV可以载入数据的方式有本地文件、HTTP URL以及IGV数据服务器。</p>
+<p>显然，IGV目前不支持S3的链接。但其实从S3的Web界面上可以轻松查到获取文件HTTP URL的方式，不知道的请转阅<a href="https://docs.amazonaws.cn/AmazonS3/latest/user-guide/view-object-overview.html">此链接</a>中文件概述截图中的URL。</p>
+<p>慢着，S3上的操作还差一步了，如果要从IGV访问还需要开放S3上对应文件的可读权限，如下图操作就可以了。</p>
+<p><img alt="AWS S3中开放文件可读权限" src="../../img/s3-make-public.png" /></p>
+<p><em>上图：AWS S3中开放文件可读权限</em></p>
+<p>然后打开电脑上IGV，按照<code>File &gt; Load from URL</code>依次点开菜单，在如下图的两个框中输入BAM文件以及对应BAI文件的URL就可以轻松查看比对信息人工确认变异了。</p>
+<p><img alt="IGV中载入URL" src="../../img/igv-load-from-url.png" /></p>
+<p><em>上图：IGV中载入URL</em></p>
+<h2 id="_2">遗留问题</h2>
+<p>至此，本地打开S3上的BAM文件解决了，但还有以下几个问题没有在本文中介绍：</p>
+<ol>
+<li>
+<p>这么大的文件从网络上下载，会不会特别慢啊？会不会流量费特别贵啊？</p>
+</li>
+<li>
+<p>“Make public”，让该文件读取权限暴露在互联网中，任何拥有该权限的人都可以查看，这点肯定不对。</p>
+</li>
+<li>
+<p>对于FQ、BAM、VCF等不同类型文件的存储方案是什么？都放在标准存储中吗？</p>
+</li>
+</ol>
+<p>这几个问题我会在今后的文章中逐一解释。</p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
