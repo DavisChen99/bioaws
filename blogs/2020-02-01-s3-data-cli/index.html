@@ -75,7 +75,7 @@
             <li><a href="#_1">安装本地客户端</a></li>
             <li><a href="#cli">配置本地cli环境</a></li>
             <li><a href="#aws-cli">使用aws cli</a></li>
-            <li><a href="#cli_1">将适合你的cli命令整合到现有代码中。</a></li>
+            <li><a href="#_2">整合到现有代码</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
@@ -104,18 +104,18 @@ sudo ./aws/install
 <table>
 <thead>
 <tr>
-<th>安装选项</th>
-<th>说明</th>
+<th align="right">安装选项</th>
+<th align="left">说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>--install-dir 或者 -i</td>
-<td>此选项指定要将所有文件复制到的文件夹。此示例将文件安装到名为 /usr/local/aws-cli 的文件夹。您必须具有对 /usr/local 的写入权限才能创建此文件夹。<br>默认值为 /usr/local/aws-cli。</td>
+<td align="right">--install-dir<br>或-i</td>
+<td align="left">此选项指定要将所有文件复制到的文件夹。此示例将文件安装到名为 /usr/local/aws-cli 的文件夹。<br>您必须具有对 /usr/local 的写入权限才能创建此文件夹。<br>默认值为 /usr/local/aws-cli。</td>
 </tr>
 <tr>
-<td>--bin-dir 或者 -b</td>
-<td>此选项指定将安装文件夹中的主 aws 程序符号链接到指定路径中的 aws2 文件。此示例创建符号链接 /usr/local/bin/aws2。您必须具有对指定文件夹的写入权限。创建指向路径中已经存在的文件夹的符号链接后，无需再将安装目录添加到用户的 $PATH 变量中。<br>默认值为 /usr/local/bin。</td>
+<td align="right">--bin-dir<br>或-b</td>
+<td align="left">此选项指定将安装文件夹中的主 aws 程序符号链接到指定路径中的 aws2 文件。此示例创建符号链接 /usr/local/bin/aws2。您必须具有对指定文件夹的写入权限。<br>创建指向路径中已经存在的文件夹的符号链接后，无需再将安装目录添加到用户的 $PATH 变量中。<br>默认值为 /usr/local/bin。</td>
 </tr>
 </tbody>
 </table>
@@ -140,7 +140,7 @@ Default output format [json]:   # 默认json
 <ul>
 <li>测试下，成功摸到s3的小蛮腰。</li>
 </ul>
-<pre><code>$aws2 s3 ls
+<pre><code class="bash">$aws2 s3 ls
 2019-09-04 16:12:22 cloudtrail-awslogs
 2019-09-21 21:35:26 config-bucket
 2019-12-06 13:12:11 rawdata
@@ -202,7 +202,7 @@ Default output format [json]:   # 默认json
 </tbody>
 </table>
 <p>以上命令如cp、mv 或 rm用于目录或文件夹时，可以通过添加 <strong>--recursive</strong> 选项来遍历目录树，包括所有子目录。</p>
-<pre><code>// 删除s3://my-bucket/path 目录和其下所有内容
+<pre><code class="bash">// 删除s3://my-bucket/path 目录和其下所有内容
 $ aws s3 rm s3://my-bucket/path --recursive
 </code></pre>
 
@@ -224,7 +224,7 @@ upload: MyFile1.txt to s3://my-bucket/path/MyFile1.txt
 <ul>
 <li>通过添加 <strong>--delete</strong> 选项来从目标中删除源中不存在的文件或对象。</li>
 </ul>
-<pre><code>// 测试1：删除本地的文件MyFile1.txt
+<pre><code class="bash">// 测试1：删除本地的文件MyFile1.txt
 $ rm ./MyFile1.txt
 
 // 同步不加 --delete，没变化
@@ -246,7 +246,7 @@ delete: MySubdirectory\MyFile3.txt
 <ul>
 <li>通过添加 <strong>--storage-class</strong> 选项来设定上传数据的存储类别，神器！特别适用于我有一堆陈芝麻烂谷子的数据要往云上怼的，直接设定<strong>归档模式</strong>就行了！</li>
 </ul>
-<pre><code>// 将当前目录文件传送到s3，并以&lt;string&gt; 模式存储，默认是STANDARD标准。
+<pre><code class="bash">// 将当前目录文件传送到s3，并以&lt;string&gt; 模式存储，默认是STANDARD标准。
 $ aws s3 sync . s3://my-bucket/path --storage-class STANDARD
 $ aws s3 sync . s3://my-bucket/path --storage-class STANDARD_IA
 $ aws s3 sync . s3://my-bucket/path --storage-class ONE-ZONE_IA
@@ -259,7 +259,7 @@ $ aws s3 sync . s3://my-bucket/path --storage-class REDUCED_REDUNDANCY
 <ul>
 <li>有些实操过的同学说了，如果我当前目录下有特定数据不想同步怎么办呢？ 别慌，我们有 <strong>--exclude</strong> 和 <strong>--include</strong>，来筛选要在同步操作期间复制的文件或对象，记住include选项一定是和exclude同时出现的，<strong>按顺序应用</strong>，自己体会下吧。</li>
 </ul>
-<pre><code>假设当前目录有3个文件:
+<pre><code class="bash">假设当前目录有3个文件:
 MyFile1.txt
 MyFile2.rtf
 MyFile88.txt
@@ -280,7 +280,7 @@ upload: MyFile88.txt to s3://my-bucket/path/MyFile88.txt
 <ul>
 <li><strong>进阶</strong>：这两个选项还可以和--delete配合使用：</li>
 </ul>
-<pre><code>假设本地目录和 s3://my-bucket/path 已经同步，并各自包含3个文件:
+<pre><code class="bash">假设本地目录和 s3://my-bucket/path 已经同步，并各自包含3个文件:
 MyFile1.txt
 MyFile2.rtf
 MyFile88.txt
@@ -303,21 +303,20 @@ download: s3://my-bucket/path/MyFile1.txt to MyFile1.txt
 $ aws s3 sync s3://my-bucket/path . --delete
 delete: MyFile2.rtf
 
-//最后
-本地目录：
+//本地目录：
 MyFile1.txt
 
-s3桶：
+//s3桶：
 MyFile1.txt
 </code></pre>
 
 <ul>
 <li>通过设置 <strong>--acl</strong> 来设定access control list访问权限，有 <em>private</em>、<em>public-read</em> 和 <em>public-read-write</em> 值。</li>
 </ul>
-<pre><code>$ aws s3 sync . s3://my-bucket/path --acl public-read
+<pre><code class="bash">$ aws s3 sync . s3://my-bucket/path --acl public-read
 </code></pre>
 
-<h2 id="cli_1">将适合你的cli命令整合到现有代码中。</h2>
+<h2 id="_2">整合到现有代码</h2>
 <p>例如：</p>
 <pre><code class="py">os.system(&quot;aws s3 sync s3://god/ooxx/fq ./path/fq&quot;)
 ...trim
