@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2020-02-01-s3-data-cli/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>如何上传数据到S3服务-命令行CLI - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="../../head/">首页</a>
+                            </li>
+                            <li >
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#s3-cli">如何上传数据到S3服务-命令行CLI</a></li>
+            <li><a href="#_1">安装本地客户端</a></li>
+            <li><a href="#cli">配置本地cli环境</a></li>
+            <li><a href="#aws-cli">使用aws cli</a></li>
+            <li><a href="#cli_1">将适合你的cli命令整合到现有代码中。</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="s3-cli">如何上传数据到S3服务-命令行CLI</h1>
+<blockquote>
+<p>之前和大家介绍过web界面上传数据到S3，不过对于用惯了命令行的生信人员显然是无法满足的，所以这里给大家介绍下使用命令行来进行s3的数据传输，以便将命令行写入本地代码实现自动化数据传输。</p>
+<p>-- D.C</p>
+</blockquote>
+<h2 id="_1">安装本地客户端</h2>
+<ul>
+<li>在上传数据之前，需要在本地服务器/本地电脑安装aws cli工具包：</li>
+</ul>
+<p>针对Linix：</p>
+<pre><code class="bash">curl &quot;https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip&quot; -o &quot;awscliv2.zip&quot;
+unzip awscliv2.zip
+sudo ./aws/install
+</code></pre>
+
+<p>针对Mac：</p>
+<pre><code class="bash">curl &quot;https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-macos.zip&quot; -o &quot;awscliv2.zip&quot;
+unzip awscliv2.zip
+sudo ./aws/install
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th>安装选项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>--install-dir 或者 -i</td>
+<td>此选项指定要将所有文件复制到的文件夹。此示例将文件安装到名为 /usr/local/aws-cli 的文件夹。您必须具有对 /usr/local 的写入权限才能创建此文件夹。<br>默认值为 /usr/local/aws-cli。</td>
+</tr>
+<tr>
+<td>--bin-dir 或者 -b</td>
+<td>此选项指定将安装文件夹中的主 aws 程序符号链接到指定路径中的 aws2 文件。此示例创建符号链接 /usr/local/bin/aws2。您必须具有对指定文件夹的写入权限。创建指向路径中已经存在的文件夹的符号链接后，无需再将安装目录添加到用户的 $PATH 变量中。<br>默认值为 /usr/local/bin。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>确认本地安装成功。</li>
+</ul>
+<pre><code class="bash">$ aws2 --version
+aws-cli/2.0.0dev0 Python/3.7.3 Linux/4.14.133-113.105.amzn2.x86_64 botocore/2.0.0dev0
+</code></pre>
+
+<h2 id="cli">配置本地cli环境</h2>
+<ul>
+<li>接着要配置本地的credentials,有点眼熟吧？没错，这个桥段这篇文章出现过-<a href="https://www.bioaws.com/blogs/2020-01-28-ec2-s3-data-exchange/">如何帮EC2摸到S3上的数据</a>，总而言之就是让服务器具有合法访问的身份。</li>
+</ul>
+<pre><code class="bash">$ aws configure
+AWS Access Key ID [****************xxxx]:   # 输入你的AK key
+AWS Secret Access Key [****************xxxx]: # 输入你的SK key
+Default region name [cn-northwest-1]:  # 宁夏：cn-northwest-1，北京：cn-north-1
+Default output format [json]:   # 默认json
+</code></pre>
+
+<ul>
+<li>测试下，成功摸到s3的小蛮腰。</li>
+</ul>
+<pre><code>$aws2 s3 ls
+2019-09-04 16:12:22 cloudtrail-awslogs
+2019-09-21 21:35:26 config-bucket
+2019-12-06 13:12:11 rawdata
+2019-09-04 16:27:26 do-not-delete
+</code></pre>
+
+<h2 id="aws-cli">使用aws cli</h2>
+<h3 id="aws-cliaws2-s3-help-s3">接下来就要利用本地的aws cli命令上传数据了。通过<code>aws2 s3 help</code> 可以看到s3的命令模块：</h3>
+<table>
+<thead>
+<tr>
+<th>桶命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mb</td>
+<td><code>aws s3 mb s3://bucket-name</code> <br>创建存储桶，存储桶名称可以包含小写字母、数字、连字符和点号。存储桶名称只能以字母或数字开头和结尾，连字符或点号后不能跟点号。</td>
+</tr>
+<tr>
+<td>ls</td>
+<td><code>aws s3 ls</code>列出您的存储桶<br><code>aws s3 ls s3://bucket-name</code>列出存储桶下的对象和文件夹</td>
+</tr>
+<tr>
+<td>rb</td>
+<td><code>aws s3 rb s3://bucket-name</code>删除空桶<br><code>aws s3 rb s3://bucket-name --force</code> 删除无版本控制的非空桶和桶内所有内容</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>对象命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cp</td>
+<td><code>aws s3 cp file.txt s3://my-bucket/</code><br>拷贝文件到S3，反之亦然</td>
+</tr>
+<tr>
+<td>mv</td>
+<td><code>aws s3 cp file.txt s3://my-bucket/</code><br>移动本地文件到S3，反之亦然</td>
+</tr>
+<tr>
+<td>rm</td>
+<td><code>aws s3 rm s3://my-bucket/path/MySubdirectory/MyFile3.txt</code><br>删除S3上的文件MyFile3.txt</td>
+</tr>
+<tr>
+<td>sync</td>
+<td><code>aws s3 sync . s3://my-bucket/path</code></td>
+</tr>
+<tr>
+<td>presign</td>
+<td><code>aws s3 presign s3://awsexamplebucket/test2.txt --expires-in 604800</code><br>为某个对象创建特定时间（秒为单位，604800=1周）有效的http访问链接，以供他人访问，国外随意，国内请先开ICP</td>
+</tr>
+</tbody>
+</table>
+<p>以上命令如cp、mv 或 rm用于目录或文件夹时，可以通过添加 <strong>--recursive</strong> 选项来遍历目录树，包括所有子目录。</p>
+<pre><code>// 删除s3://my-bucket/path 目录和其下所有内容
+$ aws s3 rm s3://my-bucket/path --recursive
+</code></pre>
+
+<p><strong>[注意]</strong>：如果对象很大，所有涉及向S3 存储桶（s3 cp、s3 mv 和 s3 sync）上传对象的高级命令都会自动执行<strong>分段上传</strong>。使用这些命令时，无法恢复失败的上传。如果分段上传由于超时而失败，或者通过按 Ctrl+C 手动取消，AWS CLI 将会清除创建的所有文件并中止上传。此过程可能耗时数分钟。</p>
+<p>如果进程被 kill 命令中断或者由于系统故障而中断，则正在进行的分段上传将保留在 Amazon S3 中，必须在 AWS 管理控制台中手动清除，或者使用 s3api abort-multipart-upload 命令来清除。</p>
+<h3 id="sync">关于<strong>sync</strong>的用法，这里多说几句，因为将来我们会经常打交道，其应用主要有三类：</h3>
+<ol>
+<li>本地文件系统到 S3</li>
+<li>S3 到本地文件系统</li>
+<li>S3 到 Amazon S3</li>
+</ol>
+<p>使用格式：<code>aws s3 sync &lt;source&gt; &lt;target&gt; [--options]</code></p>
+<pre><code class="bash">$ aws s3 sync . s3://my-bucket/path #如果path不存在会自动创建
+upload: MySubdirectory/MyFile3.txt to s3://my-bucket/path/MySubdirectory/MyFile3.txt
+upload: MyFile2.txt to s3://my-bucket/path/MyFile2.txt
+upload: MyFile1.txt to s3://my-bucket/path/MyFile1.txt
+</code></pre>
+
+<ul>
+<li>通过添加 <strong>--delete</strong> 选项来从目标中删除源中不存在的文件或对象。</li>
+</ul>
+<pre><code>// 测试1：删除本地的文件MyFile1.txt
+$ rm ./MyFile1.txt
+
+// 同步不加 --delete，没变化
+$ aws s3 sync . s3://my-bucket/path
+
+// 同步加了--deletion，因为源是本地，目标桶内的文件也被删除
+$ aws s3 sync . s3://my-bucket/path --delete
+delete: s3://my-bucket/path/MyFile1.txt
+
+// 测试2：删除桶内的文件MyFile3.txt
+$ aws s3 rm s3://my-bucket/path/MySubdirectory/MyFile3.txt
+delete: s3://my-bucket/path/MySubdirectory/MyFile3.txt
+
+// 同步加--deletion,这时候源是s3，目标是本地，所以本地的文件被删除
+$ aws s3 sync s3://my-bucket/path . --delete
+delete: MySubdirectory\MyFile3.txt
+</code></pre>
+
+<ul>
+<li>通过添加 <strong>--storage-class</strong> 选项来设定上传数据的存储类别，神器！特别适用于我有一堆陈芝麻烂谷子的数据要往云上怼的，直接设定<strong>归档模式</strong>就行了！</li>
+</ul>
+<pre><code>// 将当前目录文件传送到s3，并以&lt;string&gt; 模式存储，默认是STANDARD标准。
+$ aws s3 sync . s3://my-bucket/path --storage-class STANDARD
+$ aws s3 sync . s3://my-bucket/path --storage-class STANDARD_IA
+$ aws s3 sync . s3://my-bucket/path --storage-class ONE-ZONE_IA
+$ aws s3 sync . s3://my-bucket/path --storage-class INTELLIGENT_TIERING
+$ aws s3 sync . s3://my-bucket/path --storage-class GLACIER
+$ aws s3 sync . s3://my-bucket/path --storage-class DEEP_ARCHIVE
+$ aws s3 sync . s3://my-bucket/path --storage-class REDUCED_REDUNDANCY
+</code></pre>
+
+<ul>
+<li>有些实操过的同学说了，如果我当前目录下有特定数据不想同步怎么办呢？ 别慌，我们有 <strong>--exclude</strong> 和 <strong>--include</strong>，来筛选要在同步操作期间复制的文件或对象，记住include选项一定是和exclude同时出现的，<strong>按顺序应用</strong>，自己体会下吧。</li>
+</ul>
+<pre><code>假设当前目录有3个文件:
+MyFile1.txt
+MyFile2.rtf
+MyFile88.txt
+'''
+$ aws s3 sync . s3://my-bucket/path --exclude &quot;*.txt&quot;
+upload: MyFile2.rtf to s3://my-bucket/path/MyFile2.rtf
+'''
+$ aws s3 sync . s3://my-bucket/path --exclude &quot;*.txt&quot; --include &quot;MyFile*.txt&quot;
+upload: MyFile1.txt to s3://my-bucket/path/MyFile1.txt
+upload: MyFile88.txt to s3://my-bucket/path/MyFile88.txt
+upload: MyFile2.rtf to s3://my-bucket/path/MyFile2.rtf
+'''
+$ aws s3 sync . s3://my-bucket/path --exclude &quot;*.txt&quot; --include &quot;MyFile*.txt&quot; --exclude &quot;MyFile?.txt&quot;
+upload: MyFile2.rtf to s3://my-bucket/path/MyFile2.rtf
+upload: MyFile88.txt to s3://my-bucket/path/MyFile88.txt
+</code></pre>
+
+<ul>
+<li><strong>进阶</strong>：这两个选项还可以和--delete配合使用：</li>
+</ul>
+<pre><code>假设本地目录和 s3://my-bucket/path 已经同步，并各自包含3个文件:
+MyFile1.txt
+MyFile2.rtf
+MyFile88.txt
+'''
+// 删除所有本地的 .txt文件
+$ rm *.txt
+
+// 同步删除模式, 但不同步删除符合MyFile?.txt命名的文件MyFile1.txt，所以只删除了MyFile88.txt
+$ aws s3 sync . s3://my-bucket/path --delete --exclude &quot;my-bucket/path/MyFile?.txt&quot;
+delete: s3://my-bucket/path/MyFile88.txt
+'''
+// 删除s3上的MyFile2.rtf
+$ aws s3 rm s3://my-bucket/path/MyFile2.rtf
+
+// 同步删除模式, 但不删除MyFile2.rtf，所以只是把本地之前被删掉的MyFile1.txt恢复到了本地（因为在上一步桶里的这个文件并没有被删除）
+$ aws s3 sync s3://my-bucket/path . --delete --exclude &quot;./MyFile2.rtf&quot;
+download: s3://my-bucket/path/MyFile1.txt to MyFile1.txt
+'''
+// 同步删除模式, 本地的MyFile2.rtf被删除了
+$ aws s3 sync s3://my-bucket/path . --delete
+delete: MyFile2.rtf
+
+//最后
+本地目录：
+MyFile1.txt
+
+s3桶：
+MyFile1.txt
+</code></pre>
+
+<ul>
+<li>通过设置 <strong>--acl</strong> 来设定access control list访问权限，有 <em>private</em>、<em>public-read</em> 和 <em>public-read-write</em> 值。</li>
+</ul>
+<pre><code>$ aws s3 sync . s3://my-bucket/path --acl public-read
+</code></pre>
+
+<h2 id="cli_1">将适合你的cli命令整合到现有代码中。</h2>
+<p>例如：</p>
+<pre><code class="py">os.system(&quot;aws s3 sync s3://god/ooxx/fq ./path/fq&quot;)
+...trim
+...map
+...gatk
+os.system(&quot;aws s3 sync ./path/bam s3://god/ooxx/bam --storage-class STANDARD_IA&quot;)
+</code></pre>
+
+<p><strong>s3 SDK</strong> 参考：<a href="https://docs.amazonaws.cn/AmazonS3/latest/dev/UsingAWSSDK.html">点我</a></p>
+<p><strong>s3 api</strong> 参考：<a href="https://docs.aws.amazon.com/zh_cn/AmazonS3/latest/API/Welcome.html">点我</a></p>
+<blockquote>
+<p>心走得快了，世界就慢了。</p>
+</blockquote></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
