@@ -8,9 +8,11 @@
 
 - [入门系列4 如何上传数据到S3服务-Web界面](blogs/2020-01-29-s3-data-ops.md)
 
-- [入门系列5 如何帮EC2摸到S3上的数据](blogs/2020-01-28-ec2-s3-data-exchange.md)
+- [入门系列5 如何上传数据到S3服务-命令行CLI](blogs/2020-02-01-s3-data-cli.md)
 
-- [入门系列6 神器EFS终于来了！弹性共享存储！](blogs/2020-01-31-efs-user-guide-101.md)
+- [入门系列6 如何帮EC2摸到S3上的数据](blogs/2020-01-28-ec2-s3-data-exchange.md)
+
+- [入门系列7 神器EFS终于来了！弹性共享存储！](blogs/2020-01-31-efs-user-guide-101.md)
 
 - [BAM文件放云上好了，本地IGV很方便](blogs/2020-01-31-put-bam-on-s3.md)
 
