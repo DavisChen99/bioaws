@@ -26,7 +26,7 @@ VPC一个重要的功能是为在其中的组建提供了统一的安全管理�
 
 ![vpce_set1][3]
 
-- 接着选择VPC，很简单，我要连的ec2在哪个vpc里，就选那个VPC。之后选中路由表，这样endpoint就会在我选中的这个vpc的路由表里写入一条**规则**：*Destination* 是s3, **Target** 是endpoint。
+- 接着选择VPC，很简单，我要连的ec2在哪个vpc里，就选那个VPC。之后选中路由表，这样endpoint就会在我选中的这个vpc的路由表里写入一条**规则**：*Destination* 是s3, *Target* 是endpoint。
 
 ![vpce_set2][4]
 
