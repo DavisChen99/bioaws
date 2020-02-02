@@ -18,7 +18,7 @@ VPC一个重要的功能是为在其中的组建提供了统一的安全管理�
 
 因为我们要连接的EC2都是在VPC的环境中，如果给EC2和s3之间建高速公路，那么只需要在VPC和s3之间创建一个endpoint就可以了。
 
-- 登录**aws管理控制台**，搜索**VP**，点击进入。简单看下dashboard，然后点击左侧的**Endpoints**。
+- 登录**aws管理控制台**，搜索**VPC**，点击进入。简单看下dashboard，然后点击左侧的**Endpoints**。
 
 ![vpce_create][2]
 
