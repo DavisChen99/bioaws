@@ -18,6 +18,8 @@
 
 - [入门系列9 如何让 EC2 “妻妾成群”？挂载更多磁盘并实现自动挂载！](blogs/2020-02-02-ec2-ebs-attach.md)
 
+- [使用aws cli为EBS自动创建快照](blogs/2020-02-02-ebs-snapshot-cli.md)
+
 - [BAM文件放云上好了，本地IGV很方便](blogs/2020-01-31-put-bam-on-s3.md)
 
 - [10分钟打造云上集群](blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws.md)
