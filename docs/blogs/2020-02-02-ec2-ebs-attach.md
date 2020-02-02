@@ -76,6 +76,8 @@ realtime =none                   extsz=4096   blocks=0, rtextents=0
 
 **Debug**：如果提示“找不到 mkfs.xfs”，用这个命令 `sudo yum install xfsprogs` 安装XFS，然后再试。
 
+
+
 - 使用mkdir命令创建卷的挂载点目录。比如80G的卷 *xvdb* 我拿来放数据库，那就创建一个 */db* 的目录;100G的卷 *xvdc* 我拿来放待分析的基因数据，那就创建 */data*。
 
 ```bash
