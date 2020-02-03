@@ -112,7 +112,7 @@ def lambda_handler(event, context):
 
 ![lambda_name][9]
 
-- 同理，再创建一个函数名字叫`PurgeSnapshot`,`Python 3.6`，角色也设置为_LambdaSnapshot_，点击 **Save** 保存。
+- 同理，再创建一个函数名字叫`PurgeSnapshot`,`Python 3.6`，角色也设置为 _LambdaSnapshot_ ，点击 **Save** 保存。
 
 这段代码的意思是找到tag的Key是`AutoBackup`,Value是`yes`的ec2机器，再找到这台ec2上磁盘对应的snapshot，判断是否过期（是否超过10分钟）,过期则将其删除(Purge)。
 
