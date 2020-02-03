@@ -159,13 +159,13 @@ def lambda_handler(event, context):
 
 ![cwe_create][11]
 
-- 选中 _Schedule_, _Fixed rate of **5** Minutes_, 意思是每5分钟执行一次，执行什么呢？右侧的 **Target** - **Add target**, 下拉菜单选择 _Lambda function_, 下面再选择 _CreateSnapshot_ 这个函数， 点击 **Configure details**。(注意：因为这里是测试所有设置 5 分钟，如果实际使用，可以设置 7 Days)
+- 选中 _Schedule_, _Fixed rate of **5** Minutes_, 意思是每5分钟执行一次，执行什么呢？右侧的 **Target** - **Add target**, 下拉菜单选择 _Lambda function_, 下面再选择 _CreateSnapshot_ 这个函数， 点击 **Configure details**。(注意：因为这里是测试所以设置 5 分钟，如果实际使用，可以设置 7 Days)
 
 ![cwe_config1][12]
 
 - 名字命名为 **AutoBackup**, Description随便写比如`AutoBackup for ec2 with AutoBackup tag which value is yes`, 点击**Create rule** 。
 
-- 如法炮制，再添加一条规则，_Fixed rate of **1** Minutes_, lambda函数选择 _PurgeSnapshot_,命名为 **DeleteOldSnapshot**,Description随便写比如`AutoDelete old snapshot of ec2 with AutoBackup tag which value is yes`。（注意：因为这里是测试所有设置 1 分钟，如果实际使用，可以设置 1 Days）
+- 如法炮制，再添加一条规则，_Fixed rate of **1** Minutes_, lambda函数选择 _PurgeSnapshot_,命名为 **DeleteOldSnapshot**,Description随便写比如`AutoDelete old snapshot of ec2 with AutoBackup tag which value is yes`。（注意：因为这里是测试所以设置 1 分钟，如果实际使用，可以设置 1 Days）
 
 ![cwe_config2][13]
 
