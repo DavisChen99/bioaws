@@ -20,6 +20,8 @@
 
 - [入门系列10 如何调整 EC2 配置和 EBS 磁盘大小](blogs/2020-02-03-modify-ec2-ebs.md)
 
+- [高能！实现全自动EBS备份](blogs/2020-02-03-ebs-cw-lambda-autobackup.md)
+
 - [使用aws cli为EBS自动创建快照](blogs/2020-02-02-ebs-snapshot-cli.md)
 
 - [BAM文件放云上好了，本地IGV很方便](blogs/2020-01-31-put-bam-on-s3.md)
