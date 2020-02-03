@@ -7,7 +7,9 @@
 *内容较多，耐心加载...*
 
 要实现**全自动**这个骚操作，我们会用到两个aws服务：
+
 - CloudWatch
+
 - lambda
 
 逻辑关系是： CloudWatch -> lambda -> 备份/删除操作
@@ -186,7 +188,9 @@ def lambda_handler(event, context):
 ## 查看EBS磁盘
 
 我们先回忆一下整个过程：
+
 1. 每隔 _5_ 分钟,对`AutoBackup`标签值为`yes`的ec2的磁盘做一次备份；
+
 2. 每隔 _1_ 分钟,查看`AutoBackup`标签值为`yes`的ec2的磁盘snapshot，如果是 _10_ 分钟前创建的，那就将其删除。
 
 - 回到ec2控制界面，进入EBS下的Snapshots,可以看到每隔 _5_ 分钟，系统就会自动对我指定的ec2进行打snapshot的操作。
@@ -210,8 +214,11 @@ def lambda_handler(event, context):
 各位客官请扪心自问：哪个备份周期最适合我呢？？？
 
 温馨提示，涉及修改的地方有：
+
 1. PurgeSnapshot代码里面的`timedelta(minutes=10)`
+
 2. CloudWatch Event的两条Rule中的 `Fixed rate of xxx`
+
 3. 为你的ec2打上标签`AutoBackup`，需要定期备份的为`yes`,不需要的为`no`
 
 PS： lambda调用的成本灰常灰常低，每 100 万个请求 ¥1.36, 可忽略不计!
