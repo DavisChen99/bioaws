@@ -16,11 +16,13 @@
 
 - [入门系列7 加速！为EC2和S3之间搭建爱的桥梁](blogs/2020-02-02-vpc-endpoint-s3.md)
 
-- [入门系列8 神器EFS终于来了！弹性共享存储！](blogs/2020-01-31-efs-user-guide-101.md)
+- [入门系列8 EC2“红杏出墙”阿里云OSS](blogs/2020-02-04-ec2-download-oss.md)
 
-- [入门系列9 如何让 EC2 “妻妾成群”？挂载更多磁盘并实现自动挂载！](blogs/2020-02-02-ec2-ebs-attach.md)
+- [入门系列9 神器EFS终于来了！弹性共享存储！](blogs/2020-01-31-efs-user-guide-101.md)
 
-- [入门系列10 如何调整 EC2 配置和 EBS 磁盘大小](blogs/2020-02-03-modify-ec2-ebs.md)
+- [入门系列10 如何让 EC2 “妻妾成群”？挂载更多磁盘并实现自动挂载！](blogs/2020-02-02-ec2-ebs-attach.md)
+
+- [入门系列11 如何调整 EC2 配置和 EBS 磁盘大小](blogs/2020-02-03-modify-ec2-ebs.md)
 
 - [高能！实现全自动EBS备份](blogs/2020-02-03-ebs-cw-lambda-autobackup.md)
 
