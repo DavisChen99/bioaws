@@ -73,7 +73,6 @@
     <ul class="nav bs-sidenav">
         <li class="main active"><a href="#_1">一些实用的命令(持续更新)</a></li>
             <li><a href="#s3">s3</a></li>
-            <li><a href="#s3_1">看看s3上用了多少空间</a></li>
             <li><a href="#ec2">ec2</a></li>
     </ul>
 </div></div>
@@ -85,7 +84,7 @@
 <p>-- D.C</p>
 </blockquote>
 <h2 id="s3">s3</h2>
-<h2 id="s3_1">看看s3上用了多少空间</h2>
+<h3 id="s3_1">看看s3上用了多少空间</h3>
 <ul>
 <li>列出桶的大小和文件数量。</li>
 </ul>
@@ -112,9 +111,7 @@ Total Objects: 4
 </code></pre>
 
 <h2 id="ec2">ec2</h2>
-<ul>
-<li>查看instance信息</li>
-</ul>
+<h3 id="instance">查看instance信息</h3>
 <p><code>aws ec2 describe-instances</code> 输出的内容太多，后面用管道加个<code>awk</code>吧。</p>
 <p>如：
 <code>aws ec2 describe-instances | awk -F\" '/InstanceId/{print $4}'</code></p></div>
