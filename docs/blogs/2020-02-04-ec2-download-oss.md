@@ -26,6 +26,9 @@ Saving to: 'ossutil64'
 2020-02-04 15:05:55 (12.0 MB/s) - 'ossutil64' saved [10118253/10118253]
 
 $ chmod 755 ossutil64
+
+$ ./ossutil64 -v
+ossutil version: v1.6.10
 ```
 
 ##
