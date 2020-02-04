@@ -50,7 +50,7 @@ ossutil version: v1.6.10
 举例：
 
 ```bash
-$ ossutil64 cp oss://delivery-data/888/Project_s88_20Samples_20191104_123456 ./ -r -i ABCDEFG123456 -k 1a2b3c4d5e6fABCDE -e http://oss-cn-shanghai.aliyuncs.com
+$ ./ossutil64 cp oss://delivery-data/888/Project_s88_20Samples_20191104_123456 ./ -r -i ABCDEFG123456 -k 1a2b3c4d5e6fABCDE -e http://oss-cn-shanghai.aliyuncs.com
 ```
 
 _阿里云oss的Region和Endpoint对照表_
