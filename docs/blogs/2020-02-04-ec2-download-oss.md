@@ -53,7 +53,11 @@ ossutil version: v1.6.10
 $ ./ossutil64 cp oss://delivery-data/888/Project_s88_20Samples_20191104_123456 ./ -r -i ABCDEFG123456 -k 1a2b3c4d5e6fABCDE -e http://oss-cn-shanghai.aliyuncs.com
 ```
 
-_阿里云oss的Region和Endpoint对照表_
+
+> 你只有一次机会来完成这件事。
+
+
+_附：阿里云oss的Region和Endpoint对照表_
 
 |Region中文名称|Region英文表示|外网Endpoint|传输加速Endpoint|ECS访问的内网Endpoint|支持HTTPS|
 |-------------|-------------|-------------|-------------|-------------|-------------|
