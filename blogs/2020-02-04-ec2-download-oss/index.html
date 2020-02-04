@@ -101,13 +101,16 @@ Saving to: 'ossutil64'
 2020-02-04 15:05:55 (12.0 MB/s) - 'ossutil64' saved [10118253/10118253]
 
 $ chmod 755 ossutil64
+
+$ ./ossutil64 -v
+ossutil version: v1.6.10
 </code></pre>
 
 <h2 id="_1"></h2>
 <ul>
 <li>用以下命令下载oss数据到ec2当前路径。运行<code>./ossutil64 help cp</code> 查看更多说明。</li>
 </ul>
-<pre><code class="bash">./ossutil64 cp oss://bucketname/myfolder ./ -r -i &lt;AccessKeyID&gt; -k &lt;AccessKeySecret&gt; -e http://oss-cn-shanghai.aliyuncs.com
+<pre><code class="bash">./ossutil64 cp oss://bucketname/myfolder ./ -r -i &lt;AccessKeyID&gt; -k &lt;AccessKeySecret&gt; -e &lt;endpoint&gt;
 </code></pre>
 
 <p>有四个信息需要问您的服务商拿到：</p>
@@ -118,7 +121,7 @@ $ chmod 755 ossutil64
 <li>oss的endpoint 对应 <code>-e</code></li>
 </ol>
 <p>举例：</p>
-<pre><code class="bash">$ ossutil64 cp oss://delivery-data/888/Project_s88_20Samples_20191104_123456 ./ -r -i ABCDEFG123456 -k 1a2b3c4d5e6fABCDE -e http://oss-cn-shanghai.aliyuncs.com
+<pre><code class="bash">$ ./ossutil64 cp oss://delivery-data/888/Project_s88_20Samples_20191104_123456 ./ -r -i ABCDEFG123456 -k 1a2b3c4d5e6fABCDE -e http://oss-cn-shanghai.aliyuncs.com
 </code></pre>
 
 <p><em>阿里云oss的Region和Endpoint对照表</em></p>
