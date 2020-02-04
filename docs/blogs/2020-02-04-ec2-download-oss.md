@@ -36,7 +36,7 @@ ossutil version: v1.6.10
 - 用以下命令下载oss数据到ec2当前路径。运行`./ossutil64 help cp` 查看更多说明。
 
 ```bash
-./ossutil64 cp oss://bucketname/myfolder ./ -r -i <AccessKeyID> -k <AccessKeySecret> -e http://oss-cn-shanghai.aliyuncs.com
+./ossutil64 cp oss://bucketname/myfolder ./ -r -i <AccessKeyID> -k <AccessKeySecret> -e <endpoint>
 ```
 
 有四个信息需要问您的服务商拿到：
