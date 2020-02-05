@@ -147,7 +147,7 @@ $./mon-put-instance-data.pl --mem-util --mem-used --mem-avail --aggregated=only
 
 **[重要]** 为报告CloudWatch的指标制定 cron 计划：运行`crontab -e` 命令开始编辑 crontab，添加下列命令保存并退出，每 _5_ 分钟将 **内存和磁盘** 空间使用率报告到 CloudWatch：
 
-```
+```bash
 */5 * * * * ~/aws-scripts-mon/mon-put-instance-data.pl --mem-used-incl-cache-buff --mem-util --disk-space-util --disk-path=/ --from-cron
 ```
 
