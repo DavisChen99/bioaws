@@ -20,6 +20,7 @@
 
 4. ec2:DescribeTags
 
+
 - IAM控制界面进去，点击**Policy**，如下图新建一个policy，命名为`watch_ec2_mem`。
 
 ![iam_policy][1]
@@ -71,6 +72,8 @@ cd aws-scripts-mon
 4. awscreds.template – AWS 凭据的文件模板，储存您的访问密钥 ID 和私有访问密钥。
 5. LICENSE.txt – 包含 Apache 2.0 许可证的文本文件。
 6. NOTICE.txt – 版权声明。
+
+
 
 
 ## 运行监控脚本
