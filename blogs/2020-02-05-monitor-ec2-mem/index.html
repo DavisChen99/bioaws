@@ -284,7 +284,7 @@ Verification completed successfully. No actual metrics sent to CloudWatch.
 </code></pre>
 
 <p><strong>[重要]</strong> 为报告CloudWatch的指标制定 cron 计划：运行<code>crontab -e</code> 命令开始编辑 crontab，添加下列命令保存并退出，每 <em>5</em> 分钟将 <strong>内存和磁盘</strong> 空间使用率报告到 CloudWatch：</p>
-<pre><code>*/5 * * * * ~/aws-scripts-mon/mon-put-instance-data.pl --mem-used-incl-cache-buff --mem-util --disk-space-util --disk-path=/ --from-cron
+<pre><code class="bash">*/5 * * * * ~/aws-scripts-mon/mon-put-instance-data.pl --mem-used-incl-cache-buff --mem-util --disk-space-util --disk-path=/ --from-cron
 </code></pre>
 
 <ul>
