@@ -24,6 +24,8 @@
 
 - [入门系列11 如何调整 EC2 配置和 EBS 磁盘大小](blogs/2020-02-03-modify-ec2-ebs.md)
 
+- [入门系列12 用脚本监控EC2的内存和磁盘指标](blogs/2020-02-05-monitor-ec2-mem.md)
+
 - [高能！实现全自动EBS备份](blogs/2020-02-03-ebs-cw-lambda-autobackup.md)
 
 - [使用aws cli为EBS自动创建快照](blogs/2020-02-02-ebs-snapshot-cli.md)
