@@ -16,7 +16,7 @@
 
 - 这里提一句：如果我们原本用iam role来控制ec2对s3的访问，且没有在ec2上设置AKSK信息，那么替换掉role之后，ec2访问s3就会有问题。
 
-解决方法： <br>1. 在角色 _CloudWatchAgentServerRole_ 上再加attach一条Policy如 `AmazonS3ReadOnlyAccess` 或 `AmazonS3FullAccess`就可以了。<br>2. 在ec2上设置`aws configure`的全部信息（包括AKSK信息，不推荐）。
+解决方法： <br>方案1. 在角色 _CloudWatchAgentServerRole_ 上再加attach一条Policy如 `AmazonS3ReadOnlyAccess` 或 `AmazonS3FullAccess`就可以了。<br>方案2. 在ec2上设置`aws configure`的全部信息（包括AKSK信息，不推荐）。
 
 ![iam_role_adds3][3]
 
