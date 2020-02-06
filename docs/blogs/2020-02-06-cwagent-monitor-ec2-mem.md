@@ -101,14 +101,14 @@ e.g.
     this parameter is used for 'fetch-config', 'append-config', 'remove-config' action only.
 ```
 
-- vim新建一个测试的bash脚本`testmem.sh`，消耗2g内存1个小时，后面会用到。
+- vim新建一个测试的bash脚本`testmem.sh`，消耗1g内存1个小时，后面会用到。
 
 _测试内存小脚本：_
 
 ```bash
 #!/bin/bash
 mkdir /tmp/memory
-mount -t tmpfs -o size=2048M tmpfs /tmp/memory
+mount -t tmpfs -o size=1024M tmpfs /tmp/memory
 dd if=/dev/zero of=/tmp/memory/block
 sleep 3600
 rm /tmp/memory/block
