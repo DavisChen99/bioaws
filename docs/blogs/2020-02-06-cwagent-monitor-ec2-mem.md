@@ -122,11 +122,11 @@ rmdir /tmp/memory
 
 ![cw_metrics][4]
 
-- [选项1] 可以看到右侧界面出现了 **CWAgent**，点击进去后，选择择`ImageId,InstanceId, InstanceTypeGraph search`，可以看到监控的ec2列表。
+- [选项1] 可以看到右侧界面出现了 **CWAgent**，点击进去后，选择择`ImageId,InstanceId, InstanceTypeGraph search`，可以看到监控内存的ec2列表。选择 `ImageId, InstanceId, InstanceType, device, fstype, path`，可以看到监控磁盘的ec2列表。
 
-- [选项2] 将我们要监控的 ec2 的 id 输入到搜索框，回车，也能快速找到和这台机器有关的监控指标，点击`CWAgent > ImageId, InstanceId, InstanceType`,可以看到监控的ec2列表。
+- [选项2] 将我们要监控的 ec2 的 id 输入到搜索框，回车，也能快速找到和这台机器有关的监控指标，点击`CWAgent > ImageId, InstanceId, InstanceType`,可以看到监控内存的ec2列表。选择 `CWAgent >ImageId, InstanceId, InstanceType, device, fstype, path`，可以看到监控磁盘的ec2列表。
 
-- 选中对应的ec2，我们就能从上面的图中看到内存监控的动态曲线了。
+- 选中对应的ec2，我们就能从上面的图中看到内存/磁盘监控的动态曲线了。
 
 - 这个时候回到ec2，运行测试脚本`testmem.sh`,再回到 CW 查看内存监控的变化。
 
