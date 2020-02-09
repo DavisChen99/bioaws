@@ -4,14 +4,14 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="None">
         
-        <link rel="canonical" href="http://www.bioaws.com/">
-        <link rel="shortcut icon" href="img/favicon.ico">
-        <title>BioAWS</title>
-        <link href="css/bootstrap-custom.min.css" rel="stylesheet">
-        <link href="css/font-awesome.min.css" rel="stylesheet">
-        <link href="css/base.css" rel="stylesheet">
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2020-02-04-tips/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>一些实用的命令(持续更新) - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -19,13 +19,13 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 
-        <script src="js/jquery-1.10.2.min.js" defer></script>
-        <script src="js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
         <script>hljs.initHighlightingOnLoad();</script> 
     </head>
 
-    <body class="homepage">
+    <body>
 
         <div class="navbar navbar-default navbar-fixed-top" role="navigation">
             <div class="container">
@@ -39,7 +39,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href=".">BioAWS</a>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
                 </div>
 
                 <!-- Expanded navigation -->
@@ -47,13 +47,13 @@
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
                             <li >
-                                <a href="head/">首页</a>
-                            </li>
-                            <li class="active">
-                                <a href=".">文章</a>
+                                <a href="../../head/">首页</a>
                             </li>
                             <li >
-                                <a href="about/">关于此站</a>
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
                             </li>
                         </ul>
 
@@ -63,16 +63,6 @@
                                 <i class="fa fa-search"></i> Search
                             </a>
                         </li>
-                            <li >
-                                <a rel="next" href="head/">
-                                    <i class="fa fa-arrow-left"></i> Previous
-                                </a>
-                            </li>
-                            <li >
-                                <a rel="prev" href="about/">
-                                    Next <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
                     </ul>
                 </div>
             </div>
@@ -81,77 +71,50 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#_1">文章列表</a></li>
+        <li class="main active"><a href="#_1">一些实用的命令(持续更新)</a></li>
+            <li><a href="#s3">s3</a></li>
+            <li><a href="#ec2">ec2</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h2 id="_1">文章列表</h2>
+<h1 id="_1">一些实用的命令(持续更新)</h1>
+<blockquote>
+<p>其实都是aws cli里面的内容，aws doc上也都有，整理一些常用的作为备忘。</p>
+<p>-- D.C</p>
+</blockquote>
+<h2 id="s3">s3</h2>
+<h3 id="s3_1">看看s3上用了多少空间</h3>
 <ul>
-<li>
-<p><a href="blogs/2020-02-04-tips/">一些实用的命令(持续更新)</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-19-how-to-launch-ec2/">入门系列1 如何创建服务器并用命令行登录</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-25-how-to-create-ec2img/">入门系列2 如何给分析服务器打(上)镜(保)像(险)</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-26-s3-ebs-efs-compare/">入门系列3 关于S3,EBS,EFS的三角关系</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-29-s3-data-ops/">入门系列4 如何上传数据到S3服务-Web界面</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-01-s3-data-cli/">入门系列5 如何上传数据到S3服务-命令行CLI</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-28-ec2-s3-data-exchange/">入门系列6 如何帮EC2摸到S3上的数据</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-02-vpc-endpoint-s3/">入门系列7 加速！为EC2和S3之间搭建爱的桥梁</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-04-ec2-download-oss/">入门系列8 EC2“红杏出墙”阿里云OSS</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-31-efs-user-guide-101/">入门系列9 神器EFS终于来了！弹性共享存储！</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-02-ec2-ebs-attach/">入门系列10 如何让 EC2 “妻妾成群”？挂载更多磁盘并实现自动挂载！</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-03-modify-ec2-ebs/">入门系列11 如何调整 EC2 配置和 EBS 磁盘大小</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-05-monitor-ec2-mem/">入门系列12 用脚本监控EC2的内存和磁盘指标</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-06-cwagent-monitor-ec2-mem/">入门系列13 用CW代理监控EC2的内存和磁盘指标(推荐)</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-03-ebs-cw-lambda-autobackup/">高能！实现全自动EBS备份</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-02-ebs-snapshot-cli/">使用aws cli为EBS自动创建快照</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-31-put-bam-on-s3/">BAM文件放云上好了，本地IGV很方便</a></p>
-</li>
-<li>
-<p><a href="blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws/">pcluster! 10分钟打造云上集群</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-14-how-to-use-aws-batch-china/">容器！利器！AWS Batch批量计算</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-06-wdl-and-cromwell-on-aws-batch-china/">构建基于Batch和wdl语言的分析流程</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-12-31-final-day-of-2020/">2020的最后一天</a></p>
-</li>
-</ul></div>
+<li>列出桶的大小和文件数量。</li>
+</ul>
+<p>格式：<code>aws s3api list-objects --bucket BUCKETNAME --output json --query "[sum(Contents[].Size), length(Contents[])]"</code></p>
+<pre><code class="bash">$ aws s3api list-objects --bucket mytestbucket --output json --query &quot;[sum(Contents[].Size), length(Contents[])]&quot;
+[
+   201509112, # 桶内文件大小
+   8  # 桶内文件数量
+]
+</code></pre>
+
+<ul>
+<li>列出桶内每个文件大小和总占用</li>
+</ul>
+<p>格式：<code>aws s3 ls --summarize --human-readable --recursive s3://YOUR_BUCKET_NAME</code>   </p>
+<pre><code class="bash">$ aws s3 ls --summarize --human-readable --recursive s3://91package/
+2020-02-01 21:03:49    0 Bytes 1
+2019-12-06 22:33:16  160.0 MiB AtomSetup-x64.exe
+2019-12-06 22:33:43  836.2 MiB Docker Desktop Installer.exe
+2019-12-18 23:38:36   87.3 MiB GitHubDesktopSetup.exe
+
+Total Objects: 4
+   Total Size: 1.1 GiB
+</code></pre>
+
+<h2 id="ec2">ec2</h2>
+<h3 id="instance">查看instance信息</h3>
+<p><code>aws ec2 describe-instances</code> 输出的内容太多，后面用管道加个<code>awk</code>吧。</p>
+<p>如：
+<code>aws ec2 describe-instances | awk -F\" '/InstanceId/{print $4}'</code></p></div>
         </div>
 
         <footer class="col-md-12">
@@ -159,11 +122,11 @@
             <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script>
-            var base_url = ".",
+            var base_url = "../..",
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
-        <script src="js/base.js" defer></script>
-        <script src="search/main.js" defer></script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
     <div class="modal-dialog">
@@ -231,8 +194,3 @@
 
     </body>
 </html>
-
-<!--
-MkDocs version : 1.0.4
-Build Date UTC : 2020-02-06 11:38:53
--->
