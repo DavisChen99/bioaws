@@ -74,7 +74,7 @@
         <li class="main active"><a href="#tips-sshec2">[TIPS] 解决ssh连接EC2总是掉的问题</a></li>
             <li><a href="#1-sshd_config">方法1-修改服务器的sshd_config</a></li>
             <li><a href="#2-ssh_config">方法2-修改本机的ssh_config</a></li>
-            <li><a href="#3-windows">方法3- 利用客户端的反断开功能（windows）</a></li>
+            <li><a href="#3-">方法3- 利用客户端的反断开功能</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
@@ -126,9 +126,9 @@ Compression yes
 <ul>
 <li>保存，重连ec2。</li>
 </ul>
-<h2 id="3-windows">方法3- 利用客户端的反断开功能（windows）</h2>
+<h2 id="3-">方法3- 利用客户端的反断开功能</h2>
 <ul>
-<li>tmux： 终端复用神器！这个终端里面运行的所有程序，只要你不关电，程序就会一直运行，而且你当你ssh断开再重新连上的时候会接着以前的地方。（感谢大神JJF推荐）</li>
+<li>tmux： 终端复用神器! 这个终端里面运行的所有程序，只要你不关电，程序就会一直运行，而且你当你ssh断开再重新连上的时候会接着以前的地方。（感谢大神JJF推荐）</li>
 <li>MobaXterm: edit session - Advanced SSH settings - 选中 <em>Do not exit after command ends</em> 。</li>
 <li>gitbash：修改 <em>C:\Program Files\Git\etc\ssh\ssh_config</em> 。</li>
 <li>secureCRT：会话选项 - 终端 - 反空闲 - 发送NO-OP每xxx秒，设置一个非0值。</li>
