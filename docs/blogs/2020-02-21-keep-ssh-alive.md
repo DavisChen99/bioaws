@@ -61,6 +61,9 @@ Compression yes
 - putty：Connection - Seconds between keepalive(0 to turn off)，设置一个非0值。
 - iTerm2：profiles - sessions - When idle - send ASCII code.
 - XShell：session properties - connection - Keep Alive - Send keep alive message while this session connected. Interval [xxx] sec.
+- *以上软件没全部test过，仅基于对软件开发团队的信任 :)*
+
+
 
 
 > Always ask yourself lonely: what's the fact?
