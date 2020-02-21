@@ -72,7 +72,7 @@
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
         <li class="main active"><a href="#tips-sshec2">[TIPS] 解决ssh连接EC2总是掉的问题</a></li>
-            <li><a href="#1-sshd-config">方法1-修改服务器的sshd config</a></li>
+            <li><a href="#1-sshd_config">方法1-修改服务器的sshd_config</a></li>
             <li><a href="#2-ssh_config">方法2-修改本机的ssh_config</a></li>
             <li><a href="#3-windows">方法3- 利用客户端的反断开功能（windows）</a></li>
     </ul>
@@ -86,7 +86,7 @@
 </blockquote>
 <p>OpenSSH基于安全的理由，如果用户连线到SSH Server后闲置一段时间，SSH Server会在超过特定时间后自动终止SSH连线。</p>
 <p>以下方法，个人推荐第2,3种，修改每台服务器真的很烦內~</p>
-<h2 id="1-sshd-config">方法1-修改服务器的sshd config</h2>
+<h2 id="1-sshd_config">方法1-修改服务器的sshd_config</h2>
 <ul>
 <li>进到ssh文件夹，我们发现有ssh_config和sshd_config两个配置文件。二者区别在于，ssh_config是针对客户端的配置文件，sshd_config则是针对服务端的配置文件。</li>
 </ul>
