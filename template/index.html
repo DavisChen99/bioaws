@@ -8,7 +8,7 @@
         
         <link rel="canonical" href="http://www.bioaws.com/template/">
         <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>Template - BioAWS</title>
+        <title>[TIPS] 解决ssh连接EC2总是掉的问题 - BioAWS</title>
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome.min.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
@@ -71,38 +71,73 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#tips-sshec2">[TIPS] 解决ssh连接EC2总是掉的问题</a></li>
+            <li><a href="#1-sshd-config">方法1-修改服务器的sshd config</a></li>
+            <li><a href="#2-ssh_config">方法2-修改本机的ssh_config</a></li>
+            <li><a href="#3-windows">方法3- 利用客户端的反断开功能（windows）</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="_1"></h1>
+<h1 id="tips-sshec2">[TIPS] 解决ssh连接EC2总是掉的问题</h1>
 <blockquote>
+<p>我们都经历过ssh连上服务器，过段时间没操作，就自动断开了，有时候可能是直接在服务器修改代码，一下子傻了，当然我们不推荐长时间在线修改代码：）</p>
 <p>-- D.C</p>
 </blockquote>
-<h2 id="_2"></h2>
-<p>![ec2][1]</p>
-<p>![ec2][2]</p>
-<p>![ec2][3]</p>
-<p>![ec2][4]</p>
-<p>![ec2][5]</p>
-<h2 id="_3"></h2>
-<p>![ec2][6]</p>
-<p>![ec2][7]</p>
-<p>![ec2][8]</p>
-<p>![ec2][9]</p>
-<p>![ec2][10]</p>
-<h2 id="_4"></h2>
-<p><a href="http://www.google.com/">Google</a></p>
-<pre><code class="bash">echo 'hello world'
+<p>OpenSSH基于安全的理由，如果用户连线到SSH Server后闲置一段时间，SSH Server会在超过特定时间后自动终止SSH连线。</p>
+<p>以下方法，个人推荐第2,3种，修改每台服务器真的很烦內~</p>
+<h2 id="1-sshd-config">方法1-修改服务器的sshd config</h2>
+<ul>
+<li>进到ssh文件夹，我们发现有ssh_config和sshd_config两个配置文件。二者区别在于，ssh_config是针对客户端的配置文件，sshd_config则是针对服务端的配置文件。</li>
+</ul>
+<pre><code class="bash">$ cd /etc/ssh
+$ sudo vi /etc/ssh/sshd_config
 </code></pre>
 
-<pre><code class="markdown">- [ ] Eat
-- [x] Code
-  - [x] HTML
-  - [x] CSS
-  - [x] JavaScript
-- [ ] Sleep
-</code></pre></div>
+<p>找到内容，去掉注释并修改如下：</p>
+<pre><code class="bash"># 客户端每隔多少秒向服务发送一个心跳数据
+ClientAliveInterval 30
+# 表示上述多少次心跳无响应之后，会认为Client已经断开。
+ClientAliveCountMax 1800
+</code></pre>
+
+<p>保存并重启服务。</p>
+<pre><code class="bash">$ service sshd restart
+</code></pre>
+
+<h2 id="2-ssh_config">方法2-修改本机的ssh_config</h2>
+<ul>
+<li>打开本机的ssh_config文件。</li>
+</ul>
+<pre><code>sudo vi /etc/ssh/ssh_config
+</code></pre>
+
+<ul>
+<li>添加内容如下：</li>
+</ul>
+<pre><code>TCPKeepAlive=yes
+ServerAliveInterval 60
+ServerAliveCountMax 600
+StrictHostKeyChecking no
+ForwardAgent yes
+Compression yes
+</code></pre>
+
+<ul>
+<li>保存，重连ec2。</li>
+</ul>
+<h2 id="3-windows">方法3- 利用客户端的反断开功能（windows）</h2>
+<ul>
+<li>MobaXterm: edit session - Advanced SSH settings - 选中 <em>Do not exit after command ends</em> 。</li>
+<li>gitbash：修改 <em>C:\Program Files\Git\etc\ssh\ssh_config</em> 。</li>
+<li>secureCRT：会话选项 - 终端 - 反空闲 - 发送NO-OP每xxx秒，设置一个非0值。</li>
+<li>putty：Connection - Seconds between keepalive(0 to turn off)，设置一个非0值。</li>
+<li>iTerm2：profiles - sessions - When idle - send ASCII code.</li>
+<li>XShell：session properties - connection - Keep Alive - Send keep alive message while this session connected. Interval [xxx] sec.</li>
+</ul>
+<blockquote>
+<p>Always ask yourself lonely: what's the fact?</p>
+</blockquote></div>
         </div>
 
         <footer class="col-md-12">

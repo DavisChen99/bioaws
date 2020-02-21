@@ -4,14 +4,14 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="None">
         
-        <link rel="canonical" href="http://www.bioaws.com/">
-        <link rel="shortcut icon" href="img/favicon.ico">
-        <title>BioAWS</title>
-        <link href="css/bootstrap-custom.min.css" rel="stylesheet">
-        <link href="css/font-awesome.min.css" rel="stylesheet">
-        <link href="css/base.css" rel="stylesheet">
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2020-02-21-keep-ssh-alive/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>[TIPS] 解决ssh连接EC2总是掉的问题 - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -19,13 +19,13 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 
-        <script src="js/jquery-1.10.2.min.js" defer></script>
-        <script src="js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
         <script>hljs.initHighlightingOnLoad();</script> 
     </head>
 
-    <body class="homepage">
+    <body>
 
         <div class="navbar navbar-default navbar-fixed-top" role="navigation">
             <div class="container">
@@ -39,7 +39,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href=".">BioAWS</a>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
                 </div>
 
                 <!-- Expanded navigation -->
@@ -47,13 +47,13 @@
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
                             <li >
-                                <a href="head/">首页</a>
-                            </li>
-                            <li class="active">
-                                <a href=".">文章</a>
+                                <a href="../../head/">首页</a>
                             </li>
                             <li >
-                                <a href="about/">关于此站</a>
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
                             </li>
                         </ul>
 
@@ -63,16 +63,6 @@
                                 <i class="fa fa-search"></i> Search
                             </a>
                         </li>
-                            <li >
-                                <a rel="next" href="head/">
-                                    <i class="fa fa-arrow-left"></i> Previous
-                                </a>
-                            </li>
-                            <li >
-                                <a rel="prev" href="about/">
-                                    Next <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
                     </ul>
                 </div>
             </div>
@@ -81,83 +71,74 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#_1">文章列表</a></li>
+        <li class="main active"><a href="#tips-sshec2">[TIPS] 解决ssh连接EC2总是掉的问题</a></li>
+            <li><a href="#1-sshd-config">方法1-修改服务器的sshd config</a></li>
+            <li><a href="#2-ssh_config">方法2-修改本机的ssh_config</a></li>
+            <li><a href="#3-windows">方法3- 利用客户端的反断开功能（windows）</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h2 id="_1">文章列表</h2>
+<h1 id="tips-sshec2">[TIPS] 解决ssh连接EC2总是掉的问题</h1>
+<blockquote>
+<p>我们都经历过ssh连上服务器，过段时间没操作，就自动断开了，有时候可能是直接在服务器修改代码，一下子傻了，当然我们不推荐长时间在线修改代码：）</p>
+<p>-- D.C</p>
+</blockquote>
+<p>OpenSSH基于安全的理由，如果用户连线到SSH Server后闲置一段时间，SSH Server会在超过特定时间后自动终止SSH连线。</p>
+<p>以下方法，个人推荐第2,3种，修改每台服务器真的很烦內~</p>
+<h2 id="1-sshd-config">方法1-修改服务器的sshd config</h2>
 <ul>
-<li>
-<p><a href="blogs/2020-02-04-tips/">TIPS1 一些实用的命令(持续更新)</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-21-keep-ssh-alive/">TIPS2 解决ssh连接EC2总是掉的问题</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-19-how-to-launch-ec2/">入门系列1 如何创建服务器并用命令行登录</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-25-how-to-create-ec2img/">入门系列2 如何给分析服务器打(上)镜(保)像(险)</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-26-s3-ebs-efs-compare/">入门系列3 关于S3,EBS,EFS的三角关系</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-29-s3-data-ops/">入门系列4 如何上传数据到S3服务-Web界面</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-01-s3-data-cli/">入门系列5 如何上传数据到S3服务-命令行CLI</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-28-ec2-s3-data-exchange/">入门系列6 如何帮EC2摸到S3上的数据</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-02-vpc-endpoint-s3/">入门系列7 加速！为EC2和S3之间搭建爱的桥梁</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-04-ec2-download-oss/">入门系列8 EC2“红杏出墙”阿里云OSS</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-31-efs-user-guide-101/">入门系列9 神器EFS终于来了！弹性共享存储！</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-02-ec2-ebs-attach/">入门系列10 如何让 EC2 “妻妾成群”？挂载更多磁盘并实现自动挂载！</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-03-modify-ec2-ebs/">入门系列11 如何调整 EC2 配置和 EBS 磁盘大小</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-05-monitor-ec2-mem/">入门系列12 用脚本监控EC2的内存和磁盘指标</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-06-cwagent-monitor-ec2-mem/">入门系列13 用CW代理监控EC2的内存和磁盘指标(推荐)</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-09-aws-public-dataset/">入门系列14 福音！用好AWS公开数据集</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-02-ebs-snapshot-cli/">高阶1 使用aws cli为EBS自动创建快照</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-03-ebs-cw-lambda-autobackup/">高阶2 高能！实现全自动EBS备份</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-31-put-bam-on-s3/">高阶3 BAM文件放云上好了，本地IGV很方便</a></p>
-</li>
-<li>
-<p><a href="blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws/">高阶4 pcluster! 10分钟打造云上集群</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-14-how-to-use-aws-batch-china/">高阶5 容器！利器！AWS Batch批量计算</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-06-wdl-and-cromwell-on-aws-batch-china/">高阶6 构建基于Batch和wdl语言的分析流程</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-12-31-final-day-of-2020/">尾牙 2020的最后一天</a></p>
-</li>
-</ul></div>
+<li>进到ssh文件夹，我们发现有ssh_config和sshd_config两个配置文件。二者区别在于，ssh_config是针对客户端的配置文件，sshd_config则是针对服务端的配置文件。</li>
+</ul>
+<pre><code class="bash">$ cd /etc/ssh
+$ sudo vi /etc/ssh/sshd_config
+</code></pre>
+
+<p>找到内容，去掉注释并修改如下：</p>
+<pre><code class="bash"># 客户端每隔多少秒向服务发送一个心跳数据
+ClientAliveInterval 30
+# 表示上述多少次心跳无响应之后，会认为Client已经断开。
+ClientAliveCountMax 1800
+</code></pre>
+
+<p>保存并重启服务。</p>
+<pre><code class="bash">$ service sshd restart
+</code></pre>
+
+<h2 id="2-ssh_config">方法2-修改本机的ssh_config</h2>
+<ul>
+<li>打开本机的ssh_config文件。</li>
+</ul>
+<pre><code>sudo vi /etc/ssh/ssh_config
+</code></pre>
+
+<ul>
+<li>添加内容如下：</li>
+</ul>
+<pre><code>TCPKeepAlive=yes
+ServerAliveInterval 60
+ServerAliveCountMax 600
+StrictHostKeyChecking no
+ForwardAgent yes
+Compression yes
+</code></pre>
+
+<ul>
+<li>保存，重连ec2。</li>
+</ul>
+<h2 id="3-windows">方法3- 利用客户端的反断开功能（windows）</h2>
+<ul>
+<li>MobaXterm: edit session - Advanced SSH settings - 选中 <em>Do not exit after command ends</em> 。</li>
+<li>gitbash：修改 <em>C:\Program Files\Git\etc\ssh\ssh_config</em> 。</li>
+<li>secureCRT：会话选项 - 终端 - 反空闲 - 发送NO-OP每xxx秒，设置一个非0值。</li>
+<li>putty：Connection - Seconds between keepalive(0 to turn off)，设置一个非0值。</li>
+<li>iTerm2：profiles - sessions - When idle - send ASCII code.</li>
+<li>XShell：session properties - connection - Keep Alive - Send keep alive message while this session connected. Interval [xxx] sec.</li>
+<li><em>以上软件没全部test过，仅基于对软件开发团队的信任 :)</em></li>
+</ul>
+<blockquote>
+<p>Always ask yourself lonely: what's the fact?</p>
+</blockquote></div>
         </div>
 
         <footer class="col-md-12">
@@ -165,11 +146,11 @@
             <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script>
-            var base_url = ".",
+            var base_url = "../..",
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
-        <script src="js/base.js" defer></script>
-        <script src="search/main.js" defer></script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
     <div class="modal-dialog">
@@ -237,8 +218,3 @@
 
     </body>
 </html>
-
-<!--
-MkDocs version : 1.0.4
-Build Date UTC : 2020-02-21 14:34:41
--->
