@@ -8,7 +8,7 @@ OpenSSH基于安全的理由，如果用户连线到SSH Server后闲置一段时
 
 以下方法，个人推荐第2,3种，修改每台服务器真的很烦內~
 
-## 方法1-修改服务器的sshd config
+## 方法1-修改服务器的sshd_config
 
 - 进到ssh文件夹，我们发现有ssh_config和sshd_config两个配置文件。二者区别在于，ssh_config是针对客户端的配置文件，sshd_config则是针对服务端的配置文件。
 
