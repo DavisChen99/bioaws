@@ -55,7 +55,7 @@ Compression yes
 
 ## 方法3- 利用客户端的反断开功能
 
-- tmux： 终端复用神器! 这个终端里面运行的所有程序，只要你不关电，程序就会一直运行，而且你当你ssh断开再重新连上的时候会接着以前的地方。tmux是linux or Mac，如果是windows略麻烦，可以参考[这里](https://github.com/hongwenjun/tmux_for_windows)（感谢大神JJF推荐）
+- tmux： 终端复用神器! 这个终端里面运行的所有程序，只要你不关电，程序就会一直运行，而且你当你ssh断开再重新连上的时候会接着以前的地方。tmux是linux or Mac，如果是windows，可以用cmder+tmux，或参考[这里](https://github.com/hongwenjun/tmux_for_windows)（感谢大神JJF推荐）
 - MobaXterm: edit session - Advanced SSH settings - 选中 _Do not exit after command ends_ 。
 - gitbash：修改 _C:\Program Files\Git\etc\ssh\ssh_config_ 。
 - secureCRT：会话选项 - 终端 - 反空闲 - 发送NO-OP每xxx秒，设置一个非0值。
