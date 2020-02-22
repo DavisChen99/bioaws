@@ -64,7 +64,107 @@ Compression yes
 - XShell：session properties - connection - Keep Alive - Send keep alive message while this session connected. Interval [xxx] sec.
 - *以上软件没全部test过，仅基于对软件开发团队的信任 :)*
 
+### 关于tmux
 
+要注意，tmux是安装在服务器上的，你可以理解为screen的进化替代者，所以推荐在ec2的跳板机上安装，再跳到其他机器。
+
+基本概念是：session > window > Pane
+
+```bash
+$ sudo yum install tmux
+$ vi ~/.~/.tmux.conf
+```
+
+写入下列内容，保存退出。
+
+```bash
+# Send prefix
+set-option -g prefix C-a
+unbind-key C-a
+bind-key C-a send-prefix
+
+# Use Alt-arrow keys to switch panes
+bind -n M-Left select-pane -L
+bind -n M-Right select-pane -R
+bind -n M-Up select-pane -U
+bind -n M-Down select-pane -D
+
+# Shift arrow to switch windows
+bind -n S-Left previous-window
+bind -n S-Right next-window
+
+# use vim mode to edit
+#setw -g mode-keys vi
+
+# Mouse mode
+#set -g mouse on
+set -g mode-mouse on
+set -g mouse-resize-pane on
+set -g mouse-select-pane on
+set -g mouse-select-window on
+
+
+# Set easier window split keys
+bind-key v split-window -h
+bind-key h split-window -v
+
+# Easy config reload
+bind-key r source-file ~/.tmux.conf \; display-message "tmux.conf reloaded"
+```
+
+设置config之后的常用命令，记住所有tmux开头的命令都是在外面shell里，所有 _prefix_ 开头的都是在session里：
+
+-  _prefix_ : ctrl + a (同时按，放开，再按功能键)
+- `tmux new -s <session name> -t <window name>`:新建并命名，懒人直接`tmux new`
+- `tmux ls`: 这个命令是在外面的terminal里输入的。当前正常运作中的tmux server会显示（attached）。没有的话就是已关闭，tmux server在后台运行。
+-  `prefix + d`: 挂起session,回到外面的shell。
+-  `prefix + :`: 进入命令模式，此时可以输入支持的命令，例如kill-server可以关闭tmux服务器，其他命令网上都有。
+- `tmux a -t py`: 重新连接名字为py的session。这里的a是attach的意思
+- `tmux a`: 如果只有一个session的话，这个是最快的连接方法
+-  `prefix + $`: 更名后好让自己知道每一个session是用来做什么的。通常一个session对应一个project
+- `tmux kill-session -a -t py`: 在外面输入，删除除了py以外的所有session
+- alt+箭头在pane之间切换
+- shift+箭头在window之间切换
+- 用鼠标点击切换window，pane，调整pane的大小
+- 方便切分pane的。prefix + v 代表竖着切，prefix + h 代表横着切。
+- 如果在开着tmux情况下修改了.tmux.conf的设置的话，不用关掉tmux。直接用prefix+r,就能重新加载设置。
+
+
+vim 编辑命令，装B之路不轻松:
+
+|vi             |emacs |       功能|
+|--------------|----|------------|
+|vi|             emacs|        功能|
+|^|              M-m|          反缩进|
+|Escape|         C-g|          清除选定内容|
+|Enter|          M-w|          复制选定内容|
+|j|              Down|         光标下移|
+|h|              Left|         光标左移|
+|l|              Right|        光标右移|
+|L|               |          光标移到尾行|
+|M|              M-r|          光标移到中间行|
+|H|              M-R|          光标移到首行|
+|k|              Up|           光标上移|
+|d|              C-u|          删除整行|
+|D|              C-k|          删除到行末|
+|$|              C-e|          移到行尾|
+|:数字|              g|            前往指定行|
+|C|-d            M-Down|       向下滚动半屏|
+|C|-u            M-Up|         向上滚动半屏|
+|C|-f            Page down|    下一页|
+|w|              M-f|          下一个词|
+|p|              C-y|          粘贴|
+|C|-b            Page up|      上一页|
+|b|              M-b|          上一个词|
+|q  |            Escape|       退出|
+|C|-Down or J    C-Down|       向下翻|
+|C|-Up or K      C-Up|         向下翻|
+|n |             n|            继续搜索|
+|?|              C-r|          向前搜索|
+|/|              C-s|          向后搜索|
+|0|              C-a|          移到行首|
+|Space|          C-Space|      开始选中|
+|               |C-t|          字符调序|
 
 
 > Always ask yourself lonely: what's the fact?
