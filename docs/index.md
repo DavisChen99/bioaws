@@ -1,8 +1,8 @@
 ## 文章列表
 
-- [TIPS1 一些实用的命令(持续更新)](blogs/2020-02-04-tips.md)
+- [善物1 一些实用的命令(持续更新)](blogs/2020-02-04-tips.md)
 
-- [TIPS2 解决ssh连接EC2总是掉的问题](blogs/2020-02-21-keep-ssh-alive.md)
+- [善物2 解决ssh连接服务器掉线问题](blogs/2020-02-21-keep-ssh-alive.md)
 
 - [入门系列1 如何创建服务器并用命令行登录](blogs/2020-01-19-how-to-launch-ec2.md )
 
