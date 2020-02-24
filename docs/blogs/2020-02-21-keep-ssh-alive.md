@@ -72,7 +72,7 @@ Compression yes
 
 ```bash
 $ sudo yum install tmux
-$ vi ~/.~/.tmux.conf
+$ vi ~/.tmux.conf
 ```
 
 写入下列内容，保存退出。
