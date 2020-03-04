@@ -125,7 +125,16 @@ tmpfs           3.8G     0  3.8G   0% /dev/shm
 /dev/nvme0n1p1   50G   28G   22G  56% /
 ```
 
-- 重启ec2，再看看呢？OK！
+[选项1] 重启ec2。
+
+[选项1] 不重启机器，登录ec2：
+
+```bash
+$ sudo yum install xfsprogs
+$ sudo xfs_growfs -d /
+```
+
+- 再看看呢，OK！
 
 ```bash
 $ df -h
