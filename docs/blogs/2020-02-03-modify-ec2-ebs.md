@@ -127,7 +127,7 @@ tmpfs           3.8G     0  3.8G   0% /dev/shm
 
 [选项1] 重启ec2。
 
-[选项1] 不重启机器，登录ec2：
+[选项2] 不重启机器，登录ec2：
 
 ```bash
 $ sudo yum install xfsprogs
