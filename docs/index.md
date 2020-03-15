@@ -32,6 +32,8 @@
 
 - [入门系列14 福音！用好AWS公开数据集](blogs/2020-02-09-aws-public-dataset.md)
 
+- [入门系列15 集中式备份管理服务-aws backup](blogs/2020-03-15-aws-backup.md)
+
 - [高阶1 使用aws cli为EBS自动创建快照](blogs/2020-02-02-ebs-snapshot-cli.md)
 
 - [高阶2 高能！实现全自动EBS备份](blogs/2020-02-03-ebs-cw-lambda-autobackup.md)
