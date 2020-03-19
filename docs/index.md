@@ -46,4 +46,6 @@
 
 - [高阶6 构建基于Batch和wdl语言的分析流程](blogs/2020-01-06-wdl-and-cromwell-on-aws-batch-china.md)
 
+- [高阶7 云上浏览BAM文件需要解决的问题](blogs/2020-03-18-igv-monitor-with-s3.md)
+
 - [尾牙 2020的最后一天](blogs/2020-12-31-final-day-of-2020.md)
