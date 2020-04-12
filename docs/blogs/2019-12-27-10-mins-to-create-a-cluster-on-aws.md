@@ -29,7 +29,7 @@ _俗话说的好，没图说个基霸_
 
 OK，接下来就是如何一键启动集群了。
 
-## launch an instance to install pcluster (v2.5.1) 
+## launch an instance to install pcluster (v2.5.1)
 
 - `eg. t2.micro`
 - remember your keypair name `eg. mykey.pem`
@@ -60,6 +60,25 @@ OK，接下来就是如何一键启动集群了。
   * `qsub test.sh` to check your cluster function
   * `qstat -f` to see job status
 - submit your jobs using command like `qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 4 -o output -e output -q all.q yourscript.sh`
+
+## 关于共享存储
+
+这个例子默认的是用EBS组件的NFS盘，可以说是和本地环境无缝对接了，但是对于高IOPS的应用场景，可能就会遇到瓶颈了，所幸Pcluster还为我们提供了其他的共享存储选项：
+- EFS 弹性文件系统
+- FSx Lustre
+
+以EFS为例，讲EBS设置部分替换成如下：
+
+```
+efs_settings = customfs
+
+[efs customfs]
+shared_dir = efs
+encrypted = false
+performance_mode = generalPurpose
+```
+
+这样build出来的集群，共享存储性能有保证，且容量弹性，按照实际占用空间计费，如果善于利用EFS的生命周期管理，成本也能控制的不错。
 
 ## for debug
 
