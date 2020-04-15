@@ -74,6 +74,7 @@
         <li class="main active"><a href="#_1">一些实用的命令(持续更新)</a></li>
             <li><a href="#s3">s3</a></li>
             <li><a href="#ec2">ec2</a></li>
+            <li><a href="#eks">EKS</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
@@ -114,7 +115,10 @@ Total Objects: 4
 <h3 id="instance">查看instance信息</h3>
 <p><code>aws ec2 describe-instances</code> 输出的内容太多，后面用管道加个<code>awk</code>吧。</p>
 <p>如：
-<code>aws ec2 describe-instances | awk -F\" '/InstanceId/{print $4}'</code></p></div>
+<code>aws ec2 describe-instances | awk -F\" '/InstanceId/{print $4}'</code></p>
+<h2 id="eks">EKS</h2>
+<h3 id="k8s-installing">k8s installing</h3>
+<p><code>https://kubernetes.io/docs/tasks/tools/install-kubectl/#before-you-begin</code></p></div>
         </div>
 
         <footer class="col-md-12">
