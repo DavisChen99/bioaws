@@ -46,4 +46,6 @@
 
 - [高阶6 构建基于Batch和wdl语言的分析流程](blogs/2020-01-06-wdl-and-cromwell-on-aws-batch-china.md)
 
+- [高阶7 Kubernetes on AWS - EKS 服务](blogs/2020-04-15-use-k8s-on-aws-EKS.md)
+
 - [尾牙 2020的最后一天](blogs/2020-12-31-final-day-of-2020.md)
