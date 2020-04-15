@@ -11,35 +11,35 @@
 
 ## 名词解释
 
-- Master: 包工头主节点,用来调度k8s集群,头上接收外部的api请求，从而进行任务分配和调度等。
+**- Master** : 包工头主节点,用来调度k8s集群,头上接收外部的api请求，从而进行任务分配和调度等。
 
-kube-apiserver: k8s对外的服务入口，通信纽带，无状态，水平扩展。
+**kube-apiserver** : k8s对外的服务入口，通信纽带，无状态，水平扩展。
 
-Kube-scheduler:负责对pod的任务调度。
+**Kube-scheduler** : 负责对pod的任务调度。
 
-kube-controller-manager: 处理node节点的当机啊，pod的副本数啊，管理endpoint终端节点，连接service和pod、为新的命名空间创建默认api token和accounts。
+**kube-controller-manager** : 处理node节点的当机啊，pod的副本数啊，管理endpoint终端节点，连接service和pod、为新的命名空间创建默认api token和accounts。
 
-etcd：etcd是kubernetes集群用来存储集群相关数据的数据仓库。
+**etcd** : etcd是kubernetes集群用来存储集群相关数据的数据仓库。
 
-- node： worknodes，干活的节点。执行包工头master节点指派的搬砖任务。
+- **node** : worknodes，干活的节点。执行包工头master节点指派的搬砖任务。
 
-kubelet：负责启动停止容器，保证容器运行。
+**kubelet** :负责启动停止容器，保证容器运行。
 
-kube-proxy：负责根据service生成网络规则，生成路由规则。
+**kube-proxy** :负责根据service生成网络规则，生成路由规则。
 
-Docker engine： 这个不用说了，一个pod里面可以有一个或多个容器。
+**Docker engine** : 这个不用说了，一个pod里面可以有一个或多个容器。
 
-- Pod: k8s 以pod为最小单位进行调度、扩展、共享资源、管理生命周期。在一个pod里所有的容器共享以下资源：
+**- Pod** : k8s 以pod为最小单位进行调度、扩展、共享资源、管理生命周期。在一个pod里所有的容器共享以下资源:
 
-PID命名空间：Pod中的不同应用程序可以看到其他应用程序的进程ID。
+**PID命名空间** : Pod中的不同应用程序可以看到其他应用程序的进程ID。
 
-网络命名空间：Pod中的多个容器能够访问同一个IP和端口范围。
+**网络命名空间** : Pod中的多个容器能够访问同一个IP和端口范围。
 
-IPC命名空间：Pod中的多个容器能够使用SystemV IPC或POSIX消息队列进行通信。
+**IPC命名空间** : Pod中的多个容器能够使用SystemV IPC或POSIX消息队列进行通信。
 
-UTS命名空间：Pod中的多个容器共享一个主机名。
+**UTS命名空间** : Pod中的多个容器共享一个主机名。
 
-Volumes(共享存储卷)：Pod中的各个容器可以访问在Pod级别定义的Volumes。
+**Volumes(共享存储卷)** : Pod中的各个容器可以访问在Pod级别定义的Volumes。
 
 好了，就说到这里，了解这么多我觉得就够了，再说会晕。
 
@@ -67,13 +67,13 @@ Volumes(共享存储卷)：Pod中的各个容器可以访问在Pod级别定义�
 
 aws 托管的k8s服务（目前更新到1.15），中国区可用，是一项完全托管的 Kubernetes 服务。出于其安全性、可靠性和可扩展性，Intel、Snap、Intuit、GoDaddy 和 Autodesk 等客户都使用 ECS 运行他们最敏感的任务关键型应用程序。
 
-他有几个特性：
+EKS有几个特性：
 
-- 托管：一个字，省心，多活几年。
-- 自动高可用：可跨多个 AWS 可用区运行 Kubernetes 管理基础设施、自动检测和替换运行状况不佳的控制平面节点，并提供零停机时间的按需升级和修补
-- 提供无服务器选项 - 支持 AWS Fargate 为容器提供无服务器计算功能。使用 Fargate，您无需预置和管理服务器，而且可以为每个应用程序指定资源并为其付费，并通过设计隔离应用程序来提高安全性。
-- 安全：自动将最新的安全补丁应用到您的集群控制平面。AWS 还与社区紧密合作，以确保在将新版本和补丁部署到现有集群之前解决关键的安全问题。
-- 通过社区构建：可运行上游 Kubernetes，且经认证可与 Kubernetes 兼容，因此 EKS 托管的应用程序与所有标准 Kubernetes 环境托管的应用程序完全兼容。AWS 主动与 Kubernetes 社区合作，其中包括为 Kubernetes 代码库做贡献，以帮助您充分利用 AWS 服务和功能。
+- **托管**：一个字，省心，多活几年。
+- **自动高可用**：可跨多个 AWS 可用区运行 Kubernetes 管理基础设施、自动检测和替换运行状况不佳的控制平面节点，并提供零停机时间的按需升级和修补
+- **提供无服务器选项** - 支持 AWS Fargate 为容器提供无服务器计算功能。使用 Fargate，您无需预置和管理服务器，而且可以为每个应用程序指定资源并为其付费，并通过设计隔离应用程序来提高安全性。
+- **安全**：自动将最新的安全补丁应用到您的集群控制平面。AWS 还与社区紧密合作，以确保在将新版本和补丁部署到现有集群之前解决关键的安全问题。
+- **通过社区构建**：可运行上游 Kubernetes，且经认证可与 Kubernetes 兼容，因此 EKS 托管的应用程序与所有标准 Kubernetes 环境托管的应用程序完全兼容。AWS 主动与 Kubernetes 社区合作，其中包括为 Kubernetes 代码库做贡献，以帮助您充分利用 AWS 服务和功能。
 
 EKS部署有三种方式：
 
@@ -92,6 +92,7 @@ EKS部署有三种方式：
 2. 是否安装了[eksctl](https://docs.aws.amazon.com/zh_cn/eks/latest/userguide/eksctl.html)
 
 3. 是否安装了 [Kubectl](https://docs.aws.amazon.com/zh_cn/eks/latest/userguide/install-kubectl.html)
+
 
 - 如果答案都是yes，那么执行eksctl命令一键部署EKS：
 
@@ -147,7 +148,7 @@ $ eksctl create cluster \
 
 ![myworker][3]
 
-PS: 其实呢，一键部署背后还是调用了AWS的自动化部署神器-cloudformation！
+PS: 其实呢，一键部署背后还是调用了AWS的自动化部署神器 - **CloudFormation**
 
 ![CF][4]
 
@@ -173,7 +174,7 @@ $ AWS_PROFILE=bjs # 指定用哪个aksk身份来创建集群 cat ~/.aws/config �
 
 ## 管理EKS
 
-- 在本机用awscli把EKS集群的信息同步到kubeconfig文件。
+- 在本机用awscli把EKS集群的信息同步到`kubeconfig`文件。
 
 ```
 $ aws eks update-kubeconfig --name <cluster_name>
@@ -198,7 +199,7 @@ ip-192-168-xx-xx.cn-northwest-1.compute.internal    Ready    <none>   7m41s   v1
 
 ## 部署应用
 
-- 这里我们整个最简单的web服务nginx测试下吧，新建一个dockerfile，这个功能很简单，就是提供一个web服务器，然后页面显示 “ Hello, Docker!”。
+- 这里我们整个最简单的web服务nginx测试下吧，新建一个dockerfile，这个功能很简单，**就是提供一个web服务器，然后页面显示 “ Hello, Docker!”**。
 
 ```
 $ vim dockerfile
@@ -312,9 +313,9 @@ nginx-svc    LoadBalancer   10.100.179.159   a9d4exxxxxxxxxxxxxxxxxxxxxx-dd11xxx
 
 Kubernetes集群里有三种IP地址，分别如下：
 
-- Node IP：Node节点的IP地址，即物理网卡的IP地址。
-- Pod IP：Pod的IP地址，即docker容器的IP地址，此为虚拟IP地址。
-- Cluster IP：Service的IP地址，此为虚拟IP地址。
+- **Node IP**：Node节点的IP地址，即物理网卡的IP地址。
+- **Pod IP**：Pod的IP地址，即docker容器的IP地址，此为虚拟IP地址。
+- **Cluster IP**：Service的IP地址，此为虚拟IP地址。
 
 ## 学习链接
 
