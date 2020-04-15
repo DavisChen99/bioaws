@@ -65,7 +65,7 @@
 
 ## EKS - managed k8s on aws
 
-aws 托管的k8s服务（目前更新到1.15），中国区可用，是一项完全托管的 Kubernetes 服务。出于其安全性、可靠性和可扩展性，Intel、Snap、Intuit、GoDaddy 和 Autodesk 等客户都使用 ECS 运行他们最敏感的任务关键型应用程序。
+aws 托管的k8s服务（目前更新到1.15），中国区可用，是一项完全托管的 Kubernetes 服务。出于其安全性、可靠性和可扩展性，Intel、Snap、Intuit、GoDaddy 和 Autodesk 等客户都在使用它来运行他们最敏感的任务关键型应用程序。
 
 EKS有几个特性：
 
