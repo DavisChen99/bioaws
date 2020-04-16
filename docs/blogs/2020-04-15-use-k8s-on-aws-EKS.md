@@ -159,7 +159,7 @@ PS: 其实呢，一键部署背后还是调用了AWS的自动化部署神器 - *
 --vpc-private-subnets private_subnet_1a, prviate_subnet_1b \
 ```
 
-其他选项：
+- 其他选项：
 
 ```
 --ssh-public-key eks-bjs # 指定现有的pem文件
@@ -232,7 +232,7 @@ $ docker push xxxxxxxxxxx.dkr.ecr.cn-northwest-1.amazonaws.com.cn/ekstest:latest
 
 ![myecr][6]
 
-- 接下来创建的部署YAML文件并用kubectl部署。
+- 接下来创建YAML文件并用kubectl部署。
 
 创建YAML文件 `nginx-deployment.yaml`, 部署nginx
 
