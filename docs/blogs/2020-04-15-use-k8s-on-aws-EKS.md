@@ -319,7 +319,7 @@ Kubernetes集群里有三种IP地址，分别如下：
 
 ## 学习链接
 
-- [EKS学习讲座视频](http://18.cu.backup.bokecc.com/flvs/99F54CD9738D7C14/2020-04-03/AFAB153D5CEA0DB79C33DC5901307461.mp4?t=1586966912&key=139402C5FF51ADA1E66BFFB7609106BC)
+- [EKS学习讲座视频](http://aws.amazon.bokecc.com/news/show-2474.html)
 
 - [aws_EKS_guide](https://docs.aws.amazon.com/zh_cn/eks/latest/userguide/what-is-eks.html)
 
