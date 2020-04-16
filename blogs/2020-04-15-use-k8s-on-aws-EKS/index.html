@@ -105,7 +105,9 @@
 <p><strong>kubelet</strong> :负责启动停止容器，保证容器运行。</p>
 <p><strong>kube-proxy</strong> :负责根据service生成网络规则，生成路由规则。</p>
 <p><strong>Docker engine</strong> : 这个不用说了，一个pod里面可以有一个或多个容器。</p>
-<p><strong>- Pod</strong> : k8s 以pod为最小单位进行调度、扩展、共享资源、管理生命周期。在一个pod里所有的容器共享以下资源:</p>
+<ul>
+<li><strong>Pod</strong> : k8s 以pod为最小单位进行调度、扩展、共享资源、管理生命周期。在一个pod里所有的容器共享以下资源:</li>
+</ul>
 <p><strong>PID命名空间</strong> : Pod中的不同应用程序可以看到其他应用程序的进程ID。</p>
 <p><strong>网络命名空间</strong> : Pod中的多个容器能够访问同一个IP和端口范围。</p>
 <p><strong>IPC命名空间</strong> : Pod中的多个容器能够使用SystemV IPC或POSIX消息队列进行通信。</p>
