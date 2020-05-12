@@ -121,7 +121,9 @@ sudo firewall-cmd --add-port=5901/tcp --permanent
 
 ![login][3]
 
-enjoy~
+enjoy~ 
+
+_PS: 其余系统安装步骤都差不多_
 
 ## 番外
 
