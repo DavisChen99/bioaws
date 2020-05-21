@@ -4,14 +4,14 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="None">
         
-        <link rel="canonical" href="http://www.bioaws.com/">
-        <link rel="shortcut icon" href="img/favicon.ico">
-        <title>BioAWS</title>
-        <link href="css/bootstrap-custom.min.css" rel="stylesheet">
-        <link href="css/font-awesome.min.css" rel="stylesheet">
-        <link href="css/base.css" rel="stylesheet">
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2020-03-18-igv-monitor-with-s3/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>云上浏览BAM文件需要解决的问题 - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -19,13 +19,13 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 
-        <script src="js/jquery-1.10.2.min.js" defer></script>
-        <script src="js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
         <script>hljs.initHighlightingOnLoad();</script> 
     </head>
 
-    <body class="homepage">
+    <body>
 
         <div class="navbar navbar-default navbar-fixed-top" role="navigation">
             <div class="container">
@@ -39,7 +39,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href=".">BioAWS</a>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
                 </div>
 
                 <!-- Expanded navigation -->
@@ -47,13 +47,13 @@
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
                             <li >
-                                <a href="head/">首页</a>
-                            </li>
-                            <li class="active">
-                                <a href=".">文章</a>
+                                <a href="../../head/">首页</a>
                             </li>
                             <li >
-                                <a href="about/">关于此站</a>
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
                             </li>
                         </ul>
 
@@ -63,16 +63,6 @@
                                 <i class="fa fa-search"></i> Search
                             </a>
                         </li>
-                            <li >
-                                <a rel="next" href="head/">
-                                    <i class="fa fa-arrow-left"></i> Previous
-                                </a>
-                            </li>
-                            <li >
-                                <a rel="prev" href="about/">
-                                    Next <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
                     </ul>
                 </div>
             </div>
@@ -81,89 +71,91 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#_1">文章列表</a></li>
+        <li class="main active"><a href="#bam">云上浏览BAM文件需要解决的问题</a></li>
+            <li><a href="#_1">接上</a></li>
+            <li><a href="#bam_1">BAM文件下载流量问题</a></li>
+            <li><a href="#_2">公共文件的权限问题</a></li>
+            <li><a href="#fqbamvcf">FQ/BAM/VCF文件的文件存储方案建议</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h2 id="_1">文章列表</h2>
+<h1 id="bam">云上浏览BAM文件需要解决的问题</h1>
+<blockquote>
+<p>-- Sam</p>
+</blockquote>
+<h2 id="_1">接上</h2>
+<p>上一批博客<a href="../2020-01-31-put-bam-on-s3/">BAM文件放云上好了，本地IGV很方便</a>，其中介绍了将NGS数据比对后的BAM文件放到S3上，通过本地IGV工具来查看/确认基因组上变异情况。同时也遗留了三个问题，先重温一下：</p>
+<blockquote>
+<ol>
+<li>
+<p>这么大的文件从网络上下载，会不会特别慢啊？会不会流量费特别贵啊？</p>
+</li>
+<li>
+<p>“Make public”，让该文件读取权限暴露在互联网中，任何拥有该权限的人都可以查看，这点肯定不对。</p>
+</li>
+<li>
+<p>对于FQ、BAM、VCF等不同类型文件的存储方案是什么？都放在标准存储中吗？</p>
+</li>
+</ol>
+</blockquote>
+<p>接下来，通过此篇博文逐一进行解释。注意，本文仅代表我个人观点，且不对此负责及做任何承诺。</p>
+<h2 id="bam_1">BAM文件下载流量问题</h2>
+<p>按常理想，如果每查看一个BAM文件都需要将全部整个文件下载到本地，恐怕是难以接受的，一方面会造成严重的资源浪费，并且也会耗费大量加载的时间。这就是当初给BAM设计index文件（BAI文件）的好处之一了。</p>
 <ul>
 <li>
-<p><a href="blogs/2020-02-04-tips/">善物1 一些实用的命令(持续更新)</a></p>
+<p>首先我们在比对流程中一般会包含一步<code>samtools index *.bam</code>的分析流程，就是将BAM文件中的比对信息进行排序，一般而言，是根据比对到基因组上的位置进行排序的，这有利于根据基因组位置快速找到相关的测序序列。</p>
 </li>
 <li>
-<p><a href="blogs/2020-02-21-keep-ssh-alive/">善物2 解决ssh连接服务器掉线问题</a></p>
+<p>BAI文件本身是给BAM文件做索引的，索引这个技术的使用也是为了快速搜索。其中一个很关键的使用场景是通过基因组位置快速定位对应BAM的位置（文件存储的字节信息）。</p>
 </li>
-<li>
-<p><a href="blogs/2020-01-19-how-to-launch-ec2/">入门系列1 如何创建服务器并用命令行登录</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-25-how-to-create-ec2img/">入门系列2 如何给分析服务器打(上)镜(保)像(险)</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-26-s3-ebs-efs-compare/">入门系列3 关于S3,EBS,EFS的三角关系</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-29-s3-data-ops/">入门系列4 如何上传数据到S3服务-Web界面</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-01-s3-data-cli/">入门系列5 如何上传数据到S3服务-命令行CLI</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-28-ec2-s3-data-exchange/">入门系列6 如何帮EC2摸到S3上的数据</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-02-vpc-endpoint-s3/">入门系列7 加速！为EC2和S3之间搭建爱的桥梁</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-04-ec2-download-oss/">入门系列8 EC2“红杏出墙”阿里云OSS</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-31-efs-user-guide-101/">入门系列9 神器EFS终于来了！弹性共享存储！</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-02-ec2-ebs-attach/">入门系列10 如何让 EC2 “妻妾成群”？挂载更多磁盘并实现自动挂载！</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-03-modify-ec2-ebs/">入门系列11 如何调整 EC2 配置和 EBS 磁盘大小</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-05-monitor-ec2-mem/">入门系列12 用脚本监控EC2的内存和磁盘指标</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-06-cwagent-monitor-ec2-mem/">入门系列13 用CW代理监控EC2的内存和磁盘指标(推荐)</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-09-aws-public-dataset/">入门系列14 福音！用好AWS公开数据集</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-03-15-aws-backup/">入门系列15 集中式备份管理服务AWS Backup</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-02-ebs-snapshot-cli/">高阶1 使用aws cli为EBS自动创建快照</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-03-ebs-cw-lambda-autobackup/">高阶2 高能！实现全自动EBS备份</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-31-put-bam-on-s3/">高阶3 BAM文件放云上好了，本地IGV很方便</a></p>
-</li>
-<li>
-<p><a href="blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws/">高阶4 pcluster! 10分钟打造云上集群</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-14-how-to-use-aws-batch-china/">高阶5 容器！利器！AWS Batch批量计算</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-06-wdl-and-cromwell-on-aws-batch-china/">高阶6 构建基于Batch和wdl语言的分析流程</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-03-18-igv-monitor-with-s3/">高阶7 云上浏览BAM文件需要解决的问题</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-12-31-final-day-of-2020/">尾牙 2020的最后一天</a></p>
-</li>
-</ul></div>
+</ul>
+<p>我们看一下IGV官方文档对于通过HTTP地址访问BAM文件的描述：</p>
+<p><img alt="IGV文档-通过URL载入BAM文件" src="../../img/igv-load-from-url-doc.png" /></p>
+<p>请注意最后一句，该文档已经暗示了通过IGV查看变异位点会根据基因组位置下载BAM文件固定区域数据并展示在IGV软件中。</p>
+<p>近几天我对几个样本的BAM进行非定量的数据测试，通过对S3上BAM文件的访问及数据下载量分析，也可以一窥大概，见下图：</p>
+<p><img alt="S3数据访问量统计" src="../../img/s3-data-download-figure.jpg" /></p>
+<p>其中3/11当天，我连续做了4～6个BAM文件的共计12个位点，并且在不同时间分别打开过。100MB的数据下载量，根据AWS中国区目前的流量价格，大约1毛钱，还是可以接受的。</p>
+<h2 id="_2">公共文件的权限问题</h2>
+<p>通过AWS的CLI工具预设定相应文件的URL访问，如下图：</p>
+<p><img alt="AWS CLI Presign" src="../../img/aws-s3-presign.png" /></p>
+<p>该地址默认有效周期为1小时，通过设定<code>--expires-in</code>参数确保该URL访问周期，最小1秒，最大604800秒（1周）。BAM和BAI文件都通过以上方式预设定URL地址后，就可以通过IGV软件进行浏览查看了。</p>
+<h2 id="fqbamvcf">FQ/BAM/VCF文件的文件存储方案建议</h2>
+<p>FQ、BAM和VCF是NGS检测分析的常见文件格式，按照目前我设置的自动周期管理列在下表中。</p>
+<table>
+<thead>
+<tr>
+<th>文件格式</th>
+<th>标准存储</th>
+<th>非频繁访问</th>
+<th>归档存储</th>
+<th>删除</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FQ</td>
+<td>前1个月</td>
+<td>-</td>
+<td>保持3个月</td>
+<td>永久删除</td>
+</tr>
+<tr>
+<td>BAM</td>
+<td>前1个月</td>
+<td>保持3个月</td>
+<td>永久归档</td>
+<td>-</td>
+</tr>
+<tr>
+<td>VCF</td>
+<td>前1个月</td>
+<td>保持3个月</td>
+<td>永久归档</td>
+<td>-</td>
+</tr>
+</tbody>
+</table></div>
         </div>
 
         <footer class="col-md-12">
@@ -171,11 +163,11 @@
             <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script>
-            var base_url = ".",
+            var base_url = "../..",
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
-        <script src="js/base.js" defer></script>
-        <script src="search/main.js" defer></script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
     <div class="modal-dialog">
@@ -243,8 +235,3 @@
 
     </body>
 </html>
-
-<!--
-MkDocs version : 1.0.4
-Build Date UTC : 2020-03-19 13:57:39
--->

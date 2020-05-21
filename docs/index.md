@@ -32,16 +32,22 @@
 
 - [入门系列14 福音！用好AWS公开数据集](blogs/2020-02-09-aws-public-dataset.md)
 
-- [高阶1 使用aws cli为EBS自动创建快照](blogs/2020-02-02-ebs-snapshot-cli.md)
+- [入门系列15 集中式备份管理服务AWS Backup](blogs/2020-03-15-aws-backup.md)
 
-- [高阶2 高能！实现全自动EBS备份](blogs/2020-02-03-ebs-cw-lambda-autobackup.md)
+- [高阶系列1 使用aws cli为EBS自动创建快照](blogs/2020-02-02-ebs-snapshot-cli.md)
 
-- [高阶3 BAM文件放云上好了，本地IGV很方便](blogs/2020-01-31-put-bam-on-s3.md)
+- [高阶系列2 高能！实现全自动EBS备份](blogs/2020-02-03-ebs-cw-lambda-autobackup.md)
 
-- [高阶4 pcluster! 10分钟打造云上集群](blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws.md)
+- [高阶系列3 BAM文件放云上好了，本地IGV很方便](blogs/2020-01-31-put-bam-on-s3.md)
 
-- [高阶5 容器！利器！AWS Batch批量计算](blogs/2020-01-14-how-to-use-aws-batch-china.md)
+- [高阶系列4 pcluster! 10分钟打造云上集群](blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws.md)
 
-- [高阶6 构建基于Batch和wdl语言的分析流程](blogs/2020-01-06-wdl-and-cromwell-on-aws-batch-china.md)
+- [高阶系列5 容器！利器！AWS Batch批量计算](blogs/2020-01-14-how-to-use-aws-batch-china.md)
+
+- [高阶系列6 构建基于Batch和wdl语言的分析流程](blogs/2020-01-06-wdl-and-cromwell-on-aws-batch-china.md)
+
+- [高阶系列7 Kubernetes on AWS - EKS 服务](blogs/2020-04-15-use-k8s-on-aws-EKS.md)
+
+- [高阶系列8 鼠标党福音！给EC2安装桌面GUI](blogs/2020-05-12-install_GUI_on_EC2.md)
 
 - [尾牙 2020的最后一天](blogs/2020-12-31-final-day-of-2020.md)
