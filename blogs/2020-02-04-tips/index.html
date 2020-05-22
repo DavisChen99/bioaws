@@ -112,11 +112,29 @@ Total Objects: 4
 </code></pre>
 
 <ul>
+<li>根据关键字查找桶内文件</li>
+</ul>
+<pre><code>$ aws s3api list-objects --bucket 桶名 --query &quot;Contents[?contains(Key, '文件名称')]&quot;
+</code></pre>
+
+<ul>
+<li>查找某天修改过的文件</li>
+</ul>
+<pre><code>$ aws s3api list-objects --bucket &lt;bucket name&gt; --query &quot;Contents[?contains(LastModified) &gt; '2017-08-03')]&quot;
+</code></pre>
+
+<ul>
+<li>查找某天到某天时间段内修改过的文件</li>
+</ul>
+<pre><code>$ aws s3api list-objects --bucket &lt;bucket name&gt; --query &quot;Contents[?LastModified &gt; '2017-08-03T23' &amp;&amp; LastModified &lt; '2017-08-03T23:15']&quot;
+</code></pre>
+
+<ul>
 <li>命令行归档命令</li>
 </ul>
 <p>方法1 - 用<code>cp</code>命令,原地变身为归档类型</p>
 <p><code>aws s3 cp s3://exampe/ s3://exampe/ --storage-class GLACIER --recursive</code></p>
-<p>方法2 - 用<code>mv</code>命令
+<p>方法2 - 用<code>mv</code>命令，转移到专门归档的桶
 格式：<code>aws s3 mv s3://xxx/xxx/ s3://xxx/xxx/ --recursive --storage-class DEEP_ARCHIVE</code></p>
 <p>Storage Class: STANDARD | REDUCED_REDUNDANCY | STANDARD_IA | ONEZONE_IA | INTELLIGENT_TIERING | GLACIER | DEEP_ARCHIVE. Defaults to 'STANDARD'</p>
 <ul>
