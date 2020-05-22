@@ -115,6 +115,8 @@ Total Objects: 4
 <li>根据关键字查找桶内文件</li>
 </ul>
 <pre><code>$ aws s3api list-objects --bucket 桶名 --query &quot;Contents[?contains(Key, '文件名称')]&quot;
+
+$ aws s3 ls s3://xxx --recursive | grep xxx | cut -c 32-
 </code></pre>
 
 <ul>
