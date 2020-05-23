@@ -132,12 +132,19 @@ $ aws s3 ls s3://xxx --recursive | grep xxx | cut -c 32-
 </code></pre>
 
 <ul>
+<li>查找xxx桶内所有深度归档的名字里有pdf的</li>
+</ul>
+<pre><code>aws s3api list-objects-v2     --bucket xxx桶     --query &quot;Contents[?StorageClass
+=='DEEP_ARCHIVE']&quot; --output text | awk '{print $2}' | grep 'pdf'
+</code></pre>
+
+<ul>
 <li>命令行归档命令</li>
 </ul>
 <p>方法1 - 用<code>cp</code>命令,原地变身为归档类型</p>
 <p><code>aws s3 cp s3://exampe/ s3://exampe/ --storage-class GLACIER --recursive</code></p>
-<p>方法2 - 用<code>mv</code>命令，转移到专门归档的桶
-格式：<code>aws s3 mv s3://xxx/xxx/ s3://xxx/xxx/ --recursive --storage-class DEEP_ARCHIVE</code></p>
+<p>方法2 - 用<code>mv</code>命令，转移到专门归档的桶</p>
+<p><code>aws s3 mv s3://xxx/xxx/ s3://xxx/xxx/ --recursive --storage-class DEEP_ARCHIVE</code></p>
 <p>Storage Class: STANDARD | REDUCED_REDUNDANCY | STANDARD_IA | ONEZONE_IA | INTELLIGENT_TIERING | GLACIER | DEEP_ARCHIVE. Defaults to 'STANDARD'</p>
 <ul>
 <li>取回归档的文件</li>
