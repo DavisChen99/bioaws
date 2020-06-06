@@ -63,7 +63,7 @@ Payment Option： No Upfront(无预付，折算到每月支付，后付费)；Pa
 
 如有其他不清楚的，也可以在群里问各位骨灰级大神。
 
-EC2价格参考：[点我](amazonaws.cn/ec2/pricing/?nc1=h_ls)
+EC2价格参考：[点我](http://amazonaws.cn/ec2/pricing/?nc1=h_ls)
 
 > 不必为了用电灯，而去造一座发电厂，云也是如此。
 
