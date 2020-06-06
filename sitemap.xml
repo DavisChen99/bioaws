@@ -2,17 +2,29 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
      <loc>http://www.bioaws.com/head/</loc>
+<<<<<<< HEAD
      <lastmod>2020-05-12</lastmod>
+=======
+     <lastmod>2020-05-23</lastmod>
+>>>>>>> 3cbc9c0ecd20e15583c85ff824e38cd107252302
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://www.bioaws.com/</loc>
+<<<<<<< HEAD
      <lastmod>2020-05-12</lastmod>
+=======
+     <lastmod>2020-05-23</lastmod>
+>>>>>>> 3cbc9c0ecd20e15583c85ff824e38cd107252302
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://www.bioaws.com/about/</loc>
+<<<<<<< HEAD
      <lastmod>2020-05-12</lastmod>
+=======
+     <lastmod>2020-05-23</lastmod>
+>>>>>>> 3cbc9c0ecd20e15583c85ff824e38cd107252302
      <changefreq>daily</changefreq>
     </url>
 </urlset>
