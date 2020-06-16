@@ -168,6 +168,13 @@ sleep 600
   * `qstat`
 
 - 如果是SGE:
+
+```
+#!/bin/bash
+sleep 600
+```
+
+  * `qsub -cwd -pe smp 2 -l vf=2G test.sh`
   * `qhost` to check your queue
   * `df -h` to check your volumns
   * `qsub test.sh` to check your cluster function
