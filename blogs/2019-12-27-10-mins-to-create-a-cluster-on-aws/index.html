@@ -279,6 +279,13 @@ sleep 600
 <li>
 <p>如果是SGE:</p>
 </li>
+</ul>
+<pre><code>#!/bin/bash
+sleep 600
+</code></pre>
+
+<ul>
+<li><code>qsub -cwd -pe smp 2 -l vf=2G test.sh</code></li>
 <li><code>qhost</code> to check your queue</li>
 <li><code>df -h</code> to check your volumns</li>
 <li><code>qsub test.sh</code> to check your cluster function</li>
