@@ -8,7 +8,7 @@
         
         <link rel="canonical" href="http://www.bioaws.com/blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws/">
         <link rel="shortcut icon" href="../../img/favicon.ico">
-        <title>pcluster quick-build within 10 min - BioAWS</title>
+        <title>10分钟一键创建HPC集群-pcluster - BioAWS</title>
         <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../../css/font-awesome.min.css" rel="stylesheet">
         <link href="../../css/base.css" rel="stylesheet">
@@ -71,7 +71,7 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#pcluster-quick-build-within-10-min">pcluster quick-build within 10 min</a></li>
+        <li class="main active"><a href="#10hpc-pcluster">10分钟一键创建HPC集群-pcluster</a></li>
             <li><a href="#_1">好话说前头</a></li>
             <li><a href="#launch-a-instance-for-pcluster-controller-v270">launch a instance for pcluster controller (v2.7.0)</a></li>
             <li><a href="#log-in-and-install-packages">log in and install packages</a></li>
@@ -79,11 +79,12 @@
             <li><a href="#check-service">check service</a></li>
             <li><a href="#_2">关于共享存储</a></li>
             <li><a href="#for-debug">for debug</a></li>
+            <li><a href="#for-autoscaling">for autoscaling 混搭[高阶]</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="pcluster-quick-build-within-10-min">pcluster quick-build within 10 min</h1>
+<h1 id="10hpc-pcluster">10分钟一键创建HPC集群-pcluster</h1>
 <blockquote>
 <p>brief introduction of pcluster on aws</p>
 <p>-- D.C</p>
@@ -298,7 +299,7 @@ sleep 600
 <li>EFS 弹性文件系统</li>
 <li>FSx Lustre</li>
 </ul>
-<p>以EFS为例，讲EBS设置部分替换成如下：</p>
+<p>以EFS为例，将EBS设置部分替换成如下：</p>
 <pre><code>efs_settings = customfs
 
 [efs customfs]
@@ -307,7 +308,7 @@ encrypted = false
 performance_mode = generalPurpose
 </code></pre>
 
-<p>这样build出来的集群，共享存储性能有保证，且容量弹性，按照实际占用空间计费，如果善于利用EFS的生命周期管理，成本也能控制的不错。</p>
+<p>这样build出来的集群，共享存储性能有保证，且容量弹性，按照实际占用空间计费，如果善于利用EFS的生命周期管理（去EFS页面设置），成本也能控制的不错。</p>
 <h2 id="for-debug">for debug</h2>
 <ul>
 <li><code>vi ~/.bashrc</code></li>
@@ -316,6 +317,15 @@ performance_mode = generalPurpose
 <li><code>source ~/.bashrc</code></li>
 <li><code>sudo /etc/init.d/sgemaster.p6444 &lt;start/stop/restart&gt;</code></li>
 </ul>
+<h2 id="for-autoscaling">for autoscaling 混搭[高阶]</h2>
+<pre><code>wget https://awshcls.s3.cn-northwest-1.amazonaws.com.cn/pcluster/asgmodify.json
+
+#修改其中ASG name、LaunchTemplateName和所需实例类型
+vi asgmodify.json
+
+aws autoscaling update-auto-scaling-group --cli-input-json file://asgmodify.json --profile zhy
+</code></pre>
+
 <p><a href="../../img/aws-parallelcluster-ug.pdf">pcluster_User_Guide</a></p>
 <blockquote>
 <p>行者无疆，干就是了。</p>
