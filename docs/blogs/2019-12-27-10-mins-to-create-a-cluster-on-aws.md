@@ -55,7 +55,7 @@ $ aws configure
 AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
 AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 Default region name [us-east-1]: cn-northwest-1
-Default output format [None]:
+Default output format [None]: json
 
 ```
 
@@ -96,17 +96,17 @@ sanity_check = true
 ssh = ssh {CFN_USER}@{MASTER_IP} {ARGS}
 [cluster myname] # change if you changed the name of cluster_template in global settings above
 key_name = mytest # change to your keypair name
-master_instance_type = c5.2xlarge  # change if you want
-compute_instance_type = c5.large  # change if you want
+master_instance_type = c5.2xlarge  # master node type
+compute_instance_type = c5.large  # compute node type
 pre_install =  https://awshcls.s3.cn-northwest-1.amazonaws.com.cn/efsfix.sh # if use EFS
 pre_install_args = NONE  # if use EFS
 initial_queue_size = 1  #  number of compute nodes when this cluster be created
-max_queue_size = 3000  # maximum number of compute nodes
+max_queue_size = 30  # maximum number of compute nodes
 maintain_initial_size = true  # will remain 1 compute node even no job submitted
-master_root_volume_size = 25  # change if you want, 17G by default
-compute_root_volume_size = 25  # change if you want, 17G by default
-cluster_type = spot  # change if you want, ondemand/spot
-spot_price = 0.4   # change if you want use spot as compute nodes, get latest price of specific instance in your console
+master_root_volume_size = 25  # master's root disk volumn, 17G by default
+compute_root_volume_size = 25  # compute's root disk volumn, 17G by default
+cluster_type = spot  # ondemand/spot
+spot_price = 0.4   # change if you want use spot as compute nodes, get latest price of specific instance in your EC2 console
 base_os = alinux2
 scheduler = sge
 custom_ami = ami-0c7a09bc17088086c # 2.7.0; ami-0c081e1551e30ee5a 2.6.1 ; change to your customized AMI based on pcluster ami
@@ -117,9 +117,9 @@ vpc_settings = default
 #ebs_settings = custom1, custom2 # use EBS to be shared as NFS
 efs_settings = custom1 # use EFS to be shared [recommmend]
 [vpc default]
-vpc_id = vpc-6b129502  # change to your vpc id
-master_subnet_id = subnet-e80a34a2 # change to your subnet id
-#compute_subnet_id = subnet-e80a34a2 # if you want to put compute in private subnet for security
+vpc_id = vpc-6b111111  # change to your vpc id
+master_subnet_id = subnet-a23v24c # change to your subnet id
+#compute_subnet_id = subnet-a23v24c # if you want to put compute in private subnet for security
 #[ebs custom1]  # change or add more if you want
 #shared_dir = data1  # the dir will show in your master or compute nodes
 #volume_type = gp2
@@ -153,12 +153,26 @@ MasterPrivateIP: 172.11.11.11
 ## check service
 
 - go to aws console & check your nodes
-- log in master nodes to check:
+- login master by terminal `ssh -i 'xx.pem' ec2-user@192.111.11.11`
+- 如果是PBS：
+  * `vi test.pbs`
+
+```
+#!/bin/bash
+#PBS -l nodes=1:ppn=2
+
+sleep 600
+```
+
+  * `qsub test.pbs`
+  * `qstat`
+
+- 如果是SGE:
   * `qhost` to check your queue
   * `df -h` to check your volumns
   * `qsub test.sh` to check your cluster function
   * `qstat -f` to see job status
-- submit your jobs using command like `qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 4 -o output -e output -q all.q yourscript.sh`
+  * submit your jobs using command like `qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 4 -o output -e output -q all.q yourscript.sh`
 
 ## 关于共享存储
 
