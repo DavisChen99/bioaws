@@ -13,7 +13,7 @@ _俗话说的好，没图说个基霸_
 
 - 对生信来说，第一步不是往下看，而是找到正确的**AMI**, 这个镜像应该是预装好了pcluster相关必要组件的，所以这一步至关重要。
 
-- pcluster的版本（目前是2.5.1）对应不同的ami，所以也要区分清楚,在创建ec2界面的第一步，我们可以搜索`parallelcluster-2.5.1`,目前的记录显示有41个相关的ami,根据你想要的操作系统记下对应的ami ID。不同region的ami id也不同。
+- pcluster的版本（目前是2.7.0）对应不同的ami，所以也要区分清楚,在创建ec2界面的第一步，我们可以搜索`parallelcluster-2.7.0`,目前的记录显示有41个相关的ami,根据你想要的操作系统记下对应的ami ID。不同region的ami id也不同。
 
 举例：
 
@@ -23,32 +23,131 @@ _俗话说的好，没图说个基霸_
 |2.5.1|linux|ami-05038e0c41061b799|ami-0bbadb6ff64415ab3|
 |2.5.1|ubuntu|ami-0b0ebbfcd0c50f225|ami-0d3a6e7dd85085042|
 
-- 一般操作是开一台ec2（可以是下一步的跳板机），选择上面的一个ami，然后将分析流程部署在上面，再基于这台ec2打一个新的ami，拿到这个新的ami id，设置为pcluster集群的启动ami。
+- 一般操作是开一台ec2（可以是下一步的跳板机），选择上面的一个ami，然后将分析流程部署在上面，再基于这台ec2打一个新的ami，拿到这个新的ami id，设置为pcluster集群的启动ami,对应下面template里面的custom_ami。
 
 - pcluster启动的集群默认是master是on-demand, compute节点可以设置为on-demand或是spot，像上图中展示的又有OD又有spot的情况，是需要启动以后手动调整auto scaling策略。
 
 OK，接下来就是如何一键启动集群了。
 
-## launch an instance to install pcluster (v2.5.1)
+## launch a instance for pcluster controller (v2.7.0)
 
-- `eg. t2.micro`
+- choose a instance type `eg. t2.micro`
 - remember your keypair name `eg. mykey.pem`
 - launch & login
 
-## install packages & launch cluster
+## log in and install packages
 
-- `wget https://github.com/DavisChen99/awspac/archive/master.zip`
-- `unzip awspac-master.zip && cd awspac-master`
-- refer to [doc](https://aws-parallelcluster.readthedocs.io/en/latest/configuration.html#scheduler)
-- add permission `chmod 667 install_pcluster_v1.sh`
-- run `sudo bash install_pcluster_v1.sh`, try again if you meet HTTPS connect problem - usually network issue.
+- install pip
 
-## build manually (after first build)
+```
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+
+python get-pip.py
+
+pip install aws-parallelcluster
+
+```
+
+- configure aws cli
+
+```
+$ aws configure
+AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
+AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+Default region name [us-east-1]: cn-northwest-1
+Default output format [None]:
+
+```
+
+- [option] install python3 if you want
+
+```
+sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel
+sudo yum install gcc -y
+
+sudo mkdir /usr/local/python3
+cd /usr/local/  
+sudo wget https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tgz
+sudo tar -xvf Python-3.6.5.tgz
+
+cd ./Python-3.6.5/
+sudo ./configure --prefix=/usr/local/python3
+sudo make
+sudo make install
+
+sudo ln -s /usr/local/python3/bin/python3  /usr/bin/python3
+```
+
+## config and launch pcluster
 
 - `cd ~/.parallelcluster`
 - `vim config` edit as you want
-- `aws configure` with your AKSK keys
-- `pcluster <create/delete> <cluster_template>`
+
+[config template]
+
+```
+[aws]
+aws_region_name = cn-northwest-1 # change if you want
+[global]
+cluster_template = myname # change if you want, MUST remember this name!
+update_check = true
+sanity_check = true
+[aliases]
+ssh = ssh {CFN_USER}@{MASTER_IP} {ARGS}
+[cluster myname] # change if you changed the name of cluster_template in global settings above
+key_name = mytest # change to your keypair name
+master_instance_type = c5.2xlarge  # change if you want
+compute_instance_type = c5.large  # change if you want
+pre_install =  https://awshcls.s3.cn-northwest-1.amazonaws.com.cn/efsfix.sh # if use EFS
+pre_install_args = NONE  # if use EFS
+initial_queue_size = 1  #  number of compute nodes when this cluster be created
+max_queue_size = 3000  # maximum number of compute nodes
+maintain_initial_size = true  # will remain 1 compute node even no job submitted
+master_root_volume_size = 25  # change if you want, 17G by default
+compute_root_volume_size = 25  # change if you want, 17G by default
+cluster_type = spot  # change if you want, ondemand/spot
+spot_price = 0.4   # change if you want use spot as compute nodes, get latest price of specific instance in your console
+base_os = alinux2
+scheduler = sge
+custom_ami = ami-0c7a09bc17088086c # 2.7.0; ami-0c081e1551e30ee5a 2.6.1 ; change to your customized AMI based on pcluster ami
+s3_read_resource = NONE
+s3_read_write_resource = NONE
+placement = compute
+vpc_settings = default
+#ebs_settings = custom1, custom2 # use EBS to be shared as NFS
+efs_settings = custom1 # use EFS to be shared [recommmend]
+[vpc default]
+vpc_id = vpc-6b129502  # change to your vpc id
+master_subnet_id = subnet-e80a34a2 # change to your subnet id
+#compute_subnet_id = subnet-e80a34a2 # if you want to put compute in private subnet for security
+#[ebs custom1]  # change or add more if you want
+#shared_dir = data1  # the dir will show in your master or compute nodes
+#volume_type = gp2
+#volume_size = 80    # GB
+#[ebs custom2]  # change or add more if you want
+#shared_dir = data2
+#volume_type = gp2
+#volume_size = 2000 # GB
+[efs custom1]
+shared_dir = myefs # change and will be mounted as /myefs in your master and computer node
+encrypted = false
+performance_mode = generalPurpose
+[scaling custom]
+scaledown_idletime = 10  # if idle time of compute nodes exceeds, it will be terminated for cost control (min)
+```
+
+- Launch cluster `pcluster <create/delete> <cluster_template>`
+
+```
+$ pcluster create -c configxxx myname
+Beginning cluster creation for cluster: myname
+Creating stack named: parallelcluster-myname
+Status: parallelcluster-find5 - CREATE_COMPLETE
+MasterPublicIP: 161.111.111.111
+ClusterUser: ec2-user
+MasterPrivateIP: 172.11.11.11
+```
+
 - PS: 这台跳板机在启动集群成功后，平时可以关闭，需要的时候在开启，节约费用。
 
 ## check service
