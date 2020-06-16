@@ -42,7 +42,7 @@
 
 - [高阶系列3 BAM文件放云上好了，本地IGV很方便](blogs/2020-01-31-put-bam-on-s3.md)
 
-- [高阶系列4 pcluster! 10分钟打造云上集群](blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws.md)
+- [高阶系列4 10分钟一键创建HPC集群-pcluster](blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws.md)
 
 - [高阶系列5 容器！利器！AWS Batch批量计算](blogs/2020-01-14-how-to-use-aws-batch-china.md)
 

@@ -1,4 +1,4 @@
-# pcluster quick-build within 10 min
+# 10分钟一键创建HPC集群-pcluster
 
 > brief introduction of pcluster on aws
 >
@@ -188,7 +188,7 @@ sleep 600
 - EFS 弹性文件系统
 - FSx Lustre
 
-以EFS为例，讲EBS设置部分替换成如下：
+以EFS为例，将EBS设置部分替换成如下：
 
 ```
 efs_settings = customfs
@@ -199,7 +199,7 @@ encrypted = false
 performance_mode = generalPurpose
 ```
 
-这样build出来的集群，共享存储性能有保证，且容量弹性，按照实际占用空间计费，如果善于利用EFS的生命周期管理，成本也能控制的不错。
+这样build出来的集群，共享存储性能有保证，且容量弹性，按照实际占用空间计费，如果善于利用EFS的生命周期管理（去EFS页面设置），成本也能控制的不错。
 
 ## for debug
 
@@ -208,6 +208,17 @@ performance_mode = generalPurpose
 - add `PATH=/opt/sge/bin:/opt/sge/bin/lx-amd64:/opt/amazon/openmpi/bin:$PATH`
 - `source ~/.bashrc`
 - `sudo /etc/init.d/sgemaster.p6444 <start/stop/restart>`
+
+## for autoscaling 混搭[高阶]
+
+```
+wget https://awshcls.s3.cn-northwest-1.amazonaws.com.cn/pcluster/asgmodify.json
+
+#修改其中ASG name、LaunchTemplateName和所需实例类型
+vi asgmodify.json
+ 
+aws autoscaling update-auto-scaling-group --cli-input-json file://asgmodify.json --profile zhy
+```
 
 [pcluster_User_Guide](../img/aws-parallelcluster-ug.pdf)
 
