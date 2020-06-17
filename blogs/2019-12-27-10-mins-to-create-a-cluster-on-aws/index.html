@@ -263,36 +263,55 @@ MasterPrivateIP: 172.11.11.11
 <ul>
 <li>go to aws console &amp; check your nodes</li>
 <li>login master by terminal <code>ssh -i 'xx.pem' ec2-user@192.111.11.11</code></li>
-<li>如果是PBS：</li>
-<li><code>vi test.pbs</code></li>
+<li>如果是<a href="http://bicmr.pku.edu.cn/~wenzw/pages/slurm.html">Slurm</a> (推荐)</li>
 </ul>
-<pre><code>#!/bin/bash
+<pre><code>$ cat &gt;&gt; test.slurm&lt;&lt;EOF
+#!/bin/bash
+#SBATCH -J array
+#SBATCH -p compute
+#SBATCH -N 1
+#SBATCH --cpus-per-task=1
+#SBATCH -t 5:00
+#SBATCH -a 0-2
+
+input=(foo bar baz)
+echo &quot;This is job #${SLURM_ARRAY_JOB_ID}, with parameter ${input[$SLURM_ARRAY_TASK_ID]}&quot;
+echo &quot;There are ${SLURM_ARRAY_TASK_COUNT} task(s) in the array.&quot;
+echo &quot;  Max index is ${SLURM_ARRAY_TASK_MAX}&quot;
+echo &quot;  Min index is ${SLURM_ARRAY_TASK_MIN}&quot;
+sleep 5
+EOF
+</code></pre>
+
+<p>提交任务<code>sbatch test.slurm</code></p>
+<ul>
+<li>如果是PBS：</li>
+</ul>
+<pre><code>$ cat &gt;&gt; test.pbs&lt;&lt;EOF
+#!/bin/bash
 #PBS -l nodes=1:ppn=2
 
 sleep 600
+EOF
 </code></pre>
 
-<ul>
-<li><code>qsub test.pbs</code></li>
-<li>
+<p><code>qsub test.pbs</code></p>
 <p><code>qstat</code></p>
-</li>
-<li>
-<p>如果是SGE:</p>
-</li>
+<ul>
+<li>如果是SGE:</li>
 </ul>
-<pre><code>#!/bin/bash
+<pre><code>$ cat &gt;&gt; test.sh&lt;&lt;EOF
+#!/bin/bash
 sleep 600
+EOF
 </code></pre>
 
-<ul>
-<li><code>qsub -cwd -pe smp 2 -l vf=2G test.sh</code></li>
-<li><code>qhost</code> to check your queue</li>
-<li><code>df -h</code> to check your volumns</li>
-<li><code>qsub test.sh</code> to check your cluster function</li>
-<li><code>qstat -f</code> to see job status</li>
-<li>submit your jobs using command like <code>qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 4 -o output -e output -q all.q yourscript.sh</code></li>
-</ul>
+<p><code>qsub -cwd -pe smp 2 -l vf=2G test.sh</code></p>
+<p><code>qhost</code> to check your queue</p>
+<p><code>df -h</code> to check your volumns</p>
+<p><code>qsub test.sh</code> to check your cluster function</p>
+<p><code>qstat -f</code> to see job status</p>
+<p>submit your jobs using command like <code>qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 4 -o output -e output -q all.q yourscript.sh</code></p>
 <h2 id="_2">关于共享存储</h2>
 <p>这个例子默认的是用EBS组件的NFS盘，可以说是和本地环境无缝对接了，但是对于高IOPS的应用场景，可能就会遇到瓶颈了，所幸Pcluster还为我们提供了其他的共享存储选项：</p>
 <ul>
