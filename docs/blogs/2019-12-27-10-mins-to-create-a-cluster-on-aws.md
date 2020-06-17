@@ -226,9 +226,9 @@ submit your jobs using command like `qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 
 
 ## 关于共享存储
 
-这个例子默认的是用EBS组件的NFS盘，可以说是和本地环境无缝对接了，但是对于高IOPS的应用场景，可能就会遇到瓶颈了，所幸Pcluster还为我们提供了其他的共享存储选项：
+我们一般可以用EBS的gp2类型来组建NFS盘，可以和本地环境无缝对接了，但是对于高IOPS的应用场景，可能就会遇到瓶颈了，所幸Pcluster还为我们提供了其他的共享存储选项：
 
-- EFS 弹性文件系统
+- EFS 弹性文件系统 （上面的例子用的就是EFS）
 - FSx Lustre
 
 以EFS为例，将EBS设置部分替换成如下：
