@@ -154,32 +154,75 @@ MasterPrivateIP: 172.11.11.11
 
 - go to aws console & check your nodes
 - login master by terminal `ssh -i 'xx.pem' ec2-user@192.111.11.11`
-- 如果是PBS：
-  * `vi test.pbs`
+- 如果是[Slurm](http://bicmr.pku.edu.cn/~wenzw/pages/slurm.html) (推荐)
 
 ```
+$ cat >> test.slurm<<EOF
+#!/bin/bash
+#SBATCH -J array
+#SBATCH -p compute
+#SBATCH -N 1
+#SBATCH --cpus-per-task=1
+#SBATCH -t 5:00
+#SBATCH -a 0-2
+
+input=(foo bar baz)
+echo "This is job #${SLURM_ARRAY_JOB_ID}, with parameter ${input[$SLURM_ARRAY_TASK_ID]}"
+echo "There are ${SLURM_ARRAY_TASK_COUNT} task(s) in the array."
+echo "  Max index is ${SLURM_ARRAY_TASK_MAX}"
+echo "  Min index is ${SLURM_ARRAY_TASK_MIN}"
+sleep 5
+EOF
+```
+
+提交任务`sbatch test.slurm`
+
+
+- 如果是PBS：
+
+```
+$ cat >> test.pbs<<EOF
 #!/bin/bash
 #PBS -l nodes=1:ppn=2
 
 sleep 600
+EOF
 ```
 
-  * `qsub test.pbs`
-  * `qstat`
+`qsub test.pbs`
+
+
+`qstat`
+
+
 
 - 如果是SGE:
 
 ```
+$ cat >> test.sh<<EOF
 #!/bin/bash
 sleep 600
+EOF
 ```
 
-  * `qsub -cwd -pe smp 2 -l vf=2G test.sh`
-  * `qhost` to check your queue
-  * `df -h` to check your volumns
-  * `qsub test.sh` to check your cluster function
-  * `qstat -f` to see job status
-  * submit your jobs using command like `qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 4 -o output -e output -q all.q yourscript.sh`
+
+`qsub -cwd -pe smp 2 -l vf=2G test.sh`
+
+
+`qhost` to check your queue
+
+
+`df -h` to check your volumns
+
+
+`qsub test.sh` to check your cluster function
+
+
+`qstat -f` to see job status
+
+
+submit your jobs using command like `qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 4 -o output -e output -q all.q yourscript.sh`
+
 
 ## 关于共享存储
 
