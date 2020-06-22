@@ -6,6 +6,8 @@
 >
 > -- D.C
 
+Update: endpoint 针对不出网的私有子网内的实例访问S3或者其他支持的AWS服务，而无需internet网关、NAT网关、VPN等，属于内部的连接，不具备提升访问速度的功能。
+
 ## 什么是VPC？
 
 Amazon Virtual Private Cloud (Amazon VPC),简单理解，就是在云上建个大楼，大楼里面的网络、门禁，安检等都一应俱全，我们根据需要在大楼里选择房间（创建ec2）办公，这个房间自己也有相应的门禁系统。
@@ -16,13 +18,13 @@ VPC一个重要的功能是为其中的组件提供了统一的管理功能，�
 
 ## 创建 VPC endpoint
 
-因为我们要连接的EC2都是在VPC的环境中，如果给EC2和s3之间建高速公路，那么只需要在VPC和s3之间创建一个endpoint就可以了。
+因为我们要连接的EC2都是在VPC的环境中，如果给EC2和s3之间建专属公路，那么只需要在VPC和s3之间创建一个endpoint就可以了。
 
 - 登录**aws管理控制台**，搜索**VPC**，点击进入。简单看下dashboard，然后点击左侧的**Endpoints**。
 
 ![vpce_create][2]
 
-- 点击界面上方的**Create Endpoint**,进入选择界面。我们可以看到，**Service category** 这里，系统自动帮我们选择了 **AWS service**,而 **Service Name** 这儿需要我们具体选择一项aws的服务，简单来说就是，你要给vpc建一条高速公路通到那里去呢？你得告诉我啊，没错，我们这里选择s3服务 `com.amazonaws.cn-northwest-1.s3`。
+- 点击界面上方的**Create Endpoint**,进入选择界面。我们可以看到，**Service category** 这里，系统自动帮我们选择了 **AWS service**,而 **Service Name** 这儿需要我们具体选择一项aws的服务，简单来说就是，你要给vpc建一条专属公路通到那里去呢？你得告诉我啊，没错，我们这里选择s3服务 `com.amazonaws.cn-northwest-1.s3`。
 
 ![vpce_set1][3]
 
