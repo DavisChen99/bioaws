@@ -158,7 +158,7 @@ scaledown_idletime = 10  # if idle time of compute nodes exceeds, it will be ter
 [pcluster configure](https://docs.aws.amazon.com/zh_cn/parallelcluster/latest/ug/configuration.html)
 
 
-- 启动集群命令 `pcluster <create/delete> <cluster_template>`, 在上面的例子里，cluster_template = myname, 大约等待10分钟左右。
+- 启动集群命令 `pcluster <create/delete> <cluster_template>`, 在上面的例子里，cluster_template = myname, 集群启动大约需等待10分钟左右。
 
 ```
 $ pcluster create -c config myname
@@ -170,9 +170,9 @@ ClusterUser: ec2-user
 MasterPrivateIP: 172.11.11.11
 ```
 
-- PS: 这台跳板机在启动集群成功后，平时可以关闭，需要的时候在开启，节约费用。
+- PS: 这台控制机在启动集群成功后，平时可以关闭，需要的时候在开启，节约费用。
 
-## 登录主节点，确认集群服务
+## 登录主节点，确认集群功能
 
 - 进到AWS console界面查看master和compute节点状态
 - ssh登录master节点 `ssh -i 'xx.pem' ec2-user@192.111.11.11`
