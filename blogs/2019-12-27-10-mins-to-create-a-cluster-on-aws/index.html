@@ -8,7 +8,7 @@
         
         <link rel="canonical" href="http://www.bioaws.com/blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws/">
         <link rel="shortcut icon" href="../../img/favicon.ico">
-        <title>10分钟一键创建HPC集群-pcluster - BioAWS</title>
+        <title>10分钟一键创建HPC集群-pcluster (parallelcluster) - BioAWS</title>
         <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../../css/font-awesome.min.css" rel="stylesheet">
         <link href="../../css/base.css" rel="stylesheet">
@@ -71,20 +71,21 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#10hpc-pcluster">10分钟一键创建HPC集群-pcluster</a></li>
+        <li class="main active"><a href="#10hpc-pcluster-parallelcluster">10分钟一键创建HPC集群-pcluster (parallelcluster)</a></li>
             <li><a href="#_1">好话说前头</a></li>
-            <li><a href="#launch-a-instance-for-pcluster-controller-v270">launch a instance for pcluster controller (v2.7.0)</a></li>
-            <li><a href="#log-in-and-install-packages">log in and install packages</a></li>
-            <li><a href="#config-and-launch-pcluster">config and launch pcluster</a></li>
-            <li><a href="#check-service">check service</a></li>
-            <li><a href="#_2">关于共享存储</a></li>
+            <li><a href="#_2">[必读] 创建分析镜像</a></li>
+            <li><a href="#pcluster-v270">打开一台虚拟机作为Pcluster的 控制服务器  (v2.7.0)</a></li>
+            <li><a href="#pcluster">安装pcluster 控制软件</a></li>
+            <li><a href="#config-pcluster">生成并配置集群的config文件， 一键启动pcluster</a></li>
+            <li><a href="#_3">登录主节点，确认集群服务</a></li>
+            <li><a href="#_4">关于共享存储</a></li>
             <li><a href="#for-debug">for debug</a></li>
             <li><a href="#for-autoscaling">for autoscaling 混搭[高阶]</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="10hpc-pcluster">10分钟一键创建HPC集群-pcluster</h1>
+<h1 id="10hpc-pcluster-parallelcluster">10分钟一键创建HPC集群-pcluster (parallelcluster)</h1>
 <blockquote>
 <p>brief introduction of pcluster on aws</p>
 <p>-- D.C</p>
@@ -94,7 +95,7 @@
 <h2 id="_1">好话说前头</h2>
 <ul>
 <li>
-<p>对生信来说，第一步不是往下看，而是找到正确的<strong>AMI</strong>, 这个镜像应该是预装好了pcluster相关必要组件的，所以这一步至关重要。</p>
+<p>对生信来说，第一步不是往下看，而是找到正确的<strong>AMI</strong>, 这个镜像应该是预装好了pcluster相关必要组件的，所以这一步 <strong>至关重要</strong> 。</p>
 </li>
 <li>
 <p>pcluster的版本（目前是2.7.0）对应不同的ami，所以也要区分清楚,在创建ec2界面的第一步，我们可以搜索<code>parallelcluster-2.7.0</code>,目前的记录显示有41个相关的ami,根据你想要的操作系统记下对应的ami ID。不同region的ami id也不同。</p>
@@ -132,21 +133,58 @@
 </tbody>
 </table>
 <ul>
-<li>
-<p>一般操作是开一台ec2（可以是下一步的跳板机），选择上面的一个ami，然后将分析流程部署在上面，再基于这台ec2打一个新的ami，拿到这个新的ami id，设置为pcluster集群的启动ami,对应下面template里面的custom_ami。</p>
-</li>
-<li>
-<p>pcluster启动的集群默认是master是on-demand, compute节点可以设置为on-demand或是spot，像上图中展示的又有OD又有spot的情况，是需要启动以后手动调整auto scaling策略。</p>
-</li>
+<li>本文会涉及到多台机器：</li>
 </ul>
-<p>OK，接下来就是如何一键启动集群了。</p>
-<h2 id="launch-a-instance-for-pcluster-controller-v270">launch a instance for pcluster controller (v2.7.0)</h2>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模板机</td>
+<td>从官方的pcluster镜像启动，安装用户自己的软件后，打包成分析镜像AMI</td>
+</tr>
+<tr>
+<td>控制机</td>
+<td>不需要从镜像启动，用于安装pcluster命令，用于控制集群</td>
+</tr>
+<tr>
+<td>主节点</td>
+<td>用于调度集群作业的节点</td>
+</tr>
+<tr>
+<td>计算节点</td>
+<td>用于分析计算的节点</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_2">[必读] 创建分析镜像</h2>
 <ul>
-<li>choose a instance type <code>eg. t2.micro</code></li>
-<li>remember your keypair name <code>eg. mykey.pem</code></li>
-<li>launch &amp; login</li>
+<li>
+<p>开一台ec2作为 <strong>模板机</strong> （如t2.micro），选择从parallelcluster的官方ami启动 [如aws-parallelcluster-2.7.0-amzn-hvm-202005172030 (ami-0c7a09bc17088086c)]</p>
+</li>
+<li>
+<p>将我的分析流程部署在这台模板机上，再基于 <strong>这台ec2</strong> 打一个新的ami，拿到这个新的ami id (如ami-xxxxxxxxxxxxxx)，这个AMI就可以设置为pcluster集群的启动ami,对应下面template里面的custom_ami。</p>
+</li>
+<li>
+<p>请注意，使用parallelcluster一键集群的功能，需要保证 <strong>控制服务器安装的parallelcluster版本</strong> 和 <strong>部署分析流程（的模板机）选择ami的parallelcluster版本</strong> 都是一一对应的。如都是2.7.0版本。</p>
+</li>
+<li>
+<p>所以流程大致是：</p>
+</li>
 </ul>
-<h2 id="log-in-and-install-packages">log in and install packages</h2>
+<p>原始pcluster官方镜像（ami-0c7a09bc17088086c） --&gt; 启动模板机 --&gt; 安装分析流程 --&gt; custom_ami</p>
+<p>控制机(默认Amazon Linux 2 AMI) --&gt; 安装pcluster软件 --&gt; 配置config --&gt; 运行命令启动集群</p>
+<h2 id="pcluster-v270">打开一台虚拟机作为Pcluster的 <strong>控制服务器</strong>  (v2.7.0)</h2>
+<ul>
+<li>选择一个ec2配置 <code>eg. t2.micro</code></li>
+<li>记住我的安全秘钥名称 <code>eg. mykey.pem</code></li>
+<li>登录这台机器</li>
+</ul>
+<h2 id="pcluster">安装pcluster 控制软件</h2>
 <ul>
 <li>install pip</li>
 </ul>
@@ -170,7 +208,7 @@ Default output format [None]: json
 </code></pre>
 
 <ul>
-<li>[option] install python3 if you want</li>
+<li>[可选项] 如果想安装python3的话</li>
 </ul>
 <pre><code>sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel
 sudo yum install gcc -y
@@ -188,7 +226,7 @@ sudo make install
 sudo ln -s /usr/local/python3/bin/python3  /usr/bin/python3
 </code></pre>
 
-<h2 id="config-and-launch-pcluster">config and launch pcluster</h2>
+<h2 id="config-pcluster">生成并配置集群的config文件， 一键启动pcluster</h2>
 <ul>
 <li><code>cd ~/.parallelcluster</code></li>
 <li><code>vim config</code> edit as you want</li>
@@ -202,12 +240,12 @@ update_check = true
 sanity_check = true
 [aliases]
 ssh = ssh {CFN_USER}@{MASTER_IP} {ARGS}
-[cluster myname] # change if you changed the name of cluster_template in global settings above
+[cluster myname] # change if you changed the name of cluster_template in [global] settings above
 key_name = mytest # change to your keypair name
 master_instance_type = c5.2xlarge  # master node type
 compute_instance_type = c5.large  # compute node type
-pre_install =  https://awshcls.s3.cn-northwest-1.amazonaws.com.cn/efsfix.sh # if use EFS
-pre_install_args = NONE  # if use EFS
+pre_install =  https://awshcls.s3.cn-northwest-1.amazonaws.com.cn/efsfix.sh # 中国区用EFS加上这句
+pre_install_args = NONE  # 中国区用EFS加上这句
 initial_queue_size = 1  #  number of compute nodes when this cluster be created
 max_queue_size = 30  # maximum number of compute nodes
 maintain_initial_size = true  # will remain 1 compute node even no job submitted
@@ -216,8 +254,8 @@ compute_root_volume_size = 25  # compute's root disk volumn, 17G by default
 cluster_type = spot  # ondemand/spot
 spot_price = 0.4   # change if you want use spot as compute nodes, get latest price of specific instance in your EC2 console
 base_os = alinux2
-scheduler = sge
-custom_ami = ami-0c7a09bc17088086c # 2.7.0; ami-0c081e1551e30ee5a 2.6.1 ; change to your customized AMI based on pcluster ami
+scheduler = sge #  设定调度引擎，sge,torque,slurm, awsbatch
+custom_ami = ami-xxxxxxxxxxxxxx # ami-0c7a09bc17088086c 2.7.0; ami-0c081e1551e30ee5a 2.6.1 ; change to your customized AMI based on pcluster ami
 s3_read_resource = NONE
 s3_read_write_resource = NONE
 placement = compute
@@ -244,10 +282,11 @@ performance_mode = generalPurpose
 scaledown_idletime = 10  # if idle time of compute nodes exceeds, it will be terminated for cost control (min)
 </code></pre>
 
+<p><a href="https://docs.aws.amazon.com/zh_cn/parallelcluster/latest/ug/configuration.html">pcluster configure</a></p>
 <ul>
-<li>Launch cluster <code>pcluster &lt;create/delete&gt; &lt;cluster_template&gt;</code></li>
+<li>启动集群命令 <code>pcluster &lt;create/delete&gt; &lt;cluster_template&gt;</code>, 在上面的例子里，cluster_template = myname, 大约等待10分钟左右。</li>
 </ul>
-<pre><code>$ pcluster create -c configxxx myname
+<pre><code>$ pcluster create -c config myname
 Beginning cluster creation for cluster: myname
 Creating stack named: parallelcluster-myname
 Status: parallelcluster-myname - CREATE_COMPLETE
@@ -259,11 +298,15 @@ MasterPrivateIP: 172.11.11.11
 <ul>
 <li>PS: 这台跳板机在启动集群成功后，平时可以关闭，需要的时候在开启，节约费用。</li>
 </ul>
-<h2 id="check-service">check service</h2>
+<h2 id="_3">登录主节点，确认集群服务</h2>
 <ul>
-<li>go to aws console &amp; check your nodes</li>
-<li>login master by terminal <code>ssh -i 'xx.pem' ec2-user@192.111.11.11</code></li>
-<li>如果是<a href="http://bicmr.pku.edu.cn/~wenzw/pages/slurm.html">Slurm</a> (推荐)</li>
+<li>进到AWS console界面查看master和compute节点状态</li>
+<li>
+<p>ssh登录master节点 <code>ssh -i 'xx.pem' ec2-user@192.111.11.11</code></p>
+</li>
+<li>
+<p>如果是<a href="http://bicmr.pku.edu.cn/~wenzw/pages/slurm.html">Slurm</a> (推荐)</p>
+</li>
 </ul>
 <pre><code>$ cat &gt;&gt; test.slurm&lt;&lt;EOF
 #!/bin/bash
@@ -312,7 +355,7 @@ EOF
 <p><code>qsub test.sh</code> to check your cluster function</p>
 <p><code>qstat -f</code> to see job status</p>
 <p>submit your jobs using command like <code>qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 4 -o output -e output -q all.q yourscript.sh</code></p>
-<h2 id="_2">关于共享存储</h2>
+<h2 id="_4">关于共享存储</h2>
 <p>我们一般可以用EBS的gp2类型来组建NFS盘，可以和本地环境无缝对接了，但是对于高IOPS的应用场景，可能就会遇到瓶颈了，所幸Pcluster还为我们提供了其他的共享存储选项：</p>
 <ul>
 <li>EFS 弹性文件系统 （上面的例子用的就是EFS）</li>
