@@ -77,7 +77,7 @@
             <li><a href="#pcluster-v270">打开一台虚拟机作为Pcluster的 控制服务器  (v2.7.0)</a></li>
             <li><a href="#pcluster">安装pcluster 控制软件</a></li>
             <li><a href="#config-pcluster">生成并配置集群的config文件， 一键启动pcluster</a></li>
-            <li><a href="#_3">登录主节点，确认集群服务</a></li>
+            <li><a href="#_3">登录主节点，确认集群功能</a></li>
             <li><a href="#_4">关于共享存储</a></li>
             <li><a href="#for-debug">for debug</a></li>
             <li><a href="#for-autoscaling">for autoscaling 混搭[高阶]</a></li>
@@ -284,7 +284,7 @@ scaledown_idletime = 10  # if idle time of compute nodes exceeds, it will be ter
 
 <p><a href="https://docs.aws.amazon.com/zh_cn/parallelcluster/latest/ug/configuration.html">pcluster configure</a></p>
 <ul>
-<li>启动集群命令 <code>pcluster &lt;create/delete&gt; &lt;cluster_template&gt;</code>, 在上面的例子里，cluster_template = myname, 大约等待10分钟左右。</li>
+<li>启动集群命令 <code>pcluster &lt;create/delete&gt; &lt;cluster_template&gt;</code>, 在上面的例子里，cluster_template = myname, 集群启动大约需等待10分钟左右。</li>
 </ul>
 <pre><code>$ pcluster create -c config myname
 Beginning cluster creation for cluster: myname
@@ -296,9 +296,9 @@ MasterPrivateIP: 172.11.11.11
 </code></pre>
 
 <ul>
-<li>PS: 这台跳板机在启动集群成功后，平时可以关闭，需要的时候在开启，节约费用。</li>
+<li>PS: 这台控制机在启动集群成功后，平时可以关闭，需要的时候在开启，节约费用。</li>
 </ul>
-<h2 id="_3">登录主节点，确认集群服务</h2>
+<h2 id="_3">登录主节点，确认集群功能</h2>
 <ul>
 <li>进到AWS console界面查看master和compute节点状态</li>
 <li>
