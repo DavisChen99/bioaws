@@ -16,7 +16,7 @@
 
 - [入门系列6 如何帮EC2摸到S3上的数据](blogs/2020-01-28-ec2-s3-data-exchange.md)
 
-- [入门系列7 加速！为EC2和S3之间搭建爱的桥梁](blogs/2020-02-02-vpc-endpoint-s3.md)
+- [入门系列7 为EC2和S3之间搭建爱的桥梁](blogs/2020-02-02-vpc-endpoint-s3.md)
 
 - [入门系列8 EC2“红杏出墙”阿里云OSS](blogs/2020-02-04-ec2-download-oss.md)
 
