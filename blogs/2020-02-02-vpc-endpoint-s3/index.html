@@ -8,7 +8,7 @@
         
         <link rel="canonical" href="http://www.bioaws.com/blogs/2020-02-02-vpc-endpoint-s3/">
         <link rel="shortcut icon" href="../../img/favicon.ico">
-        <title>加速！为EC2和S3之间搭建爱的桥梁 - BioAWS</title>
+        <title>Endpoint-为EC2和S3之间搭建爱的桥梁 - BioAWS</title>
         <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../../css/font-awesome.min.css" rel="stylesheet">
         <link href="../../css/base.css" rel="stylesheet">
@@ -71,14 +71,14 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#ec2s3">加速！为EC2和S3之间搭建爱的桥梁</a></li>
+        <li class="main active"><a href="#endpoint-ec2s3">Endpoint-为EC2和S3之间搭建爱的桥梁</a></li>
             <li><a href="#vpc">什么是VPC？</a></li>
             <li><a href="#vpc-endpoint">创建 VPC endpoint</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="ec2s3">加速！为EC2和S3之间搭建爱的桥梁</h1>
+<h1 id="endpoint-ec2s3">Endpoint-为EC2和S3之间搭建爱的桥梁</h1>
 <blockquote>
 <p><em>S3能为我们提供安全、耐用且具备高度可扩展能力的对象存储服务。Virtual Private Cloud则给我们在云端创建出一套AWS Cloud逻辑隔离区，并通过自己定义的虚拟网络对其进行全面控制。EC2服务器就是在VPC这个网络环境内进行工作和受管理的。</em></p>
 <p><em>当我们创建VPC时，需要利用安全组与访问控制列表（简称ACL）对输入及输出流量进行控制。在终端节点（endpoint）服务出现之前，如果大家希望让自己的EC2实例有能力访问公有资源，则必须使用Internet Gateway，且可能需要对部分NAT实例进行管理。而现在，更易于配置、具备高度可靠性的Endpoints能够为我们提供指向S3的安全私有连接，而且整个流程不需要任何网关或者NAT实例的介入。注意，这是私网。</em></p>
