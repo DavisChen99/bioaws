@@ -1,4 +1,4 @@
-# 10分钟一键创建HPC集群-pcluster
+# 10分钟一键创建HPC集群-pcluster (parallelcluster)
 
 > brief introduction of pcluster on aws
 >
@@ -11,7 +11,7 @@ _俗话说的好，没图说个基霸_
 
 ## 好话说前头
 
-- 对生信来说，第一步不是往下看，而是找到正确的**AMI**, 这个镜像应该是预装好了pcluster相关必要组件的，所以这一步至关重要。
+- 对生信来说，第一步不是往下看，而是找到正确的**AMI**, 这个镜像应该是预装好了pcluster相关必要组件的，所以这一步 **至关重要** 。
 
 - pcluster的版本（目前是2.7.0）对应不同的ami，所以也要区分清楚,在创建ec2界面的第一步，我们可以搜索`parallelcluster-2.7.0`,目前的记录显示有41个相关的ami,根据你想要的操作系统记下对应的ami ID。不同region的ami id也不同。
 
@@ -23,19 +23,38 @@ _俗话说的好，没图说个基霸_
 |2.5.1|linux|ami-05038e0c41061b799|ami-0bbadb6ff64415ab3|
 |2.5.1|ubuntu|ami-0b0ebbfcd0c50f225|ami-0d3a6e7dd85085042|
 
-- 一般操作是开一台ec2（可以是下一步的跳板机），选择上面的一个ami，然后将分析流程部署在上面，再基于这台ec2打一个新的ami，拿到这个新的ami id，设置为pcluster集群的启动ami,对应下面template里面的custom_ami。
+- 本文会涉及到多台机器：
 
-- pcluster启动的集群默认是master是on-demand, compute节点可以设置为on-demand或是spot，像上图中展示的又有OD又有spot的情况，是需要启动以后手动调整auto scaling策略。
+|名称|说明|
+|------------|-----------|
+|模板机|从官方的pcluster镜像启动，安装用户自己的软件后，打包成分析镜像AMI|
+|控制机|不需要从镜像启动，用于安装pcluster命令，用于控制集群|
+|主节点|用于调度集群作业的节点|
+|计算节点|用于分析计算的节点|
 
-OK，接下来就是如何一键启动集群了。
 
-## launch a instance for pcluster controller (v2.7.0)
+## [必读] 创建分析镜像
 
-- choose a instance type `eg. t2.micro`
-- remember your keypair name `eg. mykey.pem`
-- launch & login
+- 开一台ec2作为 **模板机** （如t2.micro），选择从parallelcluster的官方ami启动 [如aws-parallelcluster-2.7.0-amzn-hvm-202005172030 (ami-0c7a09bc17088086c)]
 
-## log in and install packages
+- 将我的分析流程部署在这台模板机上，再基于 **这台ec2** 打一个新的ami，拿到这个新的ami id (如ami-xxxxxxxxxxxxxx)，这个AMI就可以设置为pcluster集群的启动ami,对应下面template里面的custom_ami。
+
+- 请注意，使用parallelcluster一键集群的功能，需要保证 **控制服务器安装的parallelcluster版本** 和 **部署分析流程（的模板机）选择ami的parallelcluster版本** 都是一一对应的。如都是2.7.0版本。
+
+- 所以流程大致是：
+
+原始pcluster官方镜像（ami-0c7a09bc17088086c） --> 启动模板机 --> 安装分析流程 --> custom_ami
+
+控制机(默认Amazon Linux 2 AMI) --> 安装pcluster软件 --> 配置config --> 运行命令启动集群
+
+
+## 打开一台虚拟机作为Pcluster的 **控制服务器**  (v2.7.0)
+
+- 选择一个ec2配置 `eg. t2.micro`
+- 记住我的安全秘钥名称 `eg. mykey.pem`
+- 登录这台机器
+
+## 安装pcluster 控制软件
 
 - install pip
 
@@ -59,7 +78,7 @@ Default output format [None]: json
 
 ```
 
-- [option] install python3 if you want
+- [可选项] 如果想安装python3的话
 
 ```
 sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel
@@ -78,7 +97,7 @@ sudo make install
 sudo ln -s /usr/local/python3/bin/python3  /usr/bin/python3
 ```
 
-## config and launch pcluster
+## 生成并配置集群的config文件， 一键启动pcluster
 
 - `cd ~/.parallelcluster`
 - `vim config` edit as you want
@@ -94,12 +113,12 @@ update_check = true
 sanity_check = true
 [aliases]
 ssh = ssh {CFN_USER}@{MASTER_IP} {ARGS}
-[cluster myname] # change if you changed the name of cluster_template in global settings above
+[cluster myname] # change if you changed the name of cluster_template in [global] settings above
 key_name = mytest # change to your keypair name
 master_instance_type = c5.2xlarge  # master node type
 compute_instance_type = c5.large  # compute node type
-pre_install =  https://awshcls.s3.cn-northwest-1.amazonaws.com.cn/efsfix.sh # if use EFS
-pre_install_args = NONE  # if use EFS
+pre_install =  https://awshcls.s3.cn-northwest-1.amazonaws.com.cn/efsfix.sh # 中国区用EFS加上这句
+pre_install_args = NONE  # 中国区用EFS加上这句
 initial_queue_size = 1  #  number of compute nodes when this cluster be created
 max_queue_size = 30  # maximum number of compute nodes
 maintain_initial_size = true  # will remain 1 compute node even no job submitted
@@ -108,8 +127,8 @@ compute_root_volume_size = 25  # compute's root disk volumn, 17G by default
 cluster_type = spot  # ondemand/spot
 spot_price = 0.4   # change if you want use spot as compute nodes, get latest price of specific instance in your EC2 console
 base_os = alinux2
-scheduler = sge
-custom_ami = ami-0c7a09bc17088086c # 2.7.0; ami-0c081e1551e30ee5a 2.6.1 ; change to your customized AMI based on pcluster ami
+scheduler = sge #  设定调度引擎，sge,torque,slurm, awsbatch
+custom_ami = ami-xxxxxxxxxxxxxx # ami-0c7a09bc17088086c 2.7.0; ami-0c081e1551e30ee5a 2.6.1 ; change to your customized AMI based on pcluster ami
 s3_read_resource = NONE
 s3_read_write_resource = NONE
 placement = compute
@@ -136,10 +155,13 @@ performance_mode = generalPurpose
 scaledown_idletime = 10  # if idle time of compute nodes exceeds, it will be terminated for cost control (min)
 ```
 
-- Launch cluster `pcluster <create/delete> <cluster_template>`
+[pcluster configure](https://docs.aws.amazon.com/zh_cn/parallelcluster/latest/ug/configuration.html)
+
+
+- 启动集群命令 `pcluster <create/delete> <cluster_template>`, 在上面的例子里，cluster_template = myname, 大约等待10分钟左右。
 
 ```
-$ pcluster create -c configxxx myname
+$ pcluster create -c config myname
 Beginning cluster creation for cluster: myname
 Creating stack named: parallelcluster-myname
 Status: parallelcluster-myname - CREATE_COMPLETE
@@ -150,10 +172,11 @@ MasterPrivateIP: 172.11.11.11
 
 - PS: 这台跳板机在启动集群成功后，平时可以关闭，需要的时候在开启，节约费用。
 
-## check service
+## 登录主节点，确认集群服务
 
-- go to aws console & check your nodes
-- login master by terminal `ssh -i 'xx.pem' ec2-user@192.111.11.11`
+- 进到AWS console界面查看master和compute节点状态
+- ssh登录master节点 `ssh -i 'xx.pem' ec2-user@192.111.11.11`
+
 - 如果是[Slurm](http://bicmr.pku.edu.cn/~wenzw/pages/slurm.html) (推荐)
 
 ```
