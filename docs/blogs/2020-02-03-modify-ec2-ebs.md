@@ -129,19 +129,71 @@ tmpfs           3.8G     0  3.8G   0% /dev/shm
 
 [选项2] 不重启机器，登录ec2：
 
-```bash
-$ sudo yum install xfsprogs
-$ sudo xfs_growfs -d /
+Step1 先用以下命令看下调整的磁盘属于哪种类型：
+
+```
+[ec2-user ~]$ sudo file -s /dev/nvme?n*
+/dev/nvme0n1:     x86 boot sector ...
+/dev/nvme0n1p1:   SGI XFS filesystem data ...
+/dev/nvme0n1p128: data
+/dev/nvme1n1:     SGI XFS filesystem data ...
 ```
 
-- 再看看呢，OK！
+Step2 如果发现磁盘下面还有分区，那要用 _growpart_ 命令先扩分区[option]
+
+```
+[ec2-user ~]$ lsblk
+NAME          MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+nvme1n1       259:0    0  30G  0 disk /data
+nvme0n1       259:1    0  16G  0 disk
+└─nvme0n1p1   259:2    0   8G  0 part /
+└─nvme0n1p128 259:3    0   1M  0 part
+
+[ec2-user ~]$ sudo growpart /dev/nvme0n1 1
+
+[ec2-user ~]$ lsblk
+NAME          MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+nvme1n1       259:0    0  30G  0 disk /data
+nvme0n1       259:1    0  16G  0 disk
+└─nvme0n1p1   259:2    0  16G  0 part /
+└─nvme0n1p128 259:3    0   1M  0 part
+```
+
+Step3 扩展文件系统
+
+```
+#如果是扩展 ext2、ext3 或 ext4 文件系统
+[ec2-user ~]$ df -h
+Filesystem       Size  Used Avail Use% Mounted on
+/dev/xvda1       8.0G  1.9G  6.2G  24% /
+/dev/xvdf1       8.0G   45M  8.0G   1% /data
+
+#使用 resize2fs 命令扩展每个卷上的文件系统
+[ec2-user ~]$ sudo resize2fs /dev/xvda1
+[ec2-user ~]$ sudo resize2fs /dev/xvdf1
+#再次使用 df -h 命令来验证每个文件系统是否反映增加的卷大小
+[ec2-user ~]$ df -h
+Filesystem       Size  Used Avail Use% Mounted on
+/dev/xvda1        16G  1.9G  14G  12% /
+/dev/xvdf1        30G   45M  30G   1% /data
+
+```
+
 
 ```bash
+#如果是XFS系统
+$ sudo yum install xfsprogs
+#使用 xfs_growfs 命令扩展每个卷上的文件系统
+$ sudo xfs_growfs -d /
+
 $ df -h
 Filesystem      Size  Used Avail Use% Mounted on
 devtmpfs        3.8G   72K  3.8G   1% /dev
 tmpfs           3.8G     0  3.8G   0% /dev/shm
 /dev/nvme0n1p1   99G   28G   72G  28% /
+
+[参考资料](https://docs.amazonaws.cn/AWSEC2/latest/UserGuide/recognize-expanded-volume-linux.html)
+
 ```
 > 条条大路通罗马。
 
