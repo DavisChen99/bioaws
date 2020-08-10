@@ -1,10 +1,12 @@
-# 加速！为EC2和S3之间搭建爱的桥梁
+# Endpoint-为EC2和S3之间搭建爱的桥梁
 
 > *S3能为我们提供安全、耐用且具备高度可扩展能力的对象存储服务。Virtual Private Cloud则给我们在云端创建出一套AWS Cloud逻辑隔离区，并通过自己定义的虚拟网络对其进行全面控制。EC2服务器就是在VPC这个网络环境内进行工作和受管理的。*
 >
 > *当我们创建VPC时，需要利用安全组与访问控制列表（简称ACL）对输入及输出流量进行控制。在终端节点（endpoint）服务出现之前，如果大家希望让自己的EC2实例有能力访问公有资源，则必须使用Internet Gateway，且可能需要对部分NAT实例进行管理。而现在，更易于配置、具备高度可靠性的Endpoints能够为我们提供指向S3的安全私有连接，而且整个流程不需要任何网关或者NAT实例的介入。注意，这是私网。*
 >
 > -- D.C
+
+Update: endpoint 针对不出网的私有子网内的实例访问S3或者其他支持的AWS服务，而无需internet网关、NAT网关、VPN等，属于内部的连接，不具备提升访问速度的功能。
 
 ## 什么是VPC？
 
@@ -16,13 +18,13 @@ VPC一个重要的功能是为其中的组件提供了统一的管理功能，�
 
 ## 创建 VPC endpoint
 
-因为我们要连接的EC2都是在VPC的环境中，如果给EC2和s3之间建高速公路，那么只需要在VPC和s3之间创建一个endpoint就可以了。
+因为我们要连接的EC2都是在VPC的环境中，如果给EC2和s3之间建专属公路，那么只需要在VPC和s3之间创建一个endpoint就可以了。
 
 - 登录**aws管理控制台**，搜索**VPC**，点击进入。简单看下dashboard，然后点击左侧的**Endpoints**。
 
 ![vpce_create][2]
 
-- 点击界面上方的**Create Endpoint**,进入选择界面。我们可以看到，**Service category** 这里，系统自动帮我们选择了 **AWS service**,而 **Service Name** 这儿需要我们具体选择一项aws的服务，简单来说就是，你要给vpc建一条高速公路通到那里去呢？你得告诉我啊，没错，我们这里选择s3服务 `com.amazonaws.cn-northwest-1.s3`。
+- 点击界面上方的**Create Endpoint**,进入选择界面。我们可以看到，**Service category** 这里，系统自动帮我们选择了 **AWS service**,而 **Service Name** 这儿需要我们具体选择一项aws的服务，简单来说就是，你要给vpc建一条专属公路通到那里去呢？你得告诉我啊，没错，我们这里选择s3服务 `com.amazonaws.cn-northwest-1.s3`。
 
 ![vpce_set1][3]
 

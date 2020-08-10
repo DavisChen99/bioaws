@@ -1,4 +1,4 @@
-# pcluster quick-build within 10 min
+# 10分钟一键创建HPC集群-pcluster (parallelcluster)
 
 > brief introduction of pcluster on aws
 >
@@ -11,9 +11,9 @@ _俗话说的好，没图说个基霸_
 
 ## 好话说前头
 
-- 对生信来说，第一步不是往下看，而是找到正确的**AMI**, 这个镜像应该是预装好了pcluster相关必要组件的，所以这一步至关重要。
+- 对生信来说，第一步不是往下看，而是找到正确的**AMI**, 这个镜像应该是预装好了pcluster相关必要组件的，所以这一步 **至关重要** 。
 
-- pcluster的版本（目前是2.5.1）对应不同的ami，所以也要区分清楚,在创建ec2界面的第一步，我们可以搜索`parallelcluster-2.5.1`,目前的记录显示有41个相关的ami,根据你想要的操作系统记下对应的ami ID。不同region的ami id也不同。
+- pcluster的版本（目前是2.7.0）对应不同的ami，所以也要区分清楚,在创建ec2界面的第一步，我们可以搜索`parallelcluster-2.7.0`,目前的记录显示有41个相关的ami,根据你想要的操作系统记下对应的ami ID。不同region的ami id也不同。
 
 举例：
 
@@ -23,43 +23,249 @@ _俗话说的好，没图说个基霸_
 |2.5.1|linux|ami-05038e0c41061b799|ami-0bbadb6ff64415ab3|
 |2.5.1|ubuntu|ami-0b0ebbfcd0c50f225|ami-0d3a6e7dd85085042|
 
-- 一般操作是开一台ec2（可以是下一步的跳板机），选择上面的一个ami，然后将分析流程部署在上面，再基于这台ec2打一个新的ami，拿到这个新的ami id，设置为pcluster集群的启动ami。
+- 本文会涉及到多台机器：
 
-- pcluster启动的集群默认是master是on-demand, compute节点可以设置为on-demand或是spot，像上图中展示的又有OD又有spot的情况，是需要启动以后手动调整auto scaling策略。
+|名称|说明|
+|------------|-----------|
+|模板机|从官方的pcluster镜像启动，安装用户自己的软件后，打包成分析镜像AMI|
+|控制机|不需要从镜像启动，用于安装pcluster命令，用于控制集群|
+|主节点|用于调度集群作业的节点|
+|计算节点|用于分析计算的节点|
 
-OK，接下来就是如何一键启动集群了。
 
-## launch an instance to install pcluster (v2.5.1) 
+## [必读] 创建分析镜像
 
-- `eg. t2.micro`
-- remember your keypair name `eg. mykey.pem`
-- launch & login
+- 开一台ec2作为 **模板机** （如t2.micro），选择从parallelcluster的官方ami启动 [如aws-parallelcluster-2.7.0-amzn-hvm-202005172030 (ami-0c7a09bc17088086c)]
 
-## install packages & launch cluster
+- 将我的分析流程部署在这台模板机上，再基于 **这台ec2** 打一个新的ami，拿到这个新的ami id (如ami-xxxxxxxxxxxxxx)，这个AMI就可以设置为pcluster集群的启动ami,对应下面template里面的custom_ami。
 
-- `wget https://github.com/DavisChen99/awspac/archive/master.zip`
-- `unzip awspac-master.zip && cd awspac-master`
-- refer to [doc](https://aws-parallelcluster.readthedocs.io/en/latest/configuration.html#scheduler)
-- add permission `chmod 667 install_pcluster_v1.sh`
-- run `sudo bash install_pcluster_v1.sh`, try again if you meet HTTPS connect problem - usually network issue.
+- 请注意，使用parallelcluster一键集群的功能，需要保证 **控制服务器安装的parallelcluster版本** 和 **部署分析流程（的模板机）选择ami的parallelcluster版本** 都是一一对应的。如都是2.7.0版本。
 
-## build manually (after first build)
+- 所以流程大致是：
+
+原始pcluster官方镜像（ami-0c7a09bc17088086c） --> 启动模板机 --> 安装分析流程 --> custom_ami
+
+控制机(默认Amazon Linux 2 AMI) --> 安装pcluster软件 --> 配置config --> 运行命令启动集群
+
+
+## 打开一台虚拟机作为Pcluster的 **控制服务器**  (v2.7.0)
+
+- 选择一个ec2配置 `eg. t2.micro`
+- 记住我的安全秘钥名称 `eg. mykey.pem`
+- 登录这台机器
+
+## 安装pcluster 控制软件
+
+- install pip
+
+```
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+
+python get-pip.py
+
+pip install aws-parallelcluster
+
+```
+
+- configure aws cli
+
+```
+$ aws configure
+AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
+AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+Default region name [us-east-1]: cn-northwest-1
+Default output format [None]: json
+
+```
+
+- [可选项] 如果想安装python3的话
+
+```
+sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel
+sudo yum install gcc -y
+
+sudo mkdir /usr/local/python3
+cd /usr/local/  
+sudo wget https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tgz
+sudo tar -xvf Python-3.6.5.tgz
+
+cd ./Python-3.6.5/
+sudo ./configure --prefix=/usr/local/python3
+sudo make
+sudo make install
+
+sudo ln -s /usr/local/python3/bin/python3  /usr/bin/python3
+```
+
+## 生成并配置集群的config文件， 一键启动pcluster
 
 - `cd ~/.parallelcluster`
 - `vim config` edit as you want
-- `aws configure` with your AKSK keys
-- `pcluster <create/delete> <cluster_template>`
-- PS: 这台跳板机在启动集群成功后，平时可以关闭，需要的时候在开启，节约费用。
 
-## check service
+[config template]
 
-- go to aws console & check your nodes
-- log in master nodes to check:
-  * `qhost` to check your queue
-  * `df -h` to check your volumns
-  * `qsub test.sh` to check your cluster function
-  * `qstat -f` to see job status
-- submit your jobs using command like `qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 4 -o output -e output -q all.q yourscript.sh`
+```
+[aws]
+aws_region_name = cn-northwest-1 # change if you want
+[global]
+cluster_template = myname # change if you want, MUST remember this name!
+update_check = true
+sanity_check = true
+[aliases]
+ssh = ssh {CFN_USER}@{MASTER_IP} {ARGS}
+[cluster myname] # change if you changed the name of cluster_template in [global] settings above
+key_name = mytest # change to your keypair name
+master_instance_type = c5.2xlarge  # master node type
+compute_instance_type = c5.large  # compute node type
+pre_install =  https://awshcls.s3.cn-northwest-1.amazonaws.com.cn/efsfix.sh # 中国区用EFS加上这句
+pre_install_args = NONE  # 中国区用EFS加上这句
+initial_queue_size = 1  #  number of compute nodes when this cluster be created
+max_queue_size = 30  # maximum number of compute nodes
+maintain_initial_size = true  # will remain 1 compute node even no job submitted
+master_root_volume_size = 25  # master's root disk volumn, 17G by default
+compute_root_volume_size = 25  # compute's root disk volumn, 17G by default
+cluster_type = spot  # ondemand/spot
+spot_price = 0.4   # change if you want use spot as compute nodes, get latest price of specific instance in your EC2 console
+base_os = alinux2
+scheduler = sge #  设定调度引擎，sge,torque,slurm, awsbatch
+custom_ami = ami-xxxxxxxxxxxxxx # ami-0c7a09bc17088086c 2.7.0; ami-0c081e1551e30ee5a 2.6.1 ; change to your customized AMI based on pcluster ami
+s3_read_resource = NONE
+s3_read_write_resource = NONE
+placement = compute
+vpc_settings = default
+#ebs_settings = custom1, custom2 # use EBS to be shared as NFS
+efs_settings = custom1 # use EFS to be shared [recommmend]
+[vpc default]
+vpc_id = vpc-6b111111  # change to your vpc id
+master_subnet_id = subnet-a23v24c # change to your subnet id
+#compute_subnet_id = subnet-a23v24c # if you want to put compute in private subnet for security
+#[ebs custom1]  # change or add more if you want
+#shared_dir = data1  # the dir will show in your master or compute nodes
+#volume_type = gp2
+#volume_size = 80    # GB
+#[ebs custom2]  # change or add more if you want
+#shared_dir = data2
+#volume_type = gp2
+#volume_size = 2000 # GB
+[efs custom1]
+shared_dir = myefs # change and will be mounted as /myefs in your master and computer node
+encrypted = false
+performance_mode = generalPurpose
+[scaling custom]
+scaledown_idletime = 10  # if idle time of compute nodes exceeds, it will be terminated for cost control (min)
+```
+
+[pcluster configure](https://docs.aws.amazon.com/zh_cn/parallelcluster/latest/ug/configuration.html)
+
+
+- 启动集群命令 `pcluster <create/delete> <cluster_template>`, 在上面的例子里，cluster_template = myname, 集群启动大约需等待10分钟左右。
+
+```
+$ pcluster create -c config myname
+Beginning cluster creation for cluster: myname
+Creating stack named: parallelcluster-myname
+Status: parallelcluster-myname - CREATE_COMPLETE
+MasterPublicIP: 161.111.111.111
+ClusterUser: ec2-user
+MasterPrivateIP: 172.11.11.11
+```
+
+- PS: 这台控制机在启动集群成功后，平时可以关闭，需要的时候在开启，节约费用。
+
+## 登录主节点，确认集群功能
+
+- 进到AWS console界面查看master和compute节点状态
+- ssh登录master节点 `ssh -i 'xx.pem' ec2-user@192.111.11.11`
+
+- 如果是[Slurm](http://bicmr.pku.edu.cn/~wenzw/pages/slurm.html) (推荐)
+
+```
+$ cat >> test.slurm<<EOF
+#!/bin/bash
+#SBATCH -J array
+#SBATCH -p compute
+#SBATCH -N 1
+#SBATCH --cpus-per-task=1
+#SBATCH -t 5:00
+#SBATCH -a 0-2
+
+input=(foo bar baz)
+echo "This is job #${SLURM_ARRAY_JOB_ID}, with parameter ${input[$SLURM_ARRAY_TASK_ID]}"
+echo "There are ${SLURM_ARRAY_TASK_COUNT} task(s) in the array."
+echo "  Max index is ${SLURM_ARRAY_TASK_MAX}"
+echo "  Min index is ${SLURM_ARRAY_TASK_MIN}"
+sleep 5
+EOF
+```
+
+提交任务`sbatch test.slurm`
+
+
+- 如果是PBS：
+
+```
+$ cat >> test.pbs<<EOF
+#!/bin/bash
+#PBS -l nodes=1:ppn=2
+
+sleep 600
+EOF
+```
+
+`qsub test.pbs`
+
+
+`qstat`
+
+
+
+- 如果是SGE:
+
+```
+$ cat >> test.sh<<EOF
+#!/bin/bash
+sleep 600
+EOF
+```
+
+
+`qsub -cwd -pe smp 2 -l vf=2G test.sh`
+
+
+`qhost` to check your queue
+
+
+`df -h` to check your volumns
+
+
+`qsub test.sh` to check your cluster function
+
+
+`qstat -f` to see job status
+
+
+submit your jobs using command like `qsub -cwd -S /bin/bash -V -l vf=2G -pe smp 4 -o output -e output -q all.q yourscript.sh`
+
+
+## 关于共享存储
+
+我们一般可以用EBS的gp2类型来组建NFS盘，可以和本地环境无缝对接了，但是对于高IOPS的应用场景，可能就会遇到瓶颈了，所幸Pcluster还为我们提供了其他的共享存储选项：
+
+- EFS 弹性文件系统 （上面的例子用的就是EFS）
+- FSx Lustre
+
+以EFS为例，将EBS设置部分替换成如下：
+
+```
+efs_settings = customfs
+
+[efs customfs]
+shared_dir = efs
+encrypted = false
+performance_mode = generalPurpose
+```
+
+这样build出来的集群，共享存储性能有保证，且容量弹性，按照实际占用空间计费，如果善于利用EFS的生命周期管理（去EFS页面设置），成本也能控制的不错。
 
 ## for debug
 
@@ -68,6 +274,17 @@ OK，接下来就是如何一键启动集群了。
 - add `PATH=/opt/sge/bin:/opt/sge/bin/lx-amd64:/opt/amazon/openmpi/bin:$PATH`
 - `source ~/.bashrc`
 - `sudo /etc/init.d/sgemaster.p6444 <start/stop/restart>`
+
+## for autoscaling 混搭[高阶]
+
+```
+wget https://awshcls.s3.cn-northwest-1.amazonaws.com.cn/pcluster/asgmodify.json
+
+#修改其中ASG name、LaunchTemplateName和所需实例类型
+vi asgmodify.json
+ 
+aws autoscaling update-auto-scaling-group --cli-input-json file://asgmodify.json --profile zhy
+```
 
 [pcluster_User_Guide](../img/aws-parallelcluster-ug.pdf)
 
