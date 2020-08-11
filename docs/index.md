@@ -52,10 +52,8 @@
 
 - [高阶系列8 鼠标党福音！给EC2安装桌面GUI](blogs/2020-05-12-install_GUI_on_EC2.md)
 
-<<<<<<< HEAD
 - [高阶系列9 如何自动同步本地数据与S3](blogs/2020-08-06-sync_data_local_S3.md)
-=======
-- [高阶7 云上浏览BAM文件需要解决的问题](blogs/2020-03-18-igv-monitor-with-s3.md)
->>>>>>> ecad14cb3e13f6cbbc31029379aeebcac74cf412
+
+- [高阶系列10 云上浏览BAM文件需要解决的问题](blogs/2020-03-18-igv-monitor-with-s3.md)
 
 - [尾牙 2020的最后一天](blogs/2020-12-31-final-day-of-2020.md)
