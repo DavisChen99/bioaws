@@ -52,4 +52,6 @@
 
 - [高阶系列8 鼠标党福音！给EC2安装桌面GUI](blogs/2020-05-12-install_GUI_on_EC2.md)
 
+- [高阶系列9 如何自动同步本地数据与S3](blogs/2020-08-06-sync_data_local_S3.md)
+
 - [尾牙 2020的最后一天](blogs/2020-12-31-final-day-of-2020.md)
