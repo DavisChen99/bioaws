@@ -27,6 +27,8 @@ SGW 可以将划分出来的存储资源虚拟成以下几种：
 
 文档参考：[点我](https://docs.amazonaws.cn/storagegateway/latest/userguide/WhatIsStorageGateway.html)
 
+技术指导：微信群 or 联系AWS那边的对接BD
+
 
 ## [方法2] AWS 命令行+定时脚本
 
