@@ -95,6 +95,9 @@ _* 0表示星期天_
 
 Amazon S3 MultiThread Resume Migration Solution (Amazon S3多线程断点续传迁移) Breaking-point resume supported, suitable for mass files transimission to Amazon S3 多线程断点续传，充分利用带宽，适合批量的大文件S3迁移。
 
+- 多系统的如[Rclone](https://rclone.org/downloads/), 参考文档[Amazon S3](https://rclone.org/s3/)
+
+
 - 更多好用工具等待大家的发掘。
 
 
