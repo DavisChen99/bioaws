@@ -56,4 +56,6 @@
 
 - [高阶系列10 云上浏览BAM文件需要解决的问题](blogs/2020-03-18-igv-monitor-with-s3.md)
 
+- [高阶11 使用S3数据同步神器，数据尽在我手](blogs/2020-08-20-sync_data_use_S3tools.md)
+
 - [尾牙 2020的最后一天](blogs/2020-12-31-final-day-of-2020.md)
