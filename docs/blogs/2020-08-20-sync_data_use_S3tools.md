@@ -88,16 +88,16 @@ Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.7/site-package
 
 ### 起海外虚拟机
 
-我这里开了一台us-west-2 俄勒冈区域的虚机，配置是m5a.large, **划重点**，下载任务对CPU有要求，切勿选择t系列机器，推荐C系列、M系列。
+- 我这里开了一台us-west-2 俄勒冈区域的虚机，配置是m5a.large, **划重点**，下载任务对CPU有要求，切勿选择t系列机器，推荐C系列、M系列。
 
-随后登录进去查看下python版本是不是在3.6以上：
+- 随后登录进去查看下python版本是不是在3.6以上：
 
 ```
 python3 --version
 Python 3.7.8
 ```
 
-配置好AKSK。
+- 配置好AKSK。
 
 ```
 [ec2-user@ip-172-xx-xx-xxx ~]$ aws configure list
@@ -111,7 +111,7 @@ secret_key     ****************6qXX         iam-role
 
 ### 安装SMRMS工具
 
-如果我准备在 EC2 上运行这个工具，下面是一个Shell脚本帮助快速安装所需环境和软件包，copy下来存到ec2，命名为 *ec2_init.sh* 。（PS: 其他系统，如本地linux、Mac,或本地windows GUI，请参考[这里](https://github.com/aws-samples/amazon-s3-resumable-upload/tree/master/single_node)）
+- 如果我准备在 EC2 上运行这个工具，下面是一个Shell脚本帮助快速安装所需环境和软件包，copy下来存到ec2，命名为 *ec2_init.sh* 。（PS: 其他系统，如本地linux、Mac,或本地windows GUI，请参考[这里](https://github.com/aws-samples/amazon-s3-resumable-upload/tree/master/single_node)）
 
 ```bash
 #!/bin/bash -v
@@ -139,7 +139,7 @@ cd /home/ec2-user/  || exit
 git clone https://github.com/aws-samples/amazon-s3-resumable-upload
 ```
 
-接着运行脚本,会在当前目录创建一个文件夹 _amazon-s3-resumable-upload_ ：
+- 接着运行脚本,会在当前目录创建一个文件夹 _amazon-s3-resumable-upload_ ：
 
 ```
 chmod 755 ec2_init.sh
@@ -287,7 +287,7 @@ $ tree
 
 ### 重点！配置SMRMS
 
-1. 开启BBR。
+-  开启BBR。
 
 由于我的场景是海外aws和国内aws互传，所以可以启用BBR来提高传输效率，什么是BBR？ **TCP Bottleneck Bandwidth and RTT**， 这是Amazon Linux AMI内核支持的功能，默认不开启,如下方式开启：
 
@@ -316,7 +316,7 @@ $ chmod 755 /etc/sysconfig/modules/tcpcong.modules
 $ echo "net.ipv4.tcp_congestion_control = bbr" >> /etc/sysctl.d/00-tcpcong.conf
 ```
 
-2. 配置秘钥文件。
+-  配置秘钥文件。
 
 由于我是从海外S3传到国内S3，涉及两个账号，所以需要配置两个AKSK信息。
 
@@ -335,7 +335,7 @@ aws_secret_access_key = xxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 
-3. 配置SMRMS的config。
+-  配置SMRMS的config。
 
 进到/home/ec2-user/amazon-s3-resumable-upload/single_node 文件夹下，找到文件 *s3_upload_config.ini*, vim 打开编辑，主要修改以下参数：
 
@@ -425,7 +425,7 @@ LoggingLevel = INFO
 
 ## 运行同步程序SMRMS
 
-配置好以后就可以运行SMRMS程序进行同步了,速度还是杠杠地。
+- 配置好以后就可以运行SMRMS程序进行同步了,速度还是杠杠地。
 
 ```
 $ python3 /home/ec2-user/amazon-s3-resumable-upload/single_node/s3_upload.py --nogui
@@ -488,11 +488,11 @@ Logging level: INFO
 MISSION ACCOMPLISHED - Time: 0:31:39.284875  - FROM: mybucket/test TO mybucket/test
 ```
 
-28G的文件通过这个工具拉进来只要31min，而走公网下载十几K的速度就算了吧。。。之后就能看到宁夏区的S3://mybucket/test/里已经有这个数据啦~
+- 28G的文件通过这个工具拉进来只要31min，而走公网下载十几K的速度就算了吧。。。之后就能看到宁夏区的S3://mybucket/test/里已经有这个数据啦~
 
 ## 结语
 
-由于本文是测试单机版的S3_To_S3功能，其他场景没有全部过一遍，所以请有其他场景需求的童鞋参考开篇的官方文档，本文仅做抛砖引玉,也欢迎大家在技术群里踊跃讨论。
+- 由于本文是测试单机版的S3_To_S3功能，其他场景没有全部过一遍，所以请有其他场景需求的童鞋参考开篇的官方文档，本文仅做抛砖引玉,也欢迎大家在技术群里踊跃讨论。
 
 
 > 人最大的弱点，在于渴望被认同。
