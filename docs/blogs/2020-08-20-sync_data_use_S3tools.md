@@ -78,7 +78,7 @@ Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.7/site-package
 
 针对我的这个场景，基本思路是：
 
-- 新建/拥有一个海外账户（只要绑定信用卡就行，对个人也开放），开一台ec2虚机下载，然后y用s3命令传输到S3某个桶内。
+- 新建/拥有一个海外账户（只要绑定信用卡就行，对个人也开放），开一台ec2虚机下载，然后用s3命令传输到S3某个桶内。
 
 - 在海外虚机上安装S3数据工具,配置好两边的AKSK，以及SMRMS的config文件。
 
@@ -424,6 +424,8 @@ LoggingLevel = INFO
 
 
 ## 运行同步程序SMRMS
+
+- 下载数据库文件 test.1a.zip, 由于这台ec2在美国，很快就下完了，然后用aws s3 cp命令推到海外的S3://mybucket/test/下。
 
 - 配置好以后就可以运行SMRMS程序进行同步了,速度还是杠杠地。
 
