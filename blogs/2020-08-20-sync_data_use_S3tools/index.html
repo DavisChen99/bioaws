@@ -185,13 +185,21 @@ Requirement already satisfied: six&gt;=1.5 in /usr/local/lib/python3.7/site-pack
 </ul>
 <p>当然这是比较粗糙的，群里大神完全可以利用aws的sdk啥的完全可以做的一键自动化，今天我们把基本流程走一遍。</p>
 <h3 id="_3">起海外虚拟机</h3>
+<ul>
+<li>
 <p>我这里开了一台us-west-2 俄勒冈区域的虚机，配置是m5a.large, <strong>划重点</strong>，下载任务对CPU有要求，切勿选择t系列机器，推荐C系列、M系列。</p>
+</li>
+<li>
 <p>随后登录进去查看下python版本是不是在3.6以上：</p>
+</li>
+</ul>
 <pre><code>python3 --version
 Python 3.7.8
 </code></pre>
 
-<p>配置好AKSK。</p>
+<ul>
+<li>配置好AKSK。</li>
+</ul>
 <pre><code>[ec2-user@ip-172-xx-xx-xxx ~]$ aws configure list
       Name                    Value             Type    Location
       ----                    -----             ----    --------
@@ -202,7 +210,9 @@ secret_key     ****************6qXX         iam-role
 </code></pre>
 
 <h3 id="smrms">安装SMRMS工具</h3>
-<p>如果我准备在 EC2 上运行这个工具，下面是一个Shell脚本帮助快速安装所需环境和软件包，copy下来存到ec2，命名为 <em>ec2_init.sh</em> 。（PS: 其他系统，如本地linux、Mac,或本地windows GUI，请参考<a href="https://github.com/aws-samples/amazon-s3-resumable-upload/tree/master/single_node">这里</a>）</p>
+<ul>
+<li>如果我准备在 EC2 上运行这个工具，下面是一个Shell脚本帮助快速安装所需环境和软件包，copy下来存到ec2，命名为 <em>ec2_init.sh</em> 。（PS: 其他系统，如本地linux、Mac,或本地windows GUI，请参考<a href="https://github.com/aws-samples/amazon-s3-resumable-upload/tree/master/single_node">这里</a>）</li>
+</ul>
 <pre><code class="bash">#!/bin/bash -v
 yum update -y
 yum install git -y
@@ -228,7 +238,9 @@ cd /home/ec2-user/  || exit
 git clone https://github.com/aws-samples/amazon-s3-resumable-upload
 </code></pre>
 
-<p>接着运行脚本,会在当前目录创建一个文件夹 <em>amazon-s3-resumable-upload</em> ：</p>
+<ul>
+<li>接着运行脚本,会在当前目录创建一个文件夹 <em>amazon-s3-resumable-upload</em> ：</li>
+</ul>
 <pre><code>chmod 755 ec2_init.sh
 sudo bash ec2_init.sh
 </code></pre>
@@ -372,9 +384,9 @@ sudo bash ec2_init.sh
 </code></pre>
 
 <h3 id="smrms_1">重点！配置SMRMS</h3>
-<ol>
+<ul>
 <li>开启BBR。</li>
-</ol>
+</ul>
 <p>由于我的场景是海外aws和国内aws互传，所以可以启用BBR来提高传输效率，什么是BBR？ <strong>TCP Bottleneck Bandwidth and RTT</strong>， 这是Amazon Linux AMI内核支持的功能，默认不开启,如下方式开启：</p>
 <pre><code>$ sudo modprobe tcp_bbr
 
@@ -398,9 +410,9 @@ $ chmod 755 /etc/sysconfig/modules/tcpcong.modules
 $ echo &quot;net.ipv4.tcp_congestion_control = bbr&quot; &gt;&gt; /etc/sysctl.d/00-tcpcong.conf
 </code></pre>
 
-<ol>
+<ul>
 <li>配置秘钥文件。</li>
-</ol>
+</ul>
 <p>由于我是从海外S3传到国内S3，涉及两个账号，所以需要配置两个AKSK信息。</p>
 <pre><code>$ vi ~/.aws/credentials
 [ningxia]
@@ -415,9 +427,9 @@ aws_access_key_id = xxxxxxxxxxxxxxxxxxx
 aws_secret_access_key = xxxxxxxxxxxxxxxxxxxxxxx
 </code></pre>
 
-<ol>
+<ul>
 <li>配置SMRMS的config。</li>
-</ol>
+</ul>
 <p>进到/home/ec2-user/amazon-s3-resumable-upload/single_node 文件夹下，找到文件 <em>s3_upload_config.ini</em>, vim 打开编辑，主要修改以下参数：</p>
 <pre><code>[Basic]
 JobType = S3_TO_S3  # 改
@@ -501,7 +513,9 @@ LoggingLevel = INFO
 
 <p>保存，退出。</p>
 <h2 id="smrms_2">运行同步程序SMRMS</h2>
-<p>配置好以后就可以运行SMRMS程序进行同步了,速度还是杠杠地。</p>
+<ul>
+<li>配置好以后就可以运行SMRMS程序进行同步了,速度还是杠杠地。</li>
+</ul>
 <pre><code>$ python3 /home/ec2-user/amazon-s3-resumable-upload/single_node/s3_upload.py --nogui
 Reading config file: s3_upload_config.ini
 Logging to file: /home/ec2-user/amazon-s3-resumable-upload/single_node/log/s3_upload-2020-08-23T13-06-09.log
@@ -562,9 +576,13 @@ Logging level: INFO
 MISSION ACCOMPLISHED - Time: 0:31:39.284875  - FROM: mybucket/test TO mybucket/test
 </code></pre>
 
-<p>28G的文件通过这个工具拉进来只要31min，而走公网下载十几K的速度就算了吧。。。之后就能看到宁夏区的S3://mybucket/test/里已经有这个数据啦~</p>
+<ul>
+<li>28G的文件通过这个工具拉进来只要31min，而走公网下载十几K的速度就算了吧。。。之后就能看到宁夏区的S3://mybucket/test/里已经有这个数据啦~</li>
+</ul>
 <h2 id="_4">结语</h2>
-<p>由于本文是测试单机版的S3_To_S3功能，其他场景没有全部过一遍，所以请有其他场景需求的童鞋参考开篇的官方文档，本文仅做抛砖引玉,也欢迎大家在技术群里踊跃讨论。</p>
+<ul>
+<li>由于本文是测试单机版的S3_To_S3功能，其他场景没有全部过一遍，所以请有其他场景需求的童鞋参考开篇的官方文档，本文仅做抛砖引玉,也欢迎大家在技术群里踊跃讨论。</li>
+</ul>
 <blockquote>
 <p>人最大的弱点，在于渴望被认同。</p>
 </blockquote></div>
