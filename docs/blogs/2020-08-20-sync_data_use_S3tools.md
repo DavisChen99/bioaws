@@ -3,7 +3,7 @@
 > 在高阶9中提到了S3神器-Amazon S3多线程断点续传迁移工具，今天终于有空给大家介绍，对我等生信汪来说简直是莫大的福音，动辄上G的国外数据库，几KB的下载速度一度令我们抓狂，有了这个工具，我们从此不必再烦恼啦。
 > -- D.C
 
-例行介绍，该工具的全称是：Amazon S3 MultiThread Resume Migration Solution (Amazon S3多线程断点续传迁移) [点我][https://github.com/aws-samples/amazon-s3-resumable-upload] ,官方没有给出缩写，为了方便记忆，就叫做SMRMS吧，非常好记，两边是SM，中间一个人(Ren) *_*。
+例行介绍，该工具的全称是：Amazon S3 MultiThread Resume Migration Solution (Amazon S3多线程断点续传迁移) [点我](https://github.com/aws-samples/amazon-s3-resumable-upload) ,官方没有给出缩写，为了方便记忆，就叫做SMRMS吧，非常好记，两边是SM，中间一个人(Ren)。
 
 **适用于**：
 
@@ -36,7 +36,7 @@
 在典型测试中，迁移1.2TB数据从 美东区域us-east-1 S3 到 国内宁夏区域 cn-northwest-1 S3 只用1小时。
 
 
-## [1] 我该选择什么版本？
+## 我该选择什么版本？
 
 **问题** ： 先思考一下自己的应用场景是什么？是要搬迁大量数据？还只是偶尔需要去海外扒数据库？
 
@@ -51,13 +51,15 @@
 更多信息请参考本文开篇的链接，aws架构师写的readme已经详细到令人发指了！
 
 
-## [2] 装备工作，安装程序
+## 准备工作，安装程序
 
 因为我的需求很简单，就是下载一个海外数据库，所以我选择了单机版的S3_To_S3功能。
 
+下图是单机版完整介绍。
+
 ![singlenode][1]
 
-单机版的一些要求： Python 3.6 及其以上，并且要装有针对AWS的SDK: boto3, 如果客官还要从阿里云拉数据，则还要装阿里云的命令行oss2.
+单机版的一些要求： Python 3.6 及其以上，并且要装有针对AWS的SDK: *boto3*, 后面会讲到。如果客官还要从阿里云拉数据，则还要装阿里云的命令行oss2.
 
 PS: 下载的软件包里有个requirment.txt文件，不放心就跑一下。
 
@@ -74,7 +76,7 @@ Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.7/site-package
 
 ```
 
-基本思路是：
+针对我的这个场景，基本思路是：
 
 - 新建/拥有一个海外账户（只要绑定信用卡就行，对个人也开放），开一台ec2虚机下载，然后y用s3命令传输到S3某个桶内。
 
@@ -84,7 +86,7 @@ Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.7/site-package
 
 当然这是比较粗糙的，群里大神完全可以利用aws的sdk啥的完全可以做的一键自动化，今天我们把基本流程走一遍。
 
-### [2.1] 起海外虚拟机
+### 起海外虚拟机
 
 我这里开了一台us-west-2 俄勒冈区域的虚机，配置是m5a.large, **划重点**，下载任务对CPU有要求，切勿选择t系列机器，推荐C系列、M系列。
 
@@ -107,7 +109,7 @@ secret_key     ****************6qXX         iam-role
     region                us-west-2      config-file    ~/.aws/config
 ```
 
-### [2.2] 安装SMRMS工具
+### 安装SMRMS工具
 
 如果我准备在 EC2 上运行这个工具，下面是一个Shell脚本帮助快速安装所需环境和软件包，copy下来存到ec2，命名为 *ec2_init.sh* 。（PS: 其他系统，如本地linux、Mac,或本地windows GUI，请参考[这里](https://github.com/aws-samples/amazon-s3-resumable-upload/tree/master/single_node)）
 
@@ -283,7 +285,7 @@ $ tree
 20 directories, 112 files
 ```
 
-### [2.3] 重点！配置SMRMS
+### 重点！配置SMRMS
 
 1. 开启BBR。
 
