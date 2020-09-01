@@ -58,4 +58,6 @@
 
 - [高阶系列11 使用S3数据同步神器，数据尽在我手](blogs/2020-08-20-sync_data_use_S3tools.md)
 
+- [高阶12 AWS SageMaker Hyperparameter Tuning 初试](blogs/2020-09-01-sagemaker-hyperparametertuning-startup.md)
+
 - [尾牙 2020的最后一天](blogs/2020-12-31-final-day-of-2020.md)
