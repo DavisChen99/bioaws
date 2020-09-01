@@ -1,4 +1,4 @@
-# AWS SageMaker Hyperparameter Tuning 初试
+# 高阶12 AWS SageMaker Hyperparameter Tuning 初试
 
 > Xinrui (Alan) Zhou
 
