@@ -94,7 +94,7 @@
 <p><img alt="step3" src="../../img/sagemaker/image003.png" /></p>
 <p>4.稍作等待，实例创建需要一些时间</p>
 <p><img alt="step4" src="../../img/sagemaker/image004.png" /></p>
-<p>5.等到Status从Pending变成InService，选择偏好的Notebook环境进入（Jupyter Notebook或者Jupyter Lab）</p>
+<p>5.等到Status从Pending变成InService，选择偏好的Notebook环境进入（Jupyter Notebook或者Jupyter Lab），如果里面空空如也，可以右上方点击New创建一个新记事本，根据你想要的ML框架选择，这里选择 <code>conda_python3</code></p>
 <p><img alt="step5" src="../../img/sagemaker/image005.png" />
 <img alt="step6" src="../../img/sagemaker/image006.png" />
 <img alt="step7" src="../../img/sagemaker/image007.png" /></p>
@@ -119,6 +119,7 @@ pd.set_option('display.max_colwidth', None)
 bokeh.io.output_notebook()
 </code></pre>
 
+<p><strong>[by DC] 如果有报错<code>ValueError: Value must have type '&lt;class 'int'&gt;'</code>, 用这个命令：pd.set_option('display.max_colwidth', -1)</strong></p>
 <p>7.加载Boston数据集，查看数据集描述</p>
 <pre><code class="python">data = load_boston()
 print(data['DESCR'])
@@ -195,7 +196,7 @@ bucket = sagemaker.Session().default_bucket()
 prefix = 'sagemaker/xgb-hpt-demo'
 </code></pre>
 
-<p>10.把train.csv和validation.csv传至s3</p>
+<p>10.把train.csv和validation.csv传至s3，会出现在s3的这个地方<code>s3://sagemaker-cn-northwest-1-accountid/sagemaker/</code>,作为input</p>
 <pre><code class="python">boto3.Session().resource('s3').Bucket(bucket).Object(
     os.path.join(prefix, 'train/train.csv')
 ).upload_file('train.csv')
