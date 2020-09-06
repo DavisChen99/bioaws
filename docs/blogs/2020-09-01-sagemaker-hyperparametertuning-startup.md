@@ -24,7 +24,7 @@
 
 ![step4](../img/sagemaker/image004.png)
 
-5.等到Status从Pending变成InService，选择偏好的Notebook环境进入（Jupyter Notebook或者Jupyter Lab）
+5.等到Status从Pending变成InService，选择偏好的Notebook环境进入（Jupyter Notebook或者Jupyter Lab），如果里面空空如也，可以右上方点击New创建一个新记事本，根据你想要的ML框架选择，这里选择 `conda_python3`
 
 ![step5](../img/sagemaker/image005.png)
 ![step6](../img/sagemaker/image006.png)
@@ -52,6 +52,8 @@ from sklearn.model_selection import train_test_split
 pd.set_option('display.max_colwidth', None)
 bokeh.io.output_notebook()
 ```
+
+__[by DC] 如果有报错`ValueError: Value must have type '<class 'int'>'`, 用这个命令：pd.set_option('display.max_colwidth', -1)__
 
 7.加载Boston数据集，查看数据集描述
 
@@ -136,7 +138,7 @@ bucket = sagemaker.Session().default_bucket()
 prefix = 'sagemaker/xgb-hpt-demo'
 ```
 
-10.把train.csv和validation.csv传至s3
+10.把train.csv和validation.csv传至s3，会出现在s3的这个地方`s3://sagemaker-cn-northwest-1-accountid/sagemaker/`,作为input
 
 ```python
 boto3.Session().resource('s3').Bucket(bucket).Object(
