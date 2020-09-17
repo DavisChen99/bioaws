@@ -186,50 +186,42 @@
 </ul>
 <h2 id="pcluster">安装pcluster 控制软件</h2>
 <ul>
-<li>install pip</li>
+<li>安装python3</li>
 </ul>
-<pre><code>curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+<pre><code># 安装python3 依赖包
+sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel
+sudo yum install gcc -y
 
-python get-pip.py
-
-pip install aws-parallelcluster
-
+# 安装python3 和 pip3
+sudo yum -y install python3
+python3 -m pip install --upgrade pip --user
+# 设置清华镜像
+pip3 install pip -U
+pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+# 安装parallelcluster
+pip3 install aws-parallelcluster --upgrade --user
+pcluster version
 </code></pre>
 
 <ul>
-<li>configure aws cli</li>
+<li>配置aws秘钥文件</li>
 </ul>
 <pre><code>$ aws configure
-AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
-AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+AWS Access Key ID [None]: AKXXXXXXXXXXXXXXXX
+AWS Secret Access Key [None]: wJalrXUtnFEMI/KXXXXXXXXXXXXXXXXX
 Default region name [us-east-1]: cn-northwest-1
 Default output format [None]: json
 
-</code></pre>
+# 确认下aksk秘钥生效（能摸到S3上数据）
+$ aws s3 ls
+2020-01-29 11:10:27 lovevideo
 
-<ul>
-<li>[可选项] 如果想安装python3的话</li>
-</ul>
-<pre><code>sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel
-sudo yum install gcc -y
-
-sudo mkdir /usr/local/python3
-cd /usr/local/  
-sudo wget https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tgz
-sudo tar -xvf Python-3.6.5.tgz
-
-cd ./Python-3.6.5/
-sudo ./configure --prefix=/usr/local/python3
-sudo make
-sudo make install
-
-sudo ln -s /usr/local/python3/bin/python3  /usr/bin/python3
 </code></pre>
 
 <h2 id="config-pcluster">生成并配置集群的config文件， 一键启动pcluster</h2>
 <ul>
 <li><code>cd ~/.parallelcluster</code></li>
-<li><code>vim config</code> edit as you want</li>
+<li><code>vim config</code> 将下面的配置文件拷贝进去并按要求修改</li>
 </ul>
 <p>[config template]</p>
 <pre><code>[aws]
@@ -273,7 +265,7 @@ master_subnet_id = subnet-a23v24c # change to your subnet id
 #[ebs custom2]  # change or add more if you want
 #shared_dir = data2
 #volume_type = gp2
-#volume_size = 2000 # GB
+#volume_size = 200 # GB
 [efs custom1]
 shared_dir = myefs # change and will be mounted as /myefs in your master and computer node
 encrypted = false
