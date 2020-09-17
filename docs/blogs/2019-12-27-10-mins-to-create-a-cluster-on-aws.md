@@ -56,7 +56,7 @@ _俗话说的好，没图说个基霸_
 
 ## 安装pcluster 控制软件
 
-- 安装python3
+- 安装python3,pip3,pcluster
 
 ```
 # 安装python3 依赖包
@@ -66,9 +66,11 @@ sudo yum install gcc -y
 # 安装python3 和 pip3
 sudo yum -y install python3
 python3 -m pip install --upgrade pip --user
+
 # 设置清华镜像
 pip3 install pip -U
 pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
 # 安装parallelcluster
 pip3 install aws-parallelcluster --upgrade --user
 pcluster version
