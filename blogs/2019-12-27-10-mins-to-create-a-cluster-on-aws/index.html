@@ -186,7 +186,7 @@
 </ul>
 <h2 id="pcluster">安装pcluster 控制软件</h2>
 <ul>
-<li>安装python3</li>
+<li>安装python3,pip3,pcluster</li>
 </ul>
 <pre><code># 安装python3 依赖包
 sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel
@@ -195,9 +195,11 @@ sudo yum install gcc -y
 # 安装python3 和 pip3
 sudo yum -y install python3
 python3 -m pip install --upgrade pip --user
+
 # 设置清华镜像
 pip3 install pip -U
 pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
 # 安装parallelcluster
 pip3 install aws-parallelcluster --upgrade --user
 pcluster version
