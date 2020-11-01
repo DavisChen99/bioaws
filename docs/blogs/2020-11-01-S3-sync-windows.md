@@ -132,8 +132,13 @@ aws s3 sync Z:/data2 s3://databackup/data2
 - 等到下个备份周期check一下上次备份有没有自动完成，云端有没有数据就正常使用了。
 
 [S3 相关命令行文档](https://docs.amazonaws.cn/cli/latest/userguide/cli-services-s3-commands.html)
+
 [S3 sync](https://docs.aws.amazon.com/cli/latest/reference/s3/sync.html)
+
 [如何提高 Amazon S3 的同步命令传输性能](https://aws.amazon.com/cn/premiumsupport/knowledge-center/s3-improve-transfer-sync-command/)
+
+
+
 
 
 
