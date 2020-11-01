@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2020-11-01-S3-sync-windows/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>windows 定期自动同步数据到S3 - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="../../head/">首页</a>
+                            </li>
+                            <li >
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#windows-s3">windows 定期自动同步数据到S3</a></li>
+            <li><a href="#s3">在S3上新建存储桶</a></li>
+            <li><a href="#python3-aws-cli">本地安装python3 和 命令行工具AWS CLI</a></li>
+            <li><a href="#windows">启用windows的定时任务</a></li>
+            <li><a href="#_1">确认下数据自动执行</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="windows-s3">windows 定期自动同步数据到S3</h1>
+<blockquote>
+<p>虽然生物信息一般都会用Linux系统来存储数据和运算，但是还是有些同学有从windows同步数据到AWS S3的需求，比如实验室的仪器配套的计算机上的重要数据，比如存储影像数据的win服务器等，本文就简要介绍下如何利用windows自带的定时任务配合一个小脚本实现自动同步数据。</p>
+<p>-- D.C</p>
+</blockquote>
+<p><em>名词解释：S3 --- AWS上的对象存储服务</em></p>
+<h2 id="s3">在S3上新建存储桶</h2>
+<ul>
+<li>
+<p>新建一个存储桶作为数据推上来存放的位置，比如说<code>databackup</code>,那么完整的S3路径就是<code>s3://databackup</code>。</p>
+</li>
+<li>
+<p>如果是备份到特定文件夹<code>data</code>,那么路径就是<code>s3://databackup/data</code>。</p>
+</li>
+</ul>
+<h2 id="python3-aws-cli">本地安装python3 和 命令行工具AWS CLI</h2>
+<ul>
+<li>
+<p>安装<a href="https://www.python.org/downloads/windows/">python3</a></p>
+</li>
+<li>
+<p>安装windows版本的<a href="https://docs.amazonaws.cn/cli/latest/userguide/install-windows.html">aws cli</a></p>
+</li>
+<li>
+<p>打开windwos的cmd验证下：</p>
+</li>
+</ul>
+<pre><code>C:\Users\god&gt;aws --version
+aws-cli/2.0.7 Python/3.7.5 Windows/10 botocore/2.0.0dev11
+</code></pre>
+
+<ul>
+<li>配好AKSK， AKSK的key是在创建aws用户的时候让你下载的一个csv文件，记得妥善保管。</li>
+</ul>
+<pre><code>$ aws configure
+AWS Access Key ID [****************xxxx]:   # 输入你的AK key
+AWS Secret Access Key [****************xxxx]: # 输入你的SK key
+Default region name [cn-northwest-1]:  # 宁夏：cn-northwest-1，北京：cn-north-1
+Default output format [json]:   # 默认json
+
+# 配好以后应该是这样的
+
+C:\Users\god&gt;aws configure list
+      Name                    Value             Type    Location
+      ----                    -----             ----    --------
+   profile                &lt;not set&gt;             None    None
+access_key     ****************P3UC shared-credentials-file
+secret_key     ****************rV4p shared-credentials-file
+    region           cn-northwest-1      config-file    ~/.aws/config
+</code></pre>
+
+<ul>
+<li>测试key是否配成功：</li>
+</ul>
+<pre><code>C:\Users\god&gt;aws s3 ls
+2019-09-07 16:19:46 god
+2020-01-29 19:10:27 lovevideo
+2020-08-09 12:49:07 publicuse
+</code></pre>
+
+<h2 id="windows">启用windows的定时任务</h2>
+<ul>
+<li>依次打开 控制面板 - 管理工具 - 任务计划程序 - 点击 <strong>创建任务</strong></li>
+</ul>
+<p>![task][1]</p>
+<ul>
+<li><strong>常规栏</strong> 的名称写为<code>s3sync</code>, <strong>触发器栏</strong> 新建一个定时任务，设定好时间和频率。</li>
+</ul>
+<p>![trigger][2]</p>
+<ul>
+<li><strong>操作栏</strong> 新建一个操作。</li>
+</ul>
+<p>[OPTION1] 如果每次都通盘同步，程序和脚本选择本机装的aws cli程序所在的位置，参数就写对应的同步参数。</p>
+<p>程序或脚本： C:\Program Files\Amazon\AWSCLIV2\aws.exe</p>
+<p>添加参数： s3 sync Z:\data s3://databackup/data --storage-class GLACIER</p>
+<p>[OPTION2] 如果只想同步特定文件夹，可以自己写个python 脚本指定，那么程序和脚本选择本机装的python.exe程序所在的位置，参数就写对应的python脚本。</p>
+<p>程序或脚本： C:\Users\god\AppData\Local\Programs\Python\Python38\python.exe</p>
+<p>添加参数： Z:\scripts\s3sync.py</p>
+<p>参考脚本s3sync.py如下：</p>
+<pre><code class="py">#!/usr/bin/python
+
+# 本脚本会自动检测特定目录下的最新文件夹，自动备份到aws s3的归档
+# 第一步，先在当前操作系统安装python https://www.python.org/downloads/release/python-382/
+# 第二步，修改以下路径，并运行本程序
+
+import os
+
+test_report = &quot;Z:\\&quot;   #需要修改！需要同步的最新文件夹所在的上级文件夹路径
+s3dir = r&quot;s3://databackup/data&quot; #修改！ s3同步路径
+
+def new_report(test_report): # 找到最新文件夹的路径和名称
+    lists = os.listdir(test_report)  #列出目录的下所有文件和文件夹保存到lists
+    print(list)
+    lists.sort(key=lambda fn:os.path.getmtime(test_report + &quot;\\&quot; + fn)) #按时间排序
+    file_new = os.path.join(test_report,lists[-1])
+    filename = lists[-1] #获取最新的文件保存到file_new
+    print(file_new)
+    return file_new,filename
+
+
+latest=new_report(test_report) # 找出当前文件夹下的最新文件夹路径和名字
+print (latest)
+os.system(&quot;aws s3 sync  %s %s/%s --storage-class GLACIER&quot; % (latest[0],s3dir,latest[1])) # 执行同步命令
+</code></pre>
+
+<p><strong>TIPS</strong> 如果每次同步多个文件夹，AWS CLI是支持运行多个sync命令的，只需要在你的脚本里运行多条同步任务即可,但任务太多会影响本机的性能哦。</p>
+<pre><code>aws s3 sync Z:/data1 s3://databackup/data1            
+
+aws s3 sync Z:/data2 s3://databackup/data2
+</code></pre>
+
+<ul>
+<li>
+<p>点击确定，保存计划任务，就可以中间的任务清单里看到这条命叫<code>s3sync</code>的定时任务了。</p>
+</li>
+<li>
+<p>选中这条任务，点击右侧操作列表里的运行按钮进行测试, 同步完成以后就可以在AWS控制台里看到上传且已经归档的文件了。</p>
+</li>
+</ul>
+<p>![test1][3]</p>
+<p>![test2][4]</p>
+<h2 id="_1">确认下数据自动执行</h2>
+<ul>
+<li>等到下个备份周期check一下上次备份有没有自动完成，云端有没有数据就正常使用了。</li>
+</ul>
+<p><a href="https://docs.amazonaws.cn/cli/latest/userguide/cli-services-s3-commands.html">S3 相关命令行文档</a>
+<a href="https://docs.aws.amazon.com/cli/latest/reference/s3/sync.html">S3 sync</a>
+<a href="https://aws.amazon.com/cn/premiumsupport/knowledge-center/s3-improve-transfer-sync-command/">如何提高 Amazon S3 的同步命令传输性能</a></p>
+<blockquote>
+<p>人们愤怒地指责那个罪犯，举起手里的石头就要砸，耶稣说：自认为无罪的人都可以砸。所有人都放下了手中的石头。</p>
+</blockquote></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
