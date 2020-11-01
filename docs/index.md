@@ -1,6 +1,6 @@
 ## 文章列表
 
-- [善物1 一些实用的命令(持续更新)](blogs/2020-02-04-tips.md)
+- [善物1 一些实用的链接和命令(持续更新)](blogs/2020-02-04-tips.md)
 
 - [善物2 解决ssh连接服务器掉线问题](blogs/2020-02-21-keep-ssh-alive.md)
 
@@ -52,12 +52,14 @@
 
 - [高阶系列8 鼠标党福音！给EC2安装桌面GUI](blogs/2020-05-12-install_GUI_on_EC2.md)
 
-- [高阶系列9 如何自动同步本地数据与S3](blogs/2020-08-06-sync_data_local_S3.md)
+- [高阶系列9 自动同步本地数据与S3 (ubuntu + 软件)](blogs/2020-08-06-sync_data_local_S3.md)
 
-- [高阶系列10 云上浏览BAM文件需要解决的问题](blogs/2020-03-18-igv-monitor-with-s3.md)
+- [高阶系列10 利用windows定时任务自动同步本地数据与S3](blogs/2020-11-01-S3-sync-windows.md)
 
-- [高阶系列11 使用S3数据同步神器，数据尽在我手](blogs/2020-08-20-sync_data_use_S3tools.md)
+- [高阶系列11 云上浏览BAM文件需要解决的问题](blogs/2020-03-18-igv-monitor-with-s3.md)
 
-- [高阶12 AWS SageMaker Hyperparameter Tuning 初试](blogs/2020-09-01-sagemaker-hyperparametertuning-startup.md)
+- [高阶系列12 使用S3数据同步神器，数据尽在我手](blogs/2020-08-20-sync_data_use_S3tools.md)
+
+- [高阶系列13 AWS SageMaker Hyperparameter Tuning 初试](blogs/2020-09-01-sagemaker-hyperparametertuning-startup.md)
 
 - [尾牙 2020的最后一天](blogs/2020-12-31-final-day-of-2020.md)
