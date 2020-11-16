@@ -68,7 +68,7 @@ C:\Users\god>aws s3 ls
 
 [OPTION1] 如果每次都通盘同步，程序和脚本选择本机装的aws cli程序所在的位置，参数就写对应的同步参数。
 
-程序或脚本： C:\Program Files\Amazon\AWSCLIV2\aws.exe
+程序或脚本： C:\Program Files\Amazon\AWSCLIV2\bin\aws.exe
 
 添加参数： s3 sync Z:\data s3://databackup/data --storage-class GLACIER
 
