@@ -79,7 +79,7 @@ C:\Users\god>aws s3 ls
 添加参数： Z:\scripts\s3sync.py
 
 
-参考脚本s3sync.py如下：
+参考脚本s3sync.py如下, **记得保存成UTF8编码,否则无法正常运行**：
 
 ```py
 #!/usr/bin/python
