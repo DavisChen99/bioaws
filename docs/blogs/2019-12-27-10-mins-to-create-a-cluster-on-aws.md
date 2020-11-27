@@ -194,10 +194,10 @@ $ cat >> test.slurm<<EOF
 #SBATCH -a 0-2
 
 input=(foo bar baz)
-echo "This is job #${SLURM_ARRAY_JOB_ID}, with parameter ${input[$SLURM_ARRAY_TASK_ID]}"
-echo "There are ${SLURM_ARRAY_TASK_COUNT} task(s) in the array."
-echo "  Max index is ${SLURM_ARRAY_TASK_MAX}"
-echo "  Min index is ${SLURM_ARRAY_TASK_MIN}"
+echo "This is job #\${SLURM_ARRAY_JOB_ID}, with parameter ${input[$SLURM_ARRAY_TASK_ID]}"
+echo "There are \${SLURM_ARRAY_TASK_COUNT} task(s) in the array."
+echo "  Max index is \${SLURM_ARRAY_TASK_MAX}"
+echo "  Min index is \${SLURM_ARRAY_TASK_MIN}"
 sleep 5
 EOF
 ```
