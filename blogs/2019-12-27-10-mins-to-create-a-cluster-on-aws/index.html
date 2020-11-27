@@ -319,10 +319,10 @@ MasterPrivateIP: 172.11.11.11
 #SBATCH -a 0-2
 
 input=(foo bar baz)
-echo &quot;This is job #${SLURM_ARRAY_JOB_ID}, with parameter ${input[$SLURM_ARRAY_TASK_ID]}&quot;
-echo &quot;There are ${SLURM_ARRAY_TASK_COUNT} task(s) in the array.&quot;
-echo &quot;  Max index is ${SLURM_ARRAY_TASK_MAX}&quot;
-echo &quot;  Min index is ${SLURM_ARRAY_TASK_MIN}&quot;
+echo &quot;This is job #\${SLURM_ARRAY_JOB_ID}, with parameter ${input[$SLURM_ARRAY_TASK_ID]}&quot;
+echo &quot;There are \${SLURM_ARRAY_TASK_COUNT} task(s) in the array.&quot;
+echo &quot;  Max index is \${SLURM_ARRAY_TASK_MAX}&quot;
+echo &quot;  Min index is \${SLURM_ARRAY_TASK_MIN}&quot;
 sleep 5
 EOF
 </code></pre>
