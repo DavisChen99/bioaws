@@ -43,14 +43,14 @@ _俗话说的好，没图说个基霸_
 
 - 所以流程大致是：
 
-原始pcluster官方镜像（ami-0c7a09bc17088086c） --> 启动模板机 --> 安装分析流程 --> custom_ami
+原始pcluster官方镜像（ami-0c7a09bc17088086c） --> 启动模板机 --> 安装分析流程 -->打镜像sanpshot --> 得到custom_ami
 
 控制机(默认Amazon Linux 2 AMI) --> 安装pcluster软件 --> 配置config --> 运行命令启动集群
 
 
 ## 打开一台虚拟机作为Pcluster的 **控制服务器**  (v2.7.0)
 
-- 选择一个ec2配置 `eg. t2.micro`
+- 选择一个ec2配置 `eg. t2.micro` 系统不限，默认选择amazon linux
 - 记住我的安全秘钥名称 `eg. mykey.pem`
 - 登录这台机器
 
@@ -72,8 +72,17 @@ pip3 install pip -U
 pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
 # 安装parallelcluster
-pip3 install aws-parallelcluster --upgrade --user
+pip3 install aws-parallelcluster --upgrade --user  #默认安装最新版pcluster
 pcluster version
+```
+
+## TIPS:
+
+万一装错了pcluster版本咋办：
+
+```
+pip3 uninstall aws-parallelcluster # 删除老的
+pip3 install aws-parallelcluster==2.7.0 # 安装指定版本
 ```
 
 - 配置aws秘钥文件
@@ -121,7 +130,7 @@ master_root_volume_size = 25  # master's root disk volumn, 17G by default
 compute_root_volume_size = 25  # compute's root disk volumn, 17G by default
 cluster_type = spot  # ondemand/spot
 spot_price = 0.4   # change if you want use spot as compute nodes, get latest price of specific instance in your EC2 console
-base_os = alinux2
+base_os = alinux2  # change if you did not choose amazon linux as your template ami OS
 scheduler = sge #  设定调度引擎，sge,torque,slurm, awsbatch
 custom_ami = ami-xxxxxxxxxxxxxx # ami-0c7a09bc17088086c 2.7.0; ami-0c081e1551e30ee5a 2.6.1 ; change to your customized AMI based on pcluster ami
 s3_read_resource = NONE
