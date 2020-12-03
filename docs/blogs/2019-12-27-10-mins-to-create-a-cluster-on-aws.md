@@ -43,9 +43,9 @@ _俗话说的好，没图说个基霸_
 
 - 所以流程大致是：
 
-原始pcluster官方镜像（ami-0c7a09bc17088086c） --> 启动模板机 --> 安装分析流程 -->打镜像sanpshot --> 得到custom_ami
+原始pcluster官方镜像（2.7版本，ami-0c7a09bc17088086c） --> 启动模板机 --> 安装分析流程 -->打镜像sanpshot --> 得到custom_ami
 
-控制机(默认Amazon Linux 2 AMI) --> 安装pcluster软件 --> 配置config --> 运行命令启动集群
+控制机(默认Amazon Linux 2 AMI) --> 安装pcluster软件2.7版本 --> 配置config --> 运行命令启动集群
 
 
 ## 打开一台虚拟机作为Pcluster的 **控制服务器**  (v2.7.0)
