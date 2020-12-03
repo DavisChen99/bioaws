@@ -273,7 +273,20 @@ performance_mode = generalPurpose
 
 **注意**： 如果想利用现有的EFS盘也可以(**如下设置**)，但是要注意要提前删除这块EFS上所有的**挂载目标**（mount target），以前被坑过的就是，当我手动在EFS界面新建efs盘后，系统会默认为这块efs添加所在region的所有可用区的mount target，这样做无疑是为了以后使用方便，但是这样的盘是无法被pcluste利用的，推测其后台会在建集群的时候会分配一个对应可用区的mount target, 如果发现已经有了mount target就会卡在那里。
 
-删除mount target方法：EFS界面-点击对应的efs id - Network - Manage - 把每个可用区的mount target统统remove掉 - save
+doc 是这么说的： 
+
+```
+Specifying this option voids all other Amazon EFS options except for shared_dir. If you set this option to config_sanity, it only supports file systems:
+
+That don't have a mount target in the stack's Availability Zone
+
+OR
+
+That do have an existing mount target in the stack's Availability Zone, with inbound and outbound NFS traffic allowed from 0.0.0.0/0.
+
+```
+
+删除mount target方法：EFS界面-点击对应的efs id - 右下角Network - Manage - 把每个可用区的mount target统统remove掉 - save
 
 ```
 efs_settings = customfs
