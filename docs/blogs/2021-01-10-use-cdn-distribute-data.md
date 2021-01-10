@@ -34,25 +34,24 @@ CDN --- CDN的全称是Content Delivery Network，即内容分发网络。CDN是
 
 -  `源路径` ： 可选。如果您希望 CloudFront 从 Amazon S3 存储桶或自定义源的目录中请求内容，请在此处输入目录路径名称(以 / 开头)。在将请求转发到源时，CloudFront 会将目录名追加到“源域名”的值，例如 myawsbucket/production。请勿在目录名称末尾包含 /。
 
-此例中选择要share的文件夹： _/lovevideo_  
+此例中选择要share的文件夹，不写就代表整个桶，根目录： _/lovevideo_  
 
-# 不写就代表整个桶，根目录
 
 -  `限制存储桶访问` ：	如果您希望要求用户始终使用 CloudFront URL 而非 Amazon S3 URL 访问您的 Amazon S3 内容，请单击“是”。当您使用签名的 URL 或签名的 Cookies 来限制对您的内容的访问时，这会很有用。请参阅“帮助”中的“通过 CloudFront 提供私有内容”。
 
-此例中保持默认： _是_
+此例中设定为： _是_
 
 ![OAI][03]
 
 ### 默认缓存行为设置
 
--  对象缓存：如果源服务器正在添加 Cache-Control 标头来控制对象在 CloudFront 缓存中的保留时间，则选择“使用源缓存标头”。选择“自定义”可指定对象在 CloudFront 缓存中保留的最短时间，而不管 Cache-Control 标头如何。
+-  `对象缓存`：如果源服务器正在添加 Cache-Control 标头来控制对象在 CloudFront 缓存中的保留时间，则选择“使用源缓存标头”。选择“自定义”可指定对象在 CloudFront 缓存中保留的最短时间，而不管 Cache-Control 标头如何。
 
 [默认] 最小TTL：0； 最大TTL：一年；默认TTL: 24小时
 
 _名词解释：TTL是 Time To Live的缩写，该字段指定IP包被路由器丢弃之前允许通过的最大网段数量。TTL是IPv4报头的一个8 bit字段。_
 
--  其他保持默认即可。
+-  其他选项保持默认。
 
 
 ### 分配设置
