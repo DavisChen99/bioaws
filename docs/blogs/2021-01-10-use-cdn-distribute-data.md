@@ -4,14 +4,17 @@
 >
 > -- D.C
 
-_名词解释：S3 --- AWS上的对象存储服务_
-_名词解释：CDN --- CDN的全称是Content Delivery Network，即内容分发网络。CDN是构建在现有网络基础之上的智能虚拟网络，依靠部署在各地的边缘服务器，通过中心平台的负载均衡、内容分发、调度等功能模块，使用户就近获取所需内容，降低网络拥塞，提高用户访问响应速度和命中率。_
+_名词解释：
+
+S3 --- AWS上的对象存储服务_
+
+CDN --- CDN的全称是Content Delivery Network，即内容分发网络。CDN是构建在现有网络基础之上的智能虚拟网络，依靠部署在各地的边缘服务器，通过中心平台的负载均衡、内容分发、调度等功能模块，使用户就近获取所需内容，降低网络拥塞，提高用户访问响应速度和命中率。_
 
 ## 前提条件
 
 - 首先你得需要一个ICP备案过的域名，比如`cdn.xxx.com.cn`,这个备案可以在阿里，也可以在aws。
 
-- 在AWS的管理console界面右上角点击`支持`，创建并提交案例，给到后台域名和备案号，并要求开放80/443端口。
+- 在AWS的管理console界面右上角点击`支持`，创建并提交案例，给到后台域名和备案号，并要求开放80/443端口。(GOV的要求)
 
 - 准备一个S3存储桶比如`share`，在share里新建一个folder为`lovevideo`,然后把要share的小片子放进去，存储桶权限设为公开，里面的数据也要设置为公开,简单的验证就是点击下图中的URL地址，能通过浏览器下载就代表OK啦。
 
@@ -25,15 +28,17 @@ _名词解释：CDN --- CDN的全称是Content Delivery Network，即内容分�
 
 ### 源设置
 
-1. `源域名`：在字段中单击并为源指定域名 - Amazon S3 存储桶、AWS MediaPackage 通道终端节点、AWS MediaStoreContainer 终端节点或您希望 CloudFront 从中获取 Web 内容的 Web 服务器。下拉列表枚举了与当前 AWS 账户关联的 AWS 资源。要使用其他 AWS 账户中的资源，请键入资源的域名。例如，对于 Amazon S3 存储桶，请用格式 bucketname.s3.amazonaws.com 键入名称。源中的文件必须公开可读。
+- `源域名`：在字段中单击并为源指定域名 - Amazon S3 存储桶、AWS MediaPackage 通道终端节点、AWS MediaStoreContainer 终端节点或您希望 CloudFront 从中获取 Web 内容的 Web 服务器。下拉列表枚举了与当前 AWS 账户关联的 AWS 资源。要使用其他 AWS 账户中的资源，请键入资源的域名。例如，对于 Amazon S3 存储桶，请用格式 bucketname.s3.amazonaws.com 键入名称。源中的文件必须公开可读。
 
 此例中选择对应的S3桶： _share.s3.cn-northwest-1.amazonaws.com.cn_ 
 
-2. `源路径` ： 可选。如果您希望 CloudFront 从 Amazon S3 存储桶或自定义源的目录中请求内容，请在此处输入目录路径名称(以 / 开头)。在将请求转发到源时，CloudFront 会将目录名追加到“源域名”的值，例如 myawsbucket/production。请勿在目录名称末尾包含 /。
+-  `源路径` ： 可选。如果您希望 CloudFront 从 Amazon S3 存储桶或自定义源的目录中请求内容，请在此处输入目录路径名称(以 / 开头)。在将请求转发到源时，CloudFront 会将目录名追加到“源域名”的值，例如 myawsbucket/production。请勿在目录名称末尾包含 /。
 
-此例中选择要share的文件夹： _/lovevideo_  # 不写就代表整个桶，根目录
+此例中选择要share的文件夹： _/lovevideo_  
 
-3. `限制存储桶访问` ：	如果您希望要求用户始终使用 CloudFront URL 而非 Amazon S3 URL 访问您的 Amazon S3 内容，请单击“是”。当您使用签名的 URL 或签名的 Cookies 来限制对您的内容的访问时，这会很有用。请参阅“帮助”中的“通过 CloudFront 提供私有内容”。
+# 不写就代表整个桶，根目录
+
+-  `限制存储桶访问` ：	如果您希望要求用户始终使用 CloudFront URL 而非 Amazon S3 URL 访问您的 Amazon S3 内容，请单击“是”。当您使用签名的 URL 或签名的 Cookies 来限制对您的内容的访问时，这会很有用。请参阅“帮助”中的“通过 CloudFront 提供私有内容”。
 
 此例中保持默认： _是_
 
@@ -41,28 +46,28 @@ _名词解释：CDN --- CDN的全称是Content Delivery Network，即内容分�
 
 ### 默认缓存行为设置
 
-1. 对象缓存：如果源服务器正在添加 Cache-Control 标头来控制对象在 CloudFront 缓存中的保留时间，则选择“使用源缓存标头”。选择“自定义”可指定对象在 CloudFront 缓存中保留的最短时间，而不管 Cache-Control 标头如何。
+-  对象缓存：如果源服务器正在添加 Cache-Control 标头来控制对象在 CloudFront 缓存中的保留时间，则选择“使用源缓存标头”。选择“自定义”可指定对象在 CloudFront 缓存中保留的最短时间，而不管 Cache-Control 标头如何。
 
-默认为 _最小TTL：0； 最大TTL：一年；默认TTL: 24小时_
+[默认] 最小TTL：0； 最大TTL：一年；默认TTL: 24小时
 
 _名词解释：TTL是 Time To Live的缩写，该字段指定IP包被路由器丢弃之前允许通过的最大网段数量。TTL是IPv4报头的一个8 bit字段。_
 
-2. 其他保持默认即可
+-  其他保持默认即可。
 
 
 ### 分配设置
 
-1. 推荐 `使用有边缘站点（最佳性能）`,就利用了AWS分布在中国东西南北的边缘站点，为客户提供最近的下载站点。如果选择“全部”之外的价格级别，则某些用户可能会遇到较长的延迟。
+-  推荐 `使用有边缘站点（最佳性能）`,这样就利用了AWS分布在中国东西南北的边缘站点，为客户提供最近的下载站点。如果选择“全部”之外的价格级别，则某些用户可能会遇到较长的延迟。
 
-2. [**重要**]备用域名： 您必须列出使用的任何自定义域名(例如 www.example.com)以及您文件的 URL 的 CloudFront 域名(例如 d1234.cloudfront.net)。指定最多 100 个 CNAMEs，使用逗号将其分隔开或将每个 CNAME 放在一个新行中。您还必须使用 DNS 服务创建 CNAME 记录，以便将针对 www.example.com 的查询路由到 d1234.cloudfront.net。
+-  [**重要**]备用域名： 您必须列出使用的任何自定义域名(例如 www.example.com)以及您文件的 URL 的 CloudFront 域名(例如 d1234.cloudfront.net)。指定最多 100 个 CNAMEs，使用逗号将其分隔开或将每个 CNAME 放在一个新行中。您还必须使用 DNS 服务创建 CNAME 记录，以便将针对 www.example.com 的查询路由到 d1234.cloudfront.net。
 
-此例中填入已经备过案的域名： _cdn.xxx.com_，其他保持默认，点击`创建分配`。
+此例中填入已经备过案的域名： _cdn.xxx.com.cn_，其他保持默认，点击`创建分配`。
 
 ### 创建cloudfront后查看状态
 
 ![cdn][1]
 
-1. copy 图中的域名 `xxxx.cloudfront.cn`，进到备案过的域名管理页面（以阿里为例），添加CNAME解析。如下图：
+-  copy 图中的域名 `xxxx.cloudfront.cn`，进到备案过的域名管理页面（以阿里为例），添加CNAME解析。如下图：
 
 ![domain][2]
 
@@ -75,7 +80,7 @@ _名词解释：TTL是 Time To Live的缩写，该字段指定IP包被路由器�
 
 ![cnamelog][3]
 
-2. 回到cloudfront界面可以看到这个域名已经处于`活跃`状态了.
+-  回到cloudfront界面可以看到这个域名已经处于`活跃`状态了.
 
 ![cdnstatus][4]
 
