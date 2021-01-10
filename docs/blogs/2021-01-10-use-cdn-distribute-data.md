@@ -102,6 +102,8 @@ _名词解释：TTL是 Time To Live的缩写，该字段指定IP包被路由器�
 
 总结一句，内部使用或者经费奇缺，用cdn + WAF, 且注意不要泄露下载链接给无关人员。对外交付敏感数据建议还是用S3， 毕竟data leak给公司带来的名誉和经济处罚，不是那点成本节约所能cover的，切记不要捡了芝麻丢了西瓜！
 
+[官方文档（中国区）](https://docs.amazonaws.cn/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
+
 
 
 > 醉卧沙场君莫笑，我在云端我骄傲。
