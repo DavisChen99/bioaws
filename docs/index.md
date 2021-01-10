@@ -36,7 +36,7 @@
 
 - [入门系列16 通过购买包年实例显著降低成本](blogs/2020-06-06-purchase-RI.md)
 
-- [入门系列17 利用AWS CDN服务CloudFront进行数据分发][blogs/2021-01-10-use-cdn-distribute-data.md]
+- [入门系列17 利用AWS CDN服务CloudFront进行数据分发](blogs/2021-01-10-use-cdn-distribute-data.md)
 
 - [高阶系列1 使用aws cli为EBS自动创建快照](blogs/2020-02-02-ebs-snapshot-cli.md)
 
