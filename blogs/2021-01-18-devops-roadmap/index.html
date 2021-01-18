@@ -4,14 +4,14 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="None">
         
-        <link rel="canonical" href="http://www.bioaws.com/">
-        <link rel="shortcut icon" href="img/favicon.ico">
-        <title>BioAWS</title>
-        <link href="css/bootstrap-custom.min.css" rel="stylesheet">
-        <link href="css/font-awesome.min.css" rel="stylesheet">
-        <link href="css/base.css" rel="stylesheet">
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2021-01-18-devops-roadmap/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>2021 01 18 devops roadmap - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -19,13 +19,13 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 
-        <script src="js/jquery-1.10.2.min.js" defer></script>
-        <script src="js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
         <script>hljs.initHighlightingOnLoad();</script> 
     </head>
 
-    <body class="homepage">
+    <body>
 
         <div class="navbar navbar-default navbar-fixed-top" role="navigation">
             <div class="container">
@@ -39,7 +39,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href=".">BioAWS</a>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
                 </div>
 
                 <!-- Expanded navigation -->
@@ -47,13 +47,13 @@
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
                             <li >
-                                <a href="head/">首页</a>
-                            </li>
-                            <li class="active">
-                                <a href=".">文章</a>
+                                <a href="../../head/">首页</a>
                             </li>
                             <li >
-                                <a href="about/">关于此站</a>
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
                             </li>
                         </ul>
 
@@ -63,16 +63,6 @@
                                 <i class="fa fa-search"></i> Search
                             </a>
                         </li>
-                            <li >
-                                <a rel="next" href="head/">
-                                    <i class="fa fa-arrow-left"></i> Previous
-                                </a>
-                            </li>
-                            <li >
-                                <a rel="prev" href="about/">
-                                    Next <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
                     </ul>
                 </div>
             </div>
@@ -81,114 +71,84 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#_1">文章列表</a></li>
+        <li class="main active"><a href="#devops">一图了解现代化开发运维DevOps</a></li>
+            <li><a href="#devops_1">什么是DevOps?</a></li>
+            <li><a href="#devops_2">DevOps 路线图</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h2 id="_1">文章列表</h2>
+<h2 id="devops">一图了解现代化开发运维DevOps</h2>
+<blockquote>
+<p>.</p>
+<p>-- D.C</p>
+</blockquote>
+<h3 id="devops_1">什么是DevOps?</h3>
+<p>随着软件发布迭代的频率越来越高，传统的「瀑布型」（开发—测试—发布）模式已经不能满足快速交付的需求。2009 年左右 DevOps 应运而生，简单地来说，就是更好的优化开发(DEV)、测试(QA)、运维(OPS)的流程，突出重视软件开发人员和运维人员的沟通合作来实现开发运维一体化，通过高度自动化工具与流程来使得软件构建、测试、发布更加快捷、频繁和可靠。</p>
+<h3 id="devops_2">DevOps 路线图</h3>
+<p>以下是DevOps的路线图，快看看自己到哪个段位了，另外AWS也有专门针对DevOps的培训，云端是DevOps最好的试验场!</p>
+<p><img alt="roadmap" src="../../img/devops/roadmap.jpg" /></p>
+<p>相关工具大致有：</p>
 <ul>
 <li>
-<p><a href="blogs/2020-02-04-tips/">善物1 一些实用的链接和命令(持续更新)</a></p>
+<p>代码管理（SCM）：GitHub、GitLab、BitBucket、SubVersion</p>
 </li>
 <li>
-<p><a href="blogs/2020-02-21-keep-ssh-alive/">善物2 解决ssh连接服务器掉线问题</a></p>
+<p>构建工具：Ant、Gradle、maven</p>
 </li>
 <li>
-<p><a href="blogs/2021-01-18-devops-roadmap/">善物3 一图了解DevOps需要的技能</a></p>
+<p>自动部署：Capistrano、CodeDeploy</p>
 </li>
 <li>
-<p><a href="blogs/2020-01-19-how-to-launch-ec2/">入门系列1 如何创建服务器并用命令行登录</a></p>
+<p>持续集成（CI）：Bamboo、Hudson、Jenkins</p>
 </li>
 <li>
-<p><a href="blogs/2020-01-25-how-to-create-ec2img/">入门系列2 如何给分析服务器打(上)镜(保)像(险)</a></p>
+<p>配置管理：Ansible、Chef、Puppet、SaltStack、ScriptRock GuardRail</p>
 </li>
 <li>
-<p><a href="blogs/2020-01-26-s3-ebs-efs-compare/">入门系列3 关于S3,EBS,EFS的三角关系</a></p>
+<p>容器：Docker、LXC、第三方厂商如AWS</p>
 </li>
 <li>
-<p><a href="blogs/2020-01-29-s3-data-ops/">入门系列4 如何上传数据到S3服务-Web界面</a></p>
+<p>编排：Kubernetes、Core、Apache Mesos、DC/OS</p>
 </li>
 <li>
-<p><a href="blogs/2020-02-01-s3-data-cli/">入门系列5 如何上传数据到S3服务-命令行CLI</a></p>
+<p>服务注册与发现：Zookeeper、etcd、Consul</p>
 </li>
 <li>
-<p><a href="blogs/2020-01-28-ec2-s3-data-exchange/">入门系列6 如何帮EC2摸到S3上的数据</a></p>
+<p>脚本语言：python、ruby、shell</p>
 </li>
 <li>
-<p><a href="blogs/2020-02-02-vpc-endpoint-s3/">入门系列7 为EC2和S3之间搭建爱的桥梁</a></p>
+<p>日志管理：ELK、Logentries</p>
 </li>
 <li>
-<p><a href="blogs/2020-02-04-ec2-download-oss/">入门系列8 EC2“红杏出墙”阿里云OSS</a></p>
+<p>系统监控：Datadog、Graphite、Icinga、Nagios</p>
 </li>
 <li>
-<p><a href="blogs/2020-01-31-efs-user-guide-101/">入门系列9 神器EFS终于来了！弹性共享存储！</a></p>
+<p>性能监控：AppDynamics、New Relic、Splunk</p>
 </li>
 <li>
-<p><a href="blogs/2020-02-02-ec2-ebs-attach/">入门系列10 如何让 EC2 “妻妾成群”？挂载更多磁盘并实现自动挂载！</a></p>
+<p>压力测试：JMeter、Blaze Meter、loader.io</p>
 </li>
 <li>
-<p><a href="blogs/2020-02-03-modify-ec2-ebs/">入门系列11 如何调整 EC2 配置和 EBS 磁盘大小</a></p>
+<p>预警：PagerDuty、pingdom、厂商自带如AWS SNS</p>
 </li>
 <li>
-<p><a href="blogs/2020-02-05-monitor-ec2-mem/">入门系列12 用脚本监控EC2的内存和磁盘指标</a></p>
+<p>HTTP加速器：Varnish</p>
 </li>
 <li>
-<p><a href="blogs/2020-02-06-cwagent-monitor-ec2-mem/">入门系列13 用CW代理监控EC2的内存和磁盘指标(推荐)</a></p>
+<p>消息总线：ActiveMQ、SQS</p>
 </li>
 <li>
-<p><a href="blogs/2020-02-09-aws-public-dataset/">入门系列14 福音！用好AWS公开数据集</a></p>
+<p>应用服务器：Tomcat、JBoss</p>
 </li>
 <li>
-<p><a href="blogs/2020-03-15-aws-backup/">入门系列15 集中式备份管理服务AWS Backup</a></p>
+<p>Web服务器：Apache、Nginx、IIS</p>
 </li>
 <li>
-<p><a href="blogs/2020-06-06-purchase-RI/">入门系列16 通过购买包年实例显著降低成本</a></p>
+<p>数据库：MySQL、Oracle、PostgreSQL等关系型数据库；cassandra、mongoDB、redis等NoSQL数据库</p>
 </li>
 <li>
-<p><a href="blogs/2021-01-10-use-cdn-distribute-data/">入门系列17 利用AWS CDN服务CloudFront进行数据分发</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-02-ebs-snapshot-cli/">高阶系列1 使用aws cli为EBS自动创建快照</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-02-03-ebs-cw-lambda-autobackup/">高阶系列2 高能！实现全自动EBS备份</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-31-put-bam-on-s3/">高阶系列3 BAM文件放云上好了，本地IGV很方便</a></p>
-</li>
-<li>
-<p><a href="blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws/">高阶系列4 10分钟一键创建HPC集群-pcluster</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-14-how-to-use-aws-batch-china/">高阶系列5 容器！利器！AWS Batch批量计算</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-01-06-wdl-and-cromwell-on-aws-batch-china/">高阶系列6 构建基于Batch和wdl语言的分析流程</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-04-15-use-k8s-on-aws-EKS/">高阶系列7 Kubernetes on AWS - EKS 服务</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-05-12-install_GUI_on_EC2/">高阶系列8 鼠标党福音！给EC2安装桌面GUI</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-08-06-sync_data_local_S3/">高阶系列9 自动同步本地数据与S3 (ubuntu + 软件)</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-11-01-S3-sync-windows/">高阶系列10 利用windows定时任务自动同步本地数据与S3</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-03-18-igv-monitor-with-s3/">高阶系列11 云上浏览BAM文件需要解决的问题</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-08-20-sync_data_use_S3tools/">高阶系列12 使用S3数据同步神器，数据尽在我手</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-09-01-sagemaker-hyperparametertuning-startup/">高阶系列13 AWS SageMaker Hyperparameter Tuning 初试</a></p>
-</li>
-<li>
-<p><a href="blogs/2020-12-31-final-day-of-2020/">尾牙 2020的最后一天</a></p>
+<p>项目管理（PM）：Jira、Asana、Taiga、Trello、Basecamp、Pivotal Tracker</p>
 </li>
 </ul></div>
         </div>
@@ -198,11 +158,11 @@
             <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script>
-            var base_url = ".",
+            var base_url = "../..",
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
-        <script src="js/base.js" defer></script>
-        <script src="search/main.js" defer></script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
     <div class="modal-dialog">
@@ -270,8 +230,3 @@
 
     </body>
 </html>
-
-<!--
-MkDocs version : 1.0.4
-Build Date UTC : 2021-01-18 05:51:44
--->
