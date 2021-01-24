@@ -7,10 +7,10 @@ from bs4 import BeautifulSoup
 
 from optparse import OptionParser
 parser = OptionParser()
-parser.add_option('-m','--mode',type='str',default = 'off', help = 'off/on/update')
-parser.add_option('-t','--type',type='str',default = 'ri', help = 'od/do/ri/dri/cri/cdri')
-parser.add_option('-s','--os',type='str',default = 'li', help = 'li/win/su/rh/wsqs/wsqw/wsqe')
-parser.add_option('-r','--region',type='str',default = 'zhy', help = 'bjs/zhy')
+parser.add_option('-m','--mode',type='str',default = 'off', help = 'off/on/update (off by default)')
+parser.add_option('-t','--type',type='str',default = 'ri', help = 'od/do/ri/dri/cri/cdri (ri by default)')
+parser.add_option('-s','--os',type='str',default = 'li', help = 'li/win/su/rh/wsqs/wsqw/wsqe (li by default)')
+parser.add_option('-r','--region',type='str',default = 'zhy', help = 'bjs/zhy (zhy by default)')
 
 option,args = parser.parse_args(sys.argv)
 
@@ -189,8 +189,9 @@ elif smode == 'on':
     soup = BeautifulSoup(open(htmlfile,encoding='utf-8'),features='html.parser')
     tables = soup.findAll('table')
     deepfile = '%s_%s.txt' % (parsefile,mygetnum)
-    print ('> write in to ' + deepfile)
+    print ('> updating... ' + deepfile)
     fp = open(deepfile,"w",encoding='utf-8')
+    mylist = ''
     tab = tables[mygetnum]
     for tr in tab.tbody.findAll('tr'):
         for td in tr.findAll('td'):
@@ -199,6 +200,7 @@ elif smode == 'on':
         mylist += '\n'
     fp.write(mylist)
     fp.close()
+    print ('> updated :)')
 elif smode == 'update':
     print ('[update mode]')
     for myos in systemlist:
@@ -213,7 +215,7 @@ elif smode == 'update':
         tables = soup.findAll('table')
         for count in allnum:
             deepfile = '%s_%s.txt' % (parsefile,count)
-            print ('write in to ' + deepfile)
+            print ('updating... ' + deepfile)
             fp = open(deepfile,"w",encoding='utf-8')
             mylist = ''
             tab = tables[count]
@@ -224,6 +226,7 @@ elif smode == 'update':
                 mylist += '\n'
             fp.write(mylist)
             fp.close()
+            print ('> updated :)')
     sys.exit(0)
 
 
