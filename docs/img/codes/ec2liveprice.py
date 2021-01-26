@@ -82,7 +82,7 @@ translate = {'bjs': '北京区域',
              'rh': 'EC2 RHEL',
              'wsqs': '采用 SQL Standard 的 EC2 Windows',
              'wsqw': '采用 SQL Web 的 EC2 Windows',
-             'wssqe': '采用 SQL Server Enterprise 的 EC2 Windows'
+             'wsqe': '采用 SQL Server Enterprise 的 EC2 Windows'
              }
 
 if not option.abb:
