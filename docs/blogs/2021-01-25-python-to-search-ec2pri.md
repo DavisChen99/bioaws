@@ -202,7 +202,7 @@ $ python --version
 Python 3.8.1
 ```
 
-- copy 代码另存为文件名 _ec2liveprice.py_：
+- 重点来了，放送代码： _ec2liveprice.py_
 
 [代码在此](../img/codes/ec2liveprice.py)
 
