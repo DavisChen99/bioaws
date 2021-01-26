@@ -2,11 +2,11 @@
 
 - [善物1 一些实用的链接和命令(持续更新)](blogs/2020-02-04-tips.md)
 
-- [善物2 解决ssh连接服务器掉线问题](blogs/2020-02-21-keep-ssh-alive.md)
+- [善物2 解决 ssh 连接服务器掉线问题](blogs/2020-02-21-keep-ssh-alive.md)
 
-- [善物3 一图了解DevOps需要的技能](blogs/2021-01-18-devops-roadmap.md)
+- [善物3 一图了解 DevOps 需要的技能](blogs/2021-01-18-devops-roadmap.md)
 
-- [善物4 用Python实时查询EC2价格](blogs/2021-01-25-python-to-search-ec2pri.md)
+- [善物4 用 Python 实时查询EC2价格](blogs/2021-01-25-python-to-search-ec2pri.md)
 
 - [入门系列1 如何创建服务器并用命令行登录](blogs/2020-01-19-how-to-launch-ec2.md )
 

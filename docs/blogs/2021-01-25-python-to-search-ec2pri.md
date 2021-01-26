@@ -1,4 +1,4 @@
-# 善物 - python脚本查询AWS EC2 价格
+# 善物4 - python脚本查询AWS EC2 价格
 
 > 主要是闲的D疼。。。
 >
