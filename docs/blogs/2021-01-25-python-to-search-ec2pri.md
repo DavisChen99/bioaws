@@ -204,7 +204,7 @@ Python 3.8.1
 
 - copy 代码另存为文件名 _ec2liveprice.py_：
 
-[代码在此](../img/codes/ec2livepirce.py)
+[代码在此](../img/codes/ec2liveprice.py)
 
 - 记事本打开修改以下路径为自己的路径,这个路径会用来放置爬下来的价格文件，共91个文件：
 
