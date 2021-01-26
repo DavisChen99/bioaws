@@ -6,12 +6,13 @@ from optparse import OptionParser
 from bs4 import BeautifulSoup
 
 from optparse import OptionParser
-parser = OptionParser()
+usage = "usage: %prog [options] InstanceType"
+parser = OptionParser(usage)
 parser.add_option('-m','--mode',type='str',default = 'off', help = 'off/on/update (off by default)')
 parser.add_option('-t','--type',type='str',default = 'ri', help = 'od/do/ri/dri/cri/cdri (ri by default)')
 parser.add_option('-s','--os',type='str',default = 'li', help = 'li/win/su/rh/wsqs/wsqw/wsqe (li by default)')
 parser.add_option('-r','--region',type='str',default = 'zhy', help = 'bjs/zhy (zhy by default)')
-
+parser.add_option("-p", action = "store_false",dest = "abb", default = True, help = "print abbrevs to stdout") 
 option,args = parser.parse_args(sys.argv)
 
 smode = option.mode
@@ -22,24 +23,40 @@ region = option.region
 index = args[1:]
 names = index[1:]
 
-# put this script in your dir and modify dir1 and dir2
-pathdir= r'C:\Users\dvische\mytools\ec2price'
+# judge the system type
 
-html_linux = pathdir + '\ec2_linux.html'
-html_rhel = pathdir + '\ec2_rhel.html'
-html_suse = pathdir + '\ec2_suse.html'
-html_win = pathdir + '\ec2_win.html'
-html_win_sqlstd = pathdir + '\ec2_win_sqlstd.html'
-html_win_sqlweb = pathdir + '\ec2_win_sqlweb.html'
-html_win_sqlent = pathdir + '\ec2_win_sqlent.html'
+if 'win' in sys.platform:
+    mysystem = 'win'
+else:
+    mysystem = 'li'
 
-parse_linux = pathdir + '\ec2_linux'
-parse_rhel = pathdir + '\ec2_rhel'
-parse_suse = pathdir + '\ec2_suse'
-parse_win = pathdir + '\ec2_win'
-parse_win_sqlstd = pathdir + '\ec2_win_sqlstd'
-parse_win_sqlweb = pathdir + '\ec2_win_sqlweb'
-parse_win_sqlent = pathdir + '\ec2_win_sqlent'
+# NEED CHANGE to the dir you want to put the crawled data
+
+#########################################################
+if mysystem == 'win':                                   #
+    pathdir= r'C:\Users\dvische\mytools\ec2price\\'     #
+else:                                                   #
+    pathdir= r'/Users/dvische/mytools/ec2price/'        #
+#########################################################
+
+
+# paths combine
+pathdir.strip()
+html_linux = pathdir + 'ec2_linux.html'
+html_rhel = pathdir + 'ec2_rhel.html'
+html_suse = pathdir + 'ec2_suse.html'
+html_win = pathdir + 'ec2_win.html'
+html_win_sqlstd = pathdir + 'ec2_win_sqlstd.html'
+html_win_sqlweb = pathdir + 'ec2_win_sqlweb.html'
+html_win_sqlent = pathdir + 'ec2_win_sqlent.html'
+
+parse_linux = pathdir + 'ec2_linux'
+parse_rhel = pathdir + 'ec2_rhel'
+parse_suse = pathdir + 'ec2_suse'
+parse_win = pathdir + 'ec2_win'
+parse_win_sqlstd = pathdir + 'ec2_win_sqlstd'
+parse_win_sqlweb = pathdir + 'ec2_win_sqlweb'
+parse_win_sqlent = pathdir + 'ec2_win_sqlent'
 
 # partial urls
 pri_linux = 'ec2/pricing/ec2-linux-pricing/'
@@ -65,8 +82,13 @@ translate = {'bjs': '北京区域',
              'rh': 'EC2 RHEL',
              'wsqs': '采用 SQL Standard 的 EC2 Windows',
              'wsqw': '采用 SQL Web 的 EC2 Windows',
-             'wssqe': '采用 SQL Server Enterprise 的 EC2 Windows',
+             'wssqe': '采用 SQL Server Enterprise 的 EC2 Windows'
              }
+
+if not option.abb:
+    print ('\nAbbreviations:')
+    for key in translate:
+        print ('%s <---> %s' % (key,translate[key]))
 
 # function for judge the url we open or download
 def geturl(osystem):
@@ -180,7 +202,7 @@ myget = getablenum(region,instype)
 mygetnum = myget[0]
 myhead = myget[1]
 
-if smode == 'off':
+if smode == 'off' and option.abb:
     print ('[offline mode]')
 elif smode == 'on':
     print ('[online mode]')
@@ -247,8 +269,8 @@ if index:
                 if re.search(name, line, re.IGNORECASE):
                     print (line)
 else:
-    print ('please input something :)')
-
+    if option.abb:
+        print ('please tell me instance type...')
 
 
 #   0 --- 按需 (OD) 实例  ZHY
