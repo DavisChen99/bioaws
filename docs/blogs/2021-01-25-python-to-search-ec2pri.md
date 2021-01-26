@@ -229,4 +229,4 @@ $ python ec2liveprice.py -m update
 - enjoy, 也欢迎进一步更新迭代 ~
 
 
-> 空谈误国，撸码兴邦
+> 空谈误国，撸码兴邦。
