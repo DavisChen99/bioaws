@@ -6,6 +6,8 @@
 
 - [善物3 一图了解DevOps需要的技能](blogs/2021-01-18-devops-roadmap.md)
 
+- [善物3 用Python实时查询EC2价格](blogs/2021-01-25-python-to-search-ec2pri.md)
+
 - [入门系列1 如何创建服务器并用命令行登录](blogs/2020-01-19-how-to-launch-ec2.md )
 
 - [入门系列2 如何给分析服务器打(上)镜(保)像(险)](blogs/2020-01-25-how-to-create-ec2img.md)
