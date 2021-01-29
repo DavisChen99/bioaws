@@ -206,20 +206,7 @@ Python 3.8.1
 
 [代码在此](../img/codes/ec2liveprice.py)
 
-- 记事本打开修改以下路径为自己的路径,这个路径会用来放置爬下来的价格文件，共91个文件：
-
-```python
-# NEED CHANGE to the dir you want to put the crawled data
-
-#########################################################
-if mysystem == 'win':                                   #
-    pathdir= r'C:\dir\to\mytools\ec2price\\'     # windows 路径规则
-else:                                                   #
-    pathdir= r'/Users/dir/to/ec2price/'        # 其他linux路径规则
-#########################################################  
-```
-
-- **首次使用** 需要用  `update` 模式来更新价格库：
+- **首次使用** 需要用  `update` 模式来更新价格库(脚本所在路径的lib文件夹)：
 
 ```bash
 $ python ec2liveprice.py -m update

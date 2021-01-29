@@ -18,21 +18,9 @@
 
 - _python 3.8_ + _tkinter_ 包(GUI工具) + _bs4_ 包（解析HTML）
 
-- 同样需要按照自己的系统类型，记事本打开脚本 _ec2main.py_，修改解压文件夹里面的lib文件夹所在的路径：
-
-```python
-# NEED CHANGE to the dir you want to put the crawled data
-
-#########################################################
-if mysystem == 'win':                                   #
-    pathdir= r'C:\dir\to\mytools\ec2price\lib\\'        # windows 路径规则
-else:                                                   #
-    pathdir= r'/Users/dir/to/ec2price/lib/'             # 其他linux路径规则
-#########################################################  
-```
-
 ### 如何使用
 
+- 第一次 **submit** 会自动设定 _update_ 模式从而下载价格库（lib文件夹），更新完即可正常查询。
 - Linux系统直接运行命令 `python ec2GUI.py`
 - Windows系统可以右键-安装包里的快捷方式 _ec2pri.lnk_-修改路径如下，然后拖到桌面双击运行即可。图标文件也已经在包内，当然你也可以自定义狂炫酷拽的个性ico图标。
 
