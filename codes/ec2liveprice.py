@@ -21,24 +21,15 @@ osystem = option.os
 region = option.region
 
 index = args[1:]
-names = index[1:]
 
-# judge the system type
+## get current dir and set lib dir
+currentdir = os.getcwd()
+pathdir = '%s\lib\\' % currentdir
 
-if 'win' in sys.platform:
-    mysystem = 'win'
-else:
-    mysystem = 'li'
-
-# NEED CHANGE to the dir you want to put the crawled data
-
-#########################################################
-if mysystem == 'win':                                   #
-    pathdir= r'C:\Users\dvische\mytools\ec2price\\'     #
-else:                                                   #
-    pathdir= r'/Users/dvische/mytools/ec2price/'        #
-#########################################################
-
+if not os.path.exists(pathdir):
+    os.mkdir(pathdir)
+    smode = 'update'
+    print ('> no local lib, set mode to update, please try again after lib updated...')
 
 # paths combine
 pathdir.strip()
@@ -73,7 +64,7 @@ translate = {'bjs': '北京区域',
              'od': '按需实例',
              'do': '专用按需实例',
              'ri': '预留实例',
-             'dri': '专业预留实例',
+             'dri': '专用预留实例',
              'cri': '可转换实例',
              'cdri': '可转换专用预留实例',
              'li': 'EC2 Linux',
@@ -93,31 +84,31 @@ if not option.abb:
 # function for judge the url we open or download
 def geturl(osystem):
     if osystem == 'li':
-        myurl = 'https://www.amazonaws.cn/' + pri_linux
+        myurl = 'https://www.amazonaws.cn/en/' + pri_linux
         myfile = html_linux
         myparse = parse_linux
     elif osystem == 'rh':
-        myurl = 'https://www.amazonaws.cn/' + pri_rhel
+        myurl = 'https://www.amazonaws.cn/en/' + pri_rhel
         myfile = html_rhel
         myparse = parse_rhel
     elif osystem == 'su':
-        myurl = 'https://www.amazonaws.cn/' + pri_suse
+        myurl = 'https://www.amazonaws.cn/en/' + pri_suse
         myfile = html_suse
         myparse = parse_suse
     elif osystem == 'win':
-        myurl = 'https://www.amazonaws.cn/' + pri_win
+        myurl = 'https://www.amazonaws.cn/en/' + pri_win
         myfile = html_win
         myparse = parse_win
     elif osystem == 'wsqs':
-        myurl = 'https://www.amazonaws.cn/' + pri_win_sqlstd
+        myurl = 'https://www.amazonaws.cn/en/' + pri_win_sqlstd
         myfile = html_win_sqlstd
         myparse = parse_win_sqlstd
     elif osystem == 'wsqw':
-        myurl = 'https://www.amazonaws.cn/' + pri_win_sqlweb
+        myurl = 'https://www.amazonaws.cn/en/' + pri_win_sqlweb
         myfile = html_win_sqlweb
         myparse = parse_win_sqlweb
     elif osystem == 'wsqe':
-        myurl = 'https://www.amazonaws.cn/' + pri_win_sqlent
+        myurl = 'https://www.amazonaws.cn/en/' + pri_win_sqlent
         myfile = html_win_sqlent
         myparse = parse_win_sqlent
     else:
@@ -126,55 +117,101 @@ def geturl(osystem):
     return myurl,myfile,myparse
 
 # function to set table list according to diff option:
-odhead = '实例类型\tvCPU\tECU\t内存\t存储\tOD价格（人民币）/每小时'
-rihead = '实例类型\t期限\t产品类型\t预付价格（人民币）\t使用价格（人民币）\t月度成本（人民币）\t有效RI率\t与OD相比的成本节省\tOD价格（人民币）/每小时'
+odhead = '实例类型, vCPU, ECU, 内存, 存储, OD价格（人民币）/每小时'
+rihead = '实例类型, 期限, 产品类型, 预付价格（人民币）, 使用价格（人民币）, 月度成本（人民币）, 有效RI率, 与OD相比的成本节省, OD价格（人民币）/每小时'
 myhead = ''
 
-def getablenum(region,instype):
+def getablenum(region,instype,os):
     if region == 'bjs':
-        if instype == 'od':
-            tnum = 6
-            myhead = odhead
-        elif instype == 'do':
-            tnum = 7
-            myhead = odhead
-        elif instype == 'ri':
-            tnum = 8
-            myhead = rihead
-        elif instype == 'dri':
-            tnum = 9
-            myhead = rihead
-        elif instype == 'cri':
-            tnum = 10
-            myhead = rihead
-        elif instype == 'cdri':
-            tnum = 11
-            myhead = rihead
+        if os == 'wsqe':
+            if instype == 'od':
+                tnum = 7
+                myhead = odhead
+            elif instype == 'do':
+                tnum = 8
+                myhead = odhead
+            elif instype == 'ri':
+                tnum = 9
+                myhead = rihead
+            elif instype == 'dri':
+                tnum = 10
+                myhead = rihead
+            elif instype == 'cri':
+                tnum = 11
+                myhead = rihead
+            elif instype == 'cdri':
+                tnum = 12
+                myhead = rihead
+            else:
+                raise ValueError('wrong instype option, please check usage by <python thisscript.py -h>')
+                sys.exit(0)
         else:
-            raise ValueError('wrong instype option, please check usage by <python thisscript.py -h>')
-            sys.exit(0)
+            if instype == 'od':
+                tnum = 6
+                myhead = odhead
+            elif instype == 'do':
+                tnum = 7
+                myhead = odhead
+            elif instype == 'ri':
+                tnum = 8
+                myhead = rihead
+            elif instype == 'dri':
+                tnum = 9
+                myhead = rihead
+            elif instype == 'cri':
+                tnum = 10
+                myhead = rihead
+            elif instype == 'cdri':
+                tnum = 11
+                myhead = rihead
+            else:
+                raise ValueError('wrong instype option, please check usage by <python thisscript.py -h>')
+                sys.exit(0)
     elif region == 'zhy':
-        if instype == 'od':
-            tnum = 0
-            myhead = odhead
-        elif instype == 'do':
-            tnum = 1
-            myhead = odhead
-        elif instype == 'ri':
-            tnum = 2
-            myhead = rihead
-        elif instype == 'dri':
-            tnum = 3
-            myhead = rihead
-        elif instype == 'cri':
-            tnum = 4
-            myhead = rihead
-        elif instype == 'cdri':
-            tnum = 5
-            myhead = rihead
+        if os == 'wsqe':
+            if instype == 'od':
+                tnum = 0
+                myhead = odhead
+            elif instype == 'do':
+                tnum = 2
+                myhead = odhead
+            elif instype == 'ri':
+                tnum = 3
+                myhead = rihead
+            elif instype == 'dri':
+                tnum = 4
+                myhead = rihead
+            elif instype == 'cri':
+                tnum = 5
+                myhead = rihead
+            elif instype == 'cdri':
+                tnum = 6
+                myhead = rihead
+            else:
+                raise ValueError('wrong instype option, please check usage by <python thisscript.py -h>')
+                sys.exit(0)
         else:
-            raise ValueError('wrong instype option, please check usage by <python thisscript.py -h>')
-            sys.exit(0)
+            if instype == 'od':
+                tnum = 0
+                myhead = odhead
+            elif instype == 'do':
+                tnum = 1
+                myhead = odhead
+            elif instype == 'ri':
+                tnum = 2
+                myhead = rihead
+            elif instype == 'dri':
+                tnum = 3
+                myhead = rihead
+            elif instype == 'cri':
+                tnum = 4
+                myhead = rihead
+            elif instype == 'cdri':
+                tnum = 5
+                myhead = rihead
+            else:
+                raise ValueError('wrong instype option, please check usage by <python thisscript.py -h>')
+                sys.exit(0)
     else:
         raise ValueError('wrong region option, please check usage by <python thisscript.py -h>')
         sys.exit(0)
@@ -191,6 +228,7 @@ downloader= ''
 # search mode :online, offline, update only
 systemlist = ['li','win','su','rh','wsqs','wsqw','wsqe']
 allnum = [0,1,2,3,4,5,6,7,8,9,10,11]
+sqlentnum = [0,2,3,4,5,6,7,8,9,10,11,12]
 mygetnum = ''
 
 myurl = geturl(osystem)
@@ -198,7 +236,7 @@ addr = myurl[0]
 htmlfile = myurl[1]
 parsefile = myurl[2]
 
-myget = getablenum(region,instype)
+myget = getablenum(region,instype,osystem)
 mygetnum = myget[0]
 myhead = myget[1]
 
@@ -210,7 +248,14 @@ elif smode == 'on':
     os.system(downloader)
     soup = BeautifulSoup(open(htmlfile,encoding='utf-8'),features='html.parser')
     tables = soup.findAll('table')
-    deepfile = '%s_%s.txt' % (parsefile,mygetnum)
+    if 'win_sqlent' in parsefile:
+        print (mygetnum)
+        if mygetnum == '0':
+            deepfile = '%s_%s.txt' % (parsefile,mygetnum)
+        else:
+            deepfile = '%s_%s.txt' % (parsefile,mygetnum-1)
+    else:
+        deepfile = '%s_%s.txt' % (parsefile,mygetnum)
     print ('> updating... ' + deepfile)
     fp = open(deepfile,"w",encoding='utf-8')
     mylist = ''
@@ -218,7 +263,7 @@ elif smode == 'on':
     for tr in tab.tbody.findAll('tr'):
         for td in tr.findAll('td'):
             text = td.getText()
-            mylist += text + '\t'
+            mylist += text + ' | '
         mylist += '\n'
     fp.write(mylist)
     fp.close()
@@ -235,20 +280,36 @@ elif smode == 'update':
         # use BeautifulSoup to parse html
         soup = BeautifulSoup(open(htmlfile,encoding='utf-8'),features='html.parser')
         tables = soup.findAll('table')
-        for count in allnum:
-            deepfile = '%s_%s.txt' % (parsefile,count)
-            print ('updating... ' + deepfile)
-            fp = open(deepfile,"w",encoding='utf-8')
-            mylist = ''
-            tab = tables[count]
-            for tr in tab.tbody.findAll('tr'):
-                for td in tr.findAll('td'):
-                    text = td.getText()
-                    mylist += text + '\t'
-                mylist += '\n'
-            fp.write(mylist)
-            fp.close()
-            print ('> updated :)')
+        if 'win_sqlent' in parsefile:
+            for count in sqlentnum: 
+                if count == 0:
+                    deepfile = '%s_%s.txt' % (parsefile,count)
+                else:
+                    deepfile = '%s_%s.txt' % (parsefile,count-1)
+                fp = open(deepfile,"w",encoding='utf-8')
+                mylist = ''
+                tab = tables[count]
+                for tr in tab.tbody.findAll('tr'):
+                    for td in tr.findAll('td'):
+                        text = td.getText()
+                        mylist += text + ' | '
+                    mylist += '\n'
+                fp.write(mylist)
+                fp.close()
+        else:
+            for count in allnum:   
+                deepfile = '%s_%s.txt' % (parsefile,count)
+                fp = open(deepfile,"w",encoding='utf-8')
+                mylist = ''
+                tab = tables[count]
+                for tr in tab.tbody.findAll('tr'):
+                    for td in tr.findAll('td'):
+                        text = td.getText()
+                        mylist += text + ' | '
+                    mylist += '\n'
+                fp.write(mylist)
+                fp.close()
+    print ('\n> all update job finished :)\n> start your query!')
     sys.exit(0)
 
 
@@ -261,8 +322,15 @@ name = ''
 if index:
     print ('\n# %s - %s - %s' % (translate[region], translate[osystem], translate[instype]))
     print (myhead)
-    myparsefile = '%s_%s.txt' % (parsefile,mygetnum)
-    with open(myparsefile,'r',encoding='UTF-8') as a:
+    if 'win_sqlent' in parsefile:
+        print (mygetnum)
+        if mygetnum == '0':
+            deepfile = '%s_%s.txt' % (parsefile,mygetnum)
+        else:
+            deepfile = '%s_%s.txt' % (parsefile,mygetnum-1)
+    else:
+        deepfile = '%s_%s.txt' % (parsefile,mygetnum)
+    with open(deepfile,'r',encoding='UTF-8') as a:
         for each_line in a:
             line = each_line.strip('\n')
             for name in index:
