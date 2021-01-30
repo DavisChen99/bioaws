@@ -204,7 +204,7 @@ Python 3.8.1
 
 - 重点来了，放送代码： _ec2liveprice.py_
 
-[代码在此](../img/codes/ec2liveprice.py)
+[代码在此](../codes/ec2liveprice.py)
 
 - **首次使用** 自动设定 _update_ 模式从而下载价格库（lib文件夹），更新完即可正常查询。
 
@@ -214,6 +214,8 @@ $ python ec2liveprice.py -m update
 ```
 
 - enjoy, 也欢迎进一步更新迭代 ~
+
+如果喜欢界面版可以看这篇[善物5 - 界面化查询AWS EC2 价格](2021-01-25-GUI-to-search-ec2pri.md)
 
 
 > 空谈误国，撸码兴邦。

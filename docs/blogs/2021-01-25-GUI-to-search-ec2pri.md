@@ -10,7 +10,7 @@
 
 ![screenshot][1]
 
-[代码包下载](../img/codes/ec2price.zip)
+[代码包下载](../codes/ec2price.zip)
 
 ### 安装依赖
 
