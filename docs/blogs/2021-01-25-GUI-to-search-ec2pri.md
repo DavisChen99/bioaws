@@ -22,14 +22,13 @@
 
 - Linux系统直接运行命令 `python ec2GUI.py`
 - Windows系统可以右键-安装包里的快捷方式 _ec2pri.lnk_-修改路径如下，然后拖到桌面双击运行即可。图标文件也已经在包内，当然你也可以自定义狂炫酷拽的个性ico图标。
-- **首次使用** 直接点击 **submit** 会自动设定 _update_ 模式从而下载价格库（lib文件夹），更新完即可正常查询。
 
 ```
 目标： C:\Users\xxx\AppData\Local\Programs\Python\Python38\pythonw.exe C:\Users\xxx\mytools\ec2price\ec2GUI.py
 起始位置： C:\Users\xxx\mytools\ec2price
 ```
 
-- 安装包内的lib文件夹内已经自带价格文件，你也可以打开UI界面以后选择 **update** - 点击 **Submit**，稍等半分钟左右，看到提示信息就更新完成了。
+- **首次使用** 打开UI界面以后直接点击 **submit** 会自动设定 _update_ 模式从而下载价格库（lib文件夹），更新完即可正常查询。你也可以选择 **update** - 点击 **Submit**，稍等半分钟左右，看到提示信息就更新完成了。
 
 - 日常使用默认是offline模式， online 模式只会更新本次查询信息所对应的表， update是全部更新。
 
