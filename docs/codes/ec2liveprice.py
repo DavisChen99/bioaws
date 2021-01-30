@@ -286,6 +286,7 @@ elif smode == 'update':
                     deepfile = '%s_%s.txt' % (parsefile,count)
                 else:
                     deepfile = '%s_%s.txt' % (parsefile,count-1)
+                print ('> updating... ' + deepfile)
                 fp = open(deepfile,"w",encoding='utf-8')
                 mylist = ''
                 tab = tables[count]
@@ -299,6 +300,7 @@ elif smode == 'update':
         else:
             for count in allnum:   
                 deepfile = '%s_%s.txt' % (parsefile,count)
+                print ('> updating... ' + deepfile)
                 fp = open(deepfile,"w",encoding='utf-8')
                 mylist = ''
                 tab = tables[count]
@@ -309,7 +311,7 @@ elif smode == 'update':
                     mylist += '\n'
                 fp.write(mylist)
                 fp.close()
-    print ('\n> all update job finished :)\n> start your query!')
+    print ('\n> update job finished :)\n> start your query!')
     sys.exit(0)
 
 
