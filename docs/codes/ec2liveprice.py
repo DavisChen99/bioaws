@@ -117,8 +117,8 @@ def geturl(osystem):
     return myurl,myfile,myparse
 
 # function to set table list according to diff option:
-odhead = '实例类型 | vCPU | ECU | 内存 | 存储 | OD价格（人民币）/每小时'
-rihead = '实例类型 | 期限 | 产品类型 | 预付价格（人民币） | 使用价格（人民币） | 月度成本（人民币） | 有效RI率 | 与OD相比的成本节省 | OD价格（人民币）/每小时'
+odhead = '实例类型 | vCPU | ECU | 内存 | 存储 | OD价格（人民币）/每小时 |'
+rihead = '实例类型 | 期限 | 产品类型 | 预付价格（人民币） | 使用价格（人民币） | 月度成本（人民币） | 有效RI率 | 与OD相比的成本节省 | OD价格（人民币）/每小时 |'
 myhead = ''
 
 def getablenum(region,instype,os):
@@ -249,7 +249,6 @@ elif smode == 'on':
     soup = BeautifulSoup(open(htmlfile,encoding='utf-8'),features='html.parser')
     tables = soup.findAll('table')
     if 'win_sqlent' in parsefile:
-        print (mygetnum)
         if mygetnum == '0':
             deepfile = '%s_%s.txt' % (parsefile,mygetnum)
         else:
@@ -320,12 +319,12 @@ elif smode == 'update':
 
 # set vars
 name = ''
+lawer = 0
 
 if index:
-    print ('\n# %s - %s - %s' % (translate[region], translate[osystem], translate[instype]))
+    print ('\n[%s - %s - %s]\n' % (translate[region], translate[osystem], translate[instype]))
     print (myhead)
     if 'win_sqlent' in parsefile:
-        print (mygetnum)
         if mygetnum == '0':
             deepfile = '%s_%s.txt' % (parsefile,mygetnum)
         else:
@@ -338,6 +337,9 @@ if index:
             for name in index:
                 if re.search(name, line, re.IGNORECASE):
                     print (line)
+                    lawer = 1
+    if not lawer:
+        print ('no such instance...')
 else:
     if option.abb:
         print ('please tell me instance type...')
