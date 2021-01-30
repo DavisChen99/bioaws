@@ -23,8 +23,8 @@ region = option.region
 index = args[1:]
 
 ## get current dir and set lib dir
-currentdir = os.getcwd()
-pathdir = '%s\lib\\' % currentdir
+currentdir = os.path.dirname(__file__)  # 当前文件所在的目录
+pathdir = '%s/lib/' % currentdir
 
 if not os.path.exists(pathdir):
     os.mkdir(pathdir)
@@ -117,8 +117,8 @@ def geturl(osystem):
     return myurl,myfile,myparse
 
 # function to set table list according to diff option:
-odhead = '实例类型, vCPU, ECU, 内存, 存储, OD价格（人民币）/每小时'
-rihead = '实例类型, 期限, 产品类型, 预付价格（人民币）, 使用价格（人民币）, 月度成本（人民币）, 有效RI率, 与OD相比的成本节省, OD价格（人民币）/每小时'
+odhead = '实例类型 | vCPU | ECU | 内存 | 存储 | OD价格（人民币）/每小时'
+rihead = '实例类型 | 期限 | 产品类型 | 预付价格（人民币） | 使用价格（人民币） | 月度成本（人民币） | 有效RI率 | 与OD相比的成本节省 | OD价格（人民币）/每小时'
 myhead = ''
 
 def getablenum(region,instype,os):

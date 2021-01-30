@@ -206,7 +206,7 @@ Python 3.8.1
 
 [代码在此](../img/codes/ec2liveprice.py)
 
-- **首次使用** 需要用  `update` 模式来更新价格库(脚本所在路径的lib文件夹)：
+- **首次使用** 自动设定 _update_ 模式从而下载价格库（lib文件夹），更新完即可正常查询。
 
 ```bash
 $ python ec2liveprice.py -m update
