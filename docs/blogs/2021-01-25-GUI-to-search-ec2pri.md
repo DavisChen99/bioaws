@@ -14,15 +14,21 @@
 
 ### 安装依赖
 
-- 本机要装有wget[点我下载](../codes/wget.exe)，一般linux都有，windows下载exe文件后，需要将exe的路径加到系统的环境变量中。大致路线是： 控制面板 - 系统和安全 - System - 左侧的高级系统设置 - 环境变量- 选中Path, 点编辑 - 新建， 把wget.exe所在的文件夹输进去， 我的是 `C:\Program Files\Git\mingw64\bin\` - 确定，退出。
+- [wget](../codes/wget.exe),已配置在安装包内, 仅做说明。
 
 - _python 3.8_ + _tkinter_ 包(GUI工具) + _bs4_ 包（解析HTML）
+
+```bash
+python3 -m pip install --upgrade pip
+pip3 -V
+pip3 install Beautifulsoup4
+```
 
 ### 如何使用
 
 - 解压出文件夹
 - Linux系统直接运行命令 `python ec2GUI.py`
-- Windows系统可以右键-安装包里的快捷方式 _ec2pri.lnk_-修改路径如下，然后拖到桌面双击运行即可。图标文件也已经在包内，当然你也可以自定义狂炫酷拽的个性ico图标。
+- Windows系统可以右键-安装包里的快捷方式 _ec2pri.lnk_-修改路径如下，然后拖到桌面双击运行即可。图标文件也已经在包内，当然你也可以自定义狂炫酷拽的个性ico图标。[转ico图标](http://www.zuohaotu.com/image-to-ico.aspx)
 
 ```
 目标： C:\Users\xxx\AppData\Local\Programs\Python\Python38\pythonw.exe C:\Users\xxx\mytools\ec2price\ec2GUI.py
