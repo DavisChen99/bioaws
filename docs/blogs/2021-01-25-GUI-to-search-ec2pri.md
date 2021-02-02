@@ -14,7 +14,7 @@
 
 ### 安装依赖
 
-- [wget](../codes/wget.exe),已配置在安装包内, 仅做说明。
+- [wget](../codes/wget.exe),已包含在安装包内, 此处仅做说明。
 
 - _python 3.8_ + _tkinter_ 包(GUI工具) + _bs4_ 包（解析HTML）
 
