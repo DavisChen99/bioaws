@@ -14,7 +14,7 @@
 
 ### 安装依赖
 
-- 本机要装有wget，一般linux都有，windows需要手动装完后，加到系统的环境变量中。大致路线是： 控制面板 - 系统和安全 - System - 左侧的高级系统设置 - 环境变量- 选中Path, 点编辑 - 新建， 把wget.exe所在的文件夹输进去， 我的是 `C:\Program Files\Git\mingw64\bin\` - 确定，退出。
+- 本机要装有wget[点我下载](../codes/wget.exe)，一般linux都有，windows下载exe文件后，需要将exe的路径加到系统的环境变量中。大致路线是： 控制面板 - 系统和安全 - System - 左侧的高级系统设置 - 环境变量- 选中Path, 点编辑 - 新建， 把wget.exe所在的文件夹输进去， 我的是 `C:\Program Files\Git\mingw64\bin\` - 确定，退出。
 
 - _python 3.8_ + _tkinter_ 包(GUI工具) + _bs4_ 包（解析HTML）
 
