@@ -26,6 +26,15 @@ index = args[1:]
 currentdir = os.path.dirname(__file__)  # 当前文件所在的目录
 pathdir = '%s/lib/' % currentdir
 
+# judge the system type then set wgetdir
+wgetdir = ''
+if 'win' in sys.platform:
+    mysystem = 'Windows'
+    wgetdir = '%s/bin/wget.exe' %  currentdir
+else:
+    mysystem = 'Non-Windows'
+    wgetdir = 'wget'
+
 if not os.path.exists(pathdir):
     os.mkdir(pathdir)
     smode = 'update'
@@ -117,8 +126,8 @@ def geturl(osystem):
     return myurl,myfile,myparse
 
 # function to set table list according to diff option:
-odhead = '实例类型 | vCPU | ECU | 内存 | 存储 | OD价格（人民币）/每小时 |'
-rihead = '实例类型 | 期限 | 产品类型 | 预付价格（人民币） | 使用价格（人民币） | 月度成本（人民币） | 有效RI率 | 与OD相比的成本节省 | OD价格（人民币）/每小时 |'
+odhead = '实例类型 | vCPU | ECU | 内存 | 存储 | OD价格（人民币）/每小时'
+rihead = '实例类型 | 期限 | 产品类型 | 预付价格（人民币） | 使用价格（人民币） | 月度成本（人民币） | 有效RI率 | 与OD相比的成本节省 | OD价格（人民币）/每小时'
 myhead = ''
 
 def getablenum(region,instype,os):
@@ -244,7 +253,7 @@ if smode == 'off' and option.abb:
     print ('[offline mode]')
 elif smode == 'on':
     print ('[online mode]')
-    downloader = 'wget %s -O %s' % (addr,htmlfile)
+    downloader = '%s %s -O %s' % (wgetdir,addr,htmlfile)
     os.system(downloader)
     soup = BeautifulSoup(open(htmlfile,encoding='utf-8'),features='html.parser')
     tables = soup.findAll('table')
@@ -262,7 +271,14 @@ elif smode == 'on':
     for tr in tab.tbody.findAll('tr'):
         for td in tr.findAll('td'):
             text = td.getText()
-            mylist += text + ' | '
+            if 'SSD' in text:
+                mylist += text.ljust(20)
+            elif 'Upfront' in text:
+                mylist += text.ljust(18)
+            elif 'yr' in text:
+                mylist += text.ljust(6)
+            else:
+                mylist += text.ljust(15)
         mylist += '\n'
     fp.write(mylist)
     fp.close()
@@ -274,7 +290,7 @@ elif smode == 'update':
         addr = myurl[0]
         htmlfile = myurl[1]
         parsefile = myurl[2]
-        downloader = 'wget %s -O %s' % (addr,htmlfile)
+        downloader = '%s %s -O %s' % (wgetdir,addr,htmlfile)
         os.system(downloader)
         # use BeautifulSoup to parse html
         soup = BeautifulSoup(open(htmlfile,encoding='utf-8'),features='html.parser')
@@ -292,7 +308,14 @@ elif smode == 'update':
                 for tr in tab.tbody.findAll('tr'):
                     for td in tr.findAll('td'):
                         text = td.getText()
-                        mylist += text + ' | '
+                        if 'SSD' in text:
+                            mylist += text.ljust(20)
+                        elif 'Upfront' in text:
+                            mylist += text.ljust(18)
+                        elif 'yr' in text:
+                            mylist += text.ljust(6)
+                        else:
+                            mylist += text.ljust(15)
                     mylist += '\n'
                 fp.write(mylist)
                 fp.close()
@@ -306,7 +329,14 @@ elif smode == 'update':
                 for tr in tab.tbody.findAll('tr'):
                     for td in tr.findAll('td'):
                         text = td.getText()
-                        mylist += text + ' | '
+                        if 'SSD' in text:
+                            mylist += text.ljust(20)
+                        elif 'Upfront' in text:
+                            mylist += text.ljust(18)
+                        elif 'yr' in text:
+                            mylist += text.ljust(6)
+                        else:
+                            mylist += text.ljust(15)
                     mylist += '\n'
                 fp.write(mylist)
                 fp.close()

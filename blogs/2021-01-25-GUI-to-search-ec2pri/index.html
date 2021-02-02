@@ -91,17 +91,22 @@
 <h3 id="_2">安装依赖</h3>
 <ul>
 <li>
-<p>本机要装有wget<a href="../../codes/wget.exe">点我下载</a>，一般linux都有，windows下载exe文件后，需要将exe的路径加到系统的环境变量中。大致路线是： 控制面板 - 系统和安全 - System - 左侧的高级系统设置 - 环境变量- 选中Path, 点编辑 - 新建， 把wget.exe所在的文件夹输进去， 我的是 <code>C:\Program Files\Git\mingw64\bin\</code> - 确定，退出。</p>
+<p><a href="../../codes/wget.exe">wget</a>,已包含在安装包内, 此处仅做说明。</p>
 </li>
 <li>
 <p><em>python 3.8</em> + <em>tkinter</em> 包(GUI工具) + <em>bs4</em> 包（解析HTML）</p>
 </li>
 </ul>
+<pre><code class="bash">python3 -m pip install --upgrade pip
+pip3 -V
+pip3 install Beautifulsoup4
+</code></pre>
+
 <h3 id="_3">如何使用</h3>
 <ul>
 <li>解压出文件夹</li>
 <li>Linux系统直接运行命令 <code>python ec2GUI.py</code></li>
-<li>Windows系统可以右键-安装包里的快捷方式 <em>ec2pri.lnk</em>-修改路径如下，然后拖到桌面双击运行即可。图标文件也已经在包内，当然你也可以自定义狂炫酷拽的个性ico图标。</li>
+<li>Windows系统可以右键-安装包里的快捷方式 <em>ec2pri.lnk</em>-修改路径如下，然后拖到桌面双击运行即可。图标文件也已经在包内，当然你也可以自定义狂炫酷拽的个性ico图标。<a href="http://www.zuohaotu.com/image-to-ico.aspx">转ico图标</a></li>
 </ul>
 <pre><code>目标： C:\Users\xxx\AppData\Local\Programs\Python\Python38\pythonw.exe C:\Users\xxx\mytools\ec2price\ec2GUI.py
 起始位置： C:\Users\xxx\mytools\ec2price
