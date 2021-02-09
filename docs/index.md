@@ -70,4 +70,6 @@
 
 - [高阶系列13 AWS SageMaker Hyperparameter Tuning 初试](blogs/2020-09-01-sagemaker-hyperparametertuning-startup.md)
 
+- [高阶系列14 S3桶跨账号共享的最佳实践](blogs/2021-01-25-policy-to touch-s3.md)
+
 - [尾牙 2020的最后一天](blogs/2020-12-31-final-day-of-2020.md)
