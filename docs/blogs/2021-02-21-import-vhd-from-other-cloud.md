@@ -1,4 +1,4 @@
-# 高阶15 - 如何导入其他云商的虚拟机镜像
+# 高阶15 - 如何导入其他云商/本地的虚拟机镜像
 
 > 天下大势，分久必合，合久必分。同样云计算市场分分合合，来来去去也正常，有不少朋友以前用的是非AWS的云，
 > 但是因为踩坑或割韭菜等原因，想要迁移到AWS上，在这过程中遇到最多的问题，就是服务器镜像的跨云迁移。
@@ -200,7 +200,7 @@ converting — The imported image is being converted into an AMI.
 completed — The import task is completed and the AMI is ready to use.
 
 
-**转化完毕，就可以在EC2界面左侧的AMI 列表中找到对应的镜像，再通过这个镜像启动EC2即可。**
+- **转化完毕，就可以在EC2界面左侧的AMI 列表中找到对应的镜像，再通过这个镜像启动EC2即可。**
 
 
 ### 如果转化磁盘镜像(snapshot)
@@ -235,10 +235,12 @@ $ aws ec2 describe-import-snapshot-tasks --import-task-ids import-snap-123456789
 
 
 
-补充材料:
+**补充材料:**
 
 [VM Import/Export](https://docs.aws.amazon.com/zh_cn/vm-import/latest/userguide/what-is-vmimport.html)
 
+
+还有疑问或不清楚的，可以在群里提问哟~
 
 
 > 我只是一个句号。

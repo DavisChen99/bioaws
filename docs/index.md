@@ -72,6 +72,6 @@
 
 - [高阶系列14 S3桶跨账号共享的最佳实践](blogs/2021-02-09-policy-to-touch-s3.md)
 
-- [高阶系列15 如何导入其他云商的虚拟机镜像](blogs/2021-02-21-import-vhd-from-other-cloud.md)
+- [高阶系列15 如何导入其他云商/本地的虚拟机镜像](blogs/2021-02-21-import-vhd-from-other-cloud.md)
 
 - [尾牙 2020的最后一天](blogs/2020-12-31-final-day-of-2020.md)
