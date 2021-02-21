@@ -8,7 +8,7 @@
         
         <link rel="canonical" href="http://www.bioaws.com/blogs/2021-02-21-import-vhd-from-other-cloud/">
         <link rel="shortcut icon" href="../../img/favicon.ico">
-        <title>高阶15 - 如何导入其他云商的虚拟机镜像 - BioAWS</title>
+        <title>高阶15 - 如何导入其他云商/本地的虚拟机镜像 - BioAWS</title>
         <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../../css/font-awesome.min.css" rel="stylesheet">
         <link href="../../css/base.css" rel="stylesheet">
@@ -71,7 +71,7 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#15-">高阶15 - 如何导入其他云商的虚拟机镜像</a></li>
+        <li class="main active"><a href="#15-">高阶15 - 如何导入其他云商/本地的虚拟机镜像</a></li>
             <li><a href="#_1">映像格式</a></li>
             <li><a href="#_2">准备工作</a></li>
             <li><a href="#_3">权限设置</a></li>
@@ -81,7 +81,7 @@
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="15-">高阶15 - 如何导入其他云商的虚拟机镜像</h1>
+<h1 id="15-">高阶15 - 如何导入其他云商/本地的虚拟机镜像</h1>
 <blockquote>
 <p>天下大势，分久必合，合久必分。同样云计算市场分分合合，来来去去也正常，有不少朋友以前用的是非AWS的云，
 但是因为踩坑或割韭菜等原因，想要迁移到AWS上，在这过程中遇到最多的问题，就是服务器镜像的跨云迁移。
@@ -265,7 +265,9 @@
 <p>validated — The imported image was validated.</p>
 <p>converting — The imported image is being converted into an AMI.</p>
 <p>completed — The import task is completed and the AMI is ready to use.</p>
-<p><strong>转化完毕，就可以在EC2界面左侧的AMI 列表中找到对应的镜像，再通过这个镜像启动EC2即可。</strong></p>
+<ul>
+<li><strong>转化完毕，就可以在EC2界面左侧的AMI 列表中找到对应的镜像，再通过这个镜像启动EC2即可。</strong></li>
+</ul>
 <h3 id="snapshot">如果转化磁盘镜像(snapshot)</h3>
 <ul>
 <li>假设导出的磁盘镜像名字为 <code>abcd_disk</code>, 同样存放在S3的 <code>tempimage</code>桶里，那么只要在本地终端运行如下命令, 结果会返回一个作业id 如 <code>import-snap-1234567890abcdef0</code> 。</li>
@@ -293,8 +295,9 @@
 <ul>
 <li>转化完成后，就可以在ec2界面的左侧EBS下的快照里找到转化后的磁盘，再将它attach到需要的ec2上即可。</li>
 </ul>
-<p>补充材料:</p>
+<p><strong>补充材料:</strong></p>
 <p><a href="https://docs.aws.amazon.com/zh_cn/vm-import/latest/userguide/what-is-vmimport.html">VM Import/Export</a></p>
+<p>还有疑问或不清楚的，可以在群里提问哟~</p>
 <blockquote>
 <p>我只是一个句号。</p>
 </blockquote></div>
