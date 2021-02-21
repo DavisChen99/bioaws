@@ -72,6 +72,7 @@
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
         <li class="main active"><a href="#_1">一些实用的命令(持续更新)</a></li>
+            <li><a href="#_2">开发工具</a></li>
             <li><a href="#s3">s3</a></li>
             <li><a href="#ec2">ec2</a></li>
             <li><a href="#eks">EKS</a></li>
@@ -84,8 +85,45 @@
 <p>其实都是aws cli里面的内容，aws doc上也都有，整理一些常用的作为备忘。</p>
 <p>-- D.C</p>
 </blockquote>
+<h2 id="_2">开发工具</h2>
+<ul>
+<li>
+<p><a href="https://docs.amazonaws.cn/index.html?nc2=h_l2_su">中国区文档</a></p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/">Global 文档</a></p>
+</li>
+<li>
+<p>AWS 命令行工具 <a href="https://docs.aws.amazon.com/zh_cn/cli/index.html">AWS Command Line Interface</a></p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/cli/latest/reference/#available-services">AWS CLI 完整命令参考</a></p>
+</li>
+<li>
+<p><a href="https://boto3.amazonaws.com/v1/documentation/api/latest/index.html">Python SDK boto3</a></p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/cdk/latest/guide/work-with.html">AWS Cloud Development Kit (AWS CDK)</a></p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/cli/latest/reference/batch/">AWS CLI 批量计算</a></p>
+</li>
+</ul>
+<h3 id="cloudwatch">CloudWatch</h3>
+<p>获取特定实例的 CPU 利用率 (AWS CLI) : 使用 get-metric-statistics 命令获取指定实例的 CPUUtilization 指标（使用指定周期和时间间隔）</p>
+<pre><code class="batch">aws cloudwatch get-metric-statistics --namespace AWS/EC2 --metric-name CPUUtilization  --period 3600 \
+--statistics Maximum --dimensions Name=InstanceId,Value=i-1234567890abcdef0 \
+--start-time 2020-10-18T23:18:00 --end-time 2020-10-19T23:18:00
+</code></pre>
+
 <h2 id="s3">s3</h2>
 <h3 id="s3_1">看看s3上用了多少空间</h3>
+<ul>
+<li>To find the canonical user ID using the AWS CLI, 这个在设置桶的ACL权限的时候需要用到，一般要求输入要共享数据的其他用户的aws canonical user ID。</li>
+</ul>
+<pre><code>aws s3api list-buckets --query Owner.ID --output text
+</code></pre>
+
 <ul>
 <li>列出桶的大小和文件数量。</li>
 </ul>
@@ -177,6 +215,17 @@ $ aws s3 ls s3://xxx --recursive | grep xxx | cut -c 32-
 </code></pre>
 
 <p>详细参考 <a href="https://aws.amazon.com/cn/premiumsupport/knowledge-center/restore-s3-object-glacier-storage-class/">点我</a></p>
+<ul>
+<li>批量归档小脚本，使用 <code>bash test.sh folder1 folder2 folder3 ...</code></li>
+</ul>
+<pre><code class="bash">#!/bin/bash
+for arg in &quot;$@&quot; # 文件夹名
+do
+        echo $arg
+        aws s3 sync /xxx/$arg  s3://xxx/$arg --storage-class DEEP_ARCHIVE
+done
+</code></pre>
+
 <h2 id="ec2">ec2</h2>
 <h3 id="instance">查看instance信息</h3>
 <p><code>aws ec2 describe-instances</code> 输出的内容太多，后面用管道加个<code>awk</code>吧。</p>
