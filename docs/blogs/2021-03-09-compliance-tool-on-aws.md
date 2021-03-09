@@ -16,7 +16,7 @@ Prowler is a command line tool for AWS Security Best Practices Assessment, Audit
 
 It follows guidelines of the CIS Amazon Web Services Foundations Benchmark (49 checks) and has more than 100 additional checks including related to GDPR, HIPAA, PCI-DSS, ISO-27001, FFIEC, SOC2 and others.
 
-简单理解，prowler 是一款帮助我们自查合规新的命令行工具，有了它，我们就可以定期审视AWS上的资源，是否符合安全合规的最佳实践了。这也得益于AWS优秀的api接口，使得这种跨service的检查变得如此敏捷和自动化，至少目前我还没听说其他云商有这么简单的合规性检查工具的。
+简单理解，prowler 是一款帮助我们自查合规新的命令行工具，有了它，我们就可以定期审视AWS上的资源，是否符合安全合规的最佳实践了。这也得益于**AWS优秀的api接口**，使得这种跨service的检查变得如此**敏捷**和**自动化**，至少目前我还没听说其他云商有这么简单的合规性检查工具的。
 
 prowler支持180多种合规检查，这些检查都和以下的合规要求相关：
 
@@ -76,7 +76,7 @@ Default region name []:cn-northwest-1
 Default output format [json]:json
 ```
 
-- 给这台EC2的IAM角色赋予它进行合规性检查的权限Policy，当然如果你的账号的admin权限，就可以跳过这一步了。
+- 给这台EC2的IAM角色赋予它进行合规性检查的权限Policy，当然如果你的账号是admin权限，就可以跳过这一步了。
 
 ```
 # 这两个是aws 自带的
