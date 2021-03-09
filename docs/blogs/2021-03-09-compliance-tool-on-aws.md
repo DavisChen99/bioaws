@@ -43,7 +43,7 @@ prowler支持180多种合规检查，这些检查都和以下的合规要求相�
 它支持：
 
 - 获得一个合规性报告（格式有：HTML, CSV, JUNIT, JSON or JSON ASFF）
-- 可以把合规问题直接发送到 [AWS Security Hub](https://aws.amazon.com/cn/security-hub/)
+- 可以把合规问题直接发送到 [AWS Security Hub](https://www.amazonaws.cn/security-hub/) 国内已有
 - 支持自定义合规性检查
 - 并行/串行检查名下所有AWS账号
 - 可以跑在本地机器，EC2，Fargate 或者其他容器里，以及AWS的Codebuild, CloudShell 和 Cloud9.
