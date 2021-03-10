@@ -10,6 +10,8 @@
 
 - [善物5 UI界面实时查询EC2价格](blogs/2021-01-25-GUI-to-search-ec2pri.md)
 
+- [善物6 使用Batch服务的一些提示](blogs/2021-03-10-Dockerfile-tips-with-batch-service.md)
+
 - [入门系列1 如何创建服务器并用命令行登录](blogs/2020-01-19-how-to-launch-ec2.md )
 
 - [入门系列2 如何给分析服务器打(上)镜(保)像(险)](blogs/2020-01-25-how-to-create-ec2img.md)
@@ -69,5 +71,11 @@
 - [高阶系列12 使用S3数据同步神器，数据尽在我手](blogs/2020-08-20-sync_data_use_S3tools.md)
 
 - [高阶系列13 AWS SageMaker Hyperparameter Tuning 初试](blogs/2020-09-01-sagemaker-hyperparametertuning-startup.md)
+
+- [高阶系列14 S3桶跨账号共享的最佳实践](blogs/2021-02-09-policy-to-touch-s3.md)
+
+- [高阶系列15 如何导入其他云商/本地的虚拟机镜像](blogs/2021-02-21-import-vhd-from-other-cloud.md)
+
+- [高阶系列16 AWS上的合规自查神器-Prowler](blogs/2021-03-09-compliance-tool-on-aws.md)
 
 - [尾牙 2020的最后一天](blogs/2020-12-31-final-day-of-2020.md)

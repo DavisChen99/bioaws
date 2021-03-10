@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2021-01-25-python-to-search-ec2pri/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>善物4 - python脚本查询AWS EC2 价格 - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="../../head/">首页</a>
+                            </li>
+                            <li >
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#4-pythonaws-ec2">善物4 - python脚本查询AWS EC2 价格</a></li>
+            <li><a href="#_1">离线模式（默认）</a></li>
+            <li><a href="#_2">在线模式（需联网，现爬现查）</a></li>
+            <li><a href="#_3">说说安装</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="4-pythonaws-ec2">善物4 - python脚本查询AWS EC2 价格</h1>
+<blockquote>
+<p>主要是闲的D疼。。。</p>
+<p>-- D.C</p>
+</blockquote>
+<h3 id="_1">离线模式（默认）</h3>
+<ul>
+<li>help 信息</li>
+</ul>
+<pre><code class="bash">$  python ec2liveprice.py -h
+Usage: ec2liveprice.py [options] InstanceType
+
+Options:
+  -h, --help            show this help message and exit
+  -m MODE, --mode=MODE  off/on/update (off by default)
+  -t TYPE, --type=TYPE  od/do/ri/dri/cri/cdri (ri by default)
+  -s OS, --os=OS        li/win/su/rh/wsqs/wsqw/wsqe (li by default)
+  -r REGION, --region=REGION
+                        bjs/zhy (zhy by default)
+  -p                    print abbrevs to stdout
+</code></pre>
+
+<ul>
+<li>p选项查看缩写含义：</li>
+</ul>
+<pre><code class="bash">$  python ec2liveprice.py -p
+
+Abbreviations:
+bjs &lt;---&gt; 北京区域
+zhy &lt;---&gt; 宁夏区域
+od &lt;---&gt; 按需实例
+do &lt;---&gt; 专用按需实例
+ri &lt;---&gt; 预留实例
+dri &lt;---&gt; 专业预留实例
+cri &lt;---&gt; 可转换实例
+cdri &lt;---&gt; 可转换专用预留实例
+li &lt;---&gt; EC2 Linux
+win &lt;---&gt; EC2 Windows
+su &lt;---&gt; EC2 SUSE
+rh &lt;---&gt; EC2 RHEL
+wsqs &lt;---&gt; 采用 SQL Standard 的 EC2 Windows
+wsqw &lt;---&gt; 采用 SQL Web 的 EC2 Windows
+wssqe &lt;---&gt; 采用 SQL Server Enterprise 的 EC2 Windows
+</code></pre>
+
+<ul>
+<li>默认选项：宁夏区(zhy) - Linux系统(li) - 预留实例（ri）</li>
+</ul>
+<pre><code class="bash">$ python ec2liveprice.py m5.xl
+[offline mode]
+
+# 宁夏区域 - EC2 Linux - 预留实例
+实例类型        期限    产品类型        预付价格（人民币）      使用价格（人民币）      月度成本（人民币）      有效RI率        与OD相比的成本节省      OD价格（人民币）/每小时
+m5.xlarge       1 年    无预付费用      0       0.421   307.33  0.421   69%     1.356
+m5.xlarge       1 年    预付部分费用    1755    0.2     146     0.4     71%     1.356
+m5.xlarge       1 年    预付全部费用    3441    0       0       0.393   71%     1.356
+m5.xlarge       3 年    无预付费用      0       0.26    189.8   0.26    81%     1.356
+m5.xlarge       3 年    预付部分费用    3163    0.12    87.6    0.24    82%     1.356
+m5.xlarge       3 年    预付全部费用    5947    0       0       0.226   83%     1.356
+</code></pre>
+
+<ul>
+<li>查询多个： 宁夏区（zhy） - Linux系统(li) - 预留实例（ri）</li>
+</ul>
+<pre><code class="bash">$  python ec2liveprice.py m5.xl r5.xl c5.xl
+[offline mode]
+
+# 宁夏区域 - EC2 Linux - 预留实例
+实例类型        期限    产品类型        预付价格（人民币）      使用价格（人民币）      月度成本（人民币）      有效RI率        与OD相比的成本节省      OD价格（人民币）/每小时
+m5.xlarge       1 年    无预付费用      0       0.421   307.33  0.421   69%     1.356
+m5.xlarge       1 年    预付部分费用    1755    0.2     146     0.4     71%     1.356
+m5.xlarge       1 年    预付全部费用    3441    0       0       0.393   71%     1.356
+m5.xlarge       3 年    无预付费用      0       0.26    189.8   0.26    81%     1.356
+m5.xlarge       3 年    预付部分费用    3163    0.12    87.6    0.24    82%     1.356
+m5.xlarge       3 年    预付全部费用    5947    0       0       0.226   83%     1.356
+c5.xlarge       1 年    无预付费用      0       0.35    255.5   0.35    65%     0.986
+c5.xlarge       1 年    预付部分费用    1458    0.166   121.18  0.332   66%     0.986
+c5.xlarge       1 年    预付全部费用    2858    0       0       0.326   67%     0.986
+c5.xlarge       3 年    无预付费用      0       0.232   169.36  0.232   76%     0.986
+c5.xlarge       3 年    预付部分费用    2824    0.107   78.11   0.214   78%     0.986
+c5.xlarge       3 年    预付全部费用    5309    0       0       0.202   80%     0.986
+r5.xlarge       1 年    无预付费用      0       0.55    401.5   0.55    69%     1.766
+r5.xlarge       1 年    预付部分费用    2294    0.262   191.26  0.524   70%     1.766
+r5.xlarge       1 年    预付全部费用    4496    0       0       0.513   71%     1.766
+r5.xlarge       3 年    无预付费用      0       0.339   247.47  0.339   81%     1.766
+r5.xlarge       3 年    预付部分费用    4122    0.157   114.61  0.314   82%     1.766
+r5.xlarge       3 年    预付全部费用    7750    0       0       0.295   83%     1.766
+</code></pre>
+
+<ul>
+<li>查询： 北京区（bjs） - windows(win) - 按需实例(od)</li>
+</ul>
+<pre><code class="bash">$  python ec2liveprice.py -r bjs -t od -s win m5.xl
+[offline mode]
+
+# 北京区域 - EC2 Windows - 按需实例
+实例类型        vCPU    ECU     内存    存储    OD价格（人民币）/每小时
+m5.xlarge       4       N/A     16      仅限 EBS        3.286
+</code></pre>
+
+<ul>
+<li></li>
+</ul>
+<h3 id="_2">在线模式（需联网，现爬现查）</h3>
+<ul>
+<li>更新全部价格库: <code>-m update</code></li>
+</ul>
+<pre><code class="bash">$ python ec2liveprice.py -m update
+[update mode]
+--2021-01-26 17:15:36--  https://www.amazonaws.cn/ec2/pricing/ec2-linux-pricing/
+Resolving www.amazonaws.cn (www.amazonaws.cn)... 54.222.5.185
+Connecting to www.amazonaws.cn (www.amazonaws.cn)|54.222.5.185|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: 'C:/Users/dir/to/ec2price//ec2_linux.html'
+
+C:/Users/dir/to/ec2price//ec2     [                &lt;=&gt;                                                        ]   2.69M   799KB/s    in 3.6s
+
+2021-01-26 17:15:40 (774 KB/s) - 'C:/Users/dir/to/ec2price//ec2_linux.html' saved [2818252]
+
+updating... C:\Users\dir\to\ec2price\\ec2_linux_0.txt
+&gt; updated :)
+updating... C:\Users\dir\to\ec2price\\ec2_linux_1.txt
+&gt; updated :)
+updating... C:\Users\dir\to\ec2price\\ec2_linux_2.txt
+&gt; updated :)
+updating... C:\Users\dir\to\ec2price\\ec2_linux_3.txt
+&gt; updated :)
+updating... C:\Users\dir\to\ec2price\\ec2_linux_4.txt
+&gt; updated :)
+updating... C:\Users\dir\to\ec2price\\ec2_linux_5.txt
+&gt; updated :)
+updating... C:\Users\dir\to\ec2price\\ec2_linux_6.txt
+&gt; updated :)
+updating... C:\Users\dir\to\ec2price\\ec2_linux_7.txt
+&gt; updated :)
+updating... C:\Users\dir\to\ec2price\\ec2_linux_8.txt
+&gt; updated :)
+updating... C:\Users\dir\to\ec2price\\ec2_linux_9.txt
+&gt; updated :)
+updating... C:\Users\dir\to\ec2price\\ec2_linux_10.txt
+&gt; updated :)
+updating... C:\Users\dir\to\ec2price\\ec2_linux_11.txt
+&gt; updated :)
+--2021-01-26 17:15:44--  https://www.amazonaws.cn/ec2/pricing/ec2-windows-pricing/
+Resolving www.amazonaws.cn (www.amazonaws.cn)... 54.222.5.185
+Connecting to www.amazonaws.cn (www.amazonaws.cn)|54.222.5.185|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: 'C:/Users/dir/to/ec2price//ec2_win.html'
+
+C:/Users/dir/to/ec2price//ec2     [               &lt;=&gt;                                                         ]   2.41M   789KB/s    in 3.1s
+
+2021-01-26 17:15:47 (789 KB/s) - 'C:/Users/dir/to/ec2price//ec2_win.html' saved [2528413]
+...
+...
+</code></pre>
+
+<ul>
+<li>在线模式：宁夏区(zhy) - Linux系统(li) - 预留实例（ri）</li>
+</ul>
+<pre><code>$ python ec2liveprice.py -m on m5.x
+[online mode]
+--2021-01-26 17:23:30--  https://www.amazonaws.cn/ec2/pricing/ec2-linux-pricing/
+Resolving www.amazonaws.cn (www.amazonaws.cn)... 54.222.4.224
+Connecting to www.amazonaws.cn (www.amazonaws.cn)|54.222.4.224|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: 'C:/Users/dir/to/ec2price//ec2_linux.html'
+
+C:/Users/dir/to/ec2price//ec2     [                 &lt;=&gt;                                                       ]   2.69M   833KB/s    in 3.4s
+
+2021-01-26 17:23:34 (805 KB/s) - 'C:/Users/dir/to/ec2price//ec2_linux.html' saved [2818252]
+
+&gt; updating... C:\Users\dir\to\ec2price\\ec2_linux_2.txt
+&gt; updated :)
+
+# 宁夏区域 - EC2 Linux - 预留实例
+实例类型        期限    产品类型        预付价格（人民币）      使用价格（人民币）      月度成本（人民币）      有效RI率        与OD相比的成本节省      OD价格（人民币）/每小时
+m5.xlarge       1 年    无预付费用      0       0.421   307.33  0.421   69%     1.356
+m5.xlarge       1 年    预付部分费用    1755    0.2     146     0.4     71%     1.356
+m5.xlarge       1 年    预付全部费用    3441    0       0       0.393   71%     1.356
+m5.xlarge       3 年    无预付费用      0       0.26    189.8   0.26    81%     1.356
+m5.xlarge       3 年    预付部分费用    3163    0.12    87.6    0.24    82%     1.356
+m5.xlarge       3 年    预付全部费用    5947    0       0       0.226   83%     1.356
+</code></pre>
+
+<ul>
+<li>其他选项类似，只是多了个 <code>-m on</code></li>
+</ul>
+<h3 id="_3">说说安装</h3>
+<ul>
+<li>需要python包： <code>io</code>,<code>sys</code>,<code>os</code>,<code>re</code>,<code>optparse</code>,<code>bs4</code>。 一般python都自带的，除了 <code>bs4</code>。</li>
+</ul>
+<p>版本：</p>
+<pre><code class="bash">$ python --version
+Python 3.8.1
+</code></pre>
+
+<ul>
+<li>重点来了，放送代码： <em>ec2liveprice.py</em></li>
+</ul>
+<p><a href="../../codes/ec2liveprice.py">代码在此</a></p>
+<ul>
+<li><strong>首次使用</strong> 自动设定 <em>update</em> 模式从而下载价格库（lib文件夹），更新完即可正常查询。</li>
+</ul>
+<pre><code class="bash">$ python ec2liveprice.py -m update
+...
+</code></pre>
+
+<ul>
+<li>enjoy, 也欢迎进一步更新迭代 ~</li>
+</ul>
+<p>如果喜欢界面版可以看这篇<a href="../2021-01-25-GUI-to-search-ec2pri/">善物5 - 界面化查询AWS EC2 价格</a></p>
+<blockquote>
+<p>空谈误国，撸码兴邦。</p>
+</blockquote></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
