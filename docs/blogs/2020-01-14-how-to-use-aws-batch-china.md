@@ -117,8 +117,7 @@ unzip master.zip
 ```
 FROM amazonlinux:latest   # 指定操作系统镜像
 RUN yum -y install unzip aws-cli  # 安装aws 命令行工具
-ADD fetch_and_run.sh /usr/local/bin/fetch_and_run.sh  # 把
-fetch_and_run.sh 脚本拷贝至/usr/local/bin 路径下
+ADD fetch_and_run.sh /usr/local/bin/fetch_and_run.sh  # 把 fetch_and_run.sh 脚本拷贝至/usr/local/bin 路径下
 WORKDIR /tmp # 指定工作目录
 USER nobody  # 指定user
 ENTRYPOINT ["/usr/local/bin/fetch_and_run.sh"]  # 指定容器运行的入口是调用/usr/local/bin/fetch_and_run.sh 脚本
@@ -207,7 +206,7 @@ docker push 112233445566.dkr.ecr.cn-northwest-1.amazonaws.com/awsbatch/fetch_and
 ![images][6]
 
 
-### 上传作业脚本至 S3 存储并配置对应 IAM 权限拷贝以下代码存入本地文件命名为 myjob.sh。
+### 上传作业脚本至 S3 存储并配置对应 IAM 权限, 拷贝以下代码存入本地文件命名为 myjob.sh。
 
 ```
 #!/bin/bash
