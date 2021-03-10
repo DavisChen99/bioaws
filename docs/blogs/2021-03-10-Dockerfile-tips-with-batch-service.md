@@ -72,7 +72,7 @@ WORKDIR /data
 
 别担心，这个镜像上传到AWS ECR之后大概变成400MB，我猜测引用镜像之类的AWS会自动判断出来不占用额外空间。
 
-同时，使用Docker的[multi-stage builds]()技术可以减小镜像体积，以上示例可以修改为以下：
+同时，使用Docker的[multi-stage builds](https://docs.docker.com/develop/develop-images/multistage-build/)技术可以减小镜像体积，以上示例可以修改为以下：
 
 ```Dockerfile
 FROM amazonlinux:latest as build
