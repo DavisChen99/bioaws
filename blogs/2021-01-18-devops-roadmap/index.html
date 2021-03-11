@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2021-01-18-devops-roadmap/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>一图了解现代化开发运维DevOps - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="../../head/">首页</a>
+                            </li>
+                            <li >
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#devops">一图了解现代化开发运维DevOps</a></li>
+            <li><a href="#devops_1">什么是DevOps?</a></li>
+            <li><a href="#devops_2">DevOps 路线图</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="devops">一图了解现代化开发运维DevOps</h1>
+<blockquote>
+<p>少年，我看你骨骼清奇...</p>
+<p>-- D.C</p>
+</blockquote>
+<h3 id="devops_1">什么是DevOps?</h3>
+<p>随着软件发布迭代的频率越来越高，传统的「瀑布型」（开发—测试—发布）模式已经不能满足快速交付的需求。2009 年左右 DevOps 应运而生，简单地来说，就是更好的优化开发(DEV)、测试(QA)、运维(OPS)的流程，突出重视软件开发人员和运维人员的沟通合作来实现开发运维一体化，通过高度自动化工具与流程来使得软件构建、测试、发布更加快捷、频繁和可靠。</p>
+<h3 id="devops_2">DevOps 路线图</h3>
+<p>以下是DevOps的路线图，快看看自己到哪个段位了，另外AWS也有专门针对DevOps的培训，云端是DevOps最好的试验场!</p>
+<p><img alt="roadmap" src="../../img/devops/roadmap.jpg" /></p>
+<p>相关工具大致有：</p>
+<ul>
+<li>
+<p>代码管理（SCM）：GitHub、GitLab、BitBucket、SubVersion</p>
+</li>
+<li>
+<p>构建工具：Ant、Gradle、maven</p>
+</li>
+<li>
+<p>自动部署：Capistrano、CodeDeploy</p>
+</li>
+<li>
+<p>持续集成（CI）：Bamboo、Hudson、Jenkins</p>
+</li>
+<li>
+<p>配置管理：Ansible、Chef、Puppet、SaltStack、ScriptRock GuardRail</p>
+</li>
+<li>
+<p>容器：Docker、LXC、第三方厂商如AWS</p>
+</li>
+<li>
+<p>编排：Kubernetes、Core、Apache Mesos、DC/OS</p>
+</li>
+<li>
+<p>服务注册与发现：Zookeeper、etcd、Consul</p>
+</li>
+<li>
+<p>脚本语言：python、ruby、shell</p>
+</li>
+<li>
+<p>日志管理：ELK、Logentries</p>
+</li>
+<li>
+<p>系统监控：Datadog、Graphite、Icinga、Nagios</p>
+</li>
+<li>
+<p>性能监控：AppDynamics、New Relic、Splunk</p>
+</li>
+<li>
+<p>压力测试：JMeter、Blaze Meter、loader.io</p>
+</li>
+<li>
+<p>预警：PagerDuty、pingdom、厂商自带如AWS SNS</p>
+</li>
+<li>
+<p>HTTP加速器：Varnish</p>
+</li>
+<li>
+<p>消息总线：ActiveMQ、SQS</p>
+</li>
+<li>
+<p>应用服务器：Tomcat、JBoss</p>
+</li>
+<li>
+<p>Web服务器：Apache、Nginx、IIS</p>
+</li>
+<li>
+<p>数据库：MySQL、Oracle、PostgreSQL等关系型数据库；cassandra、mongoDB、redis等NoSQL数据库</p>
+</li>
+<li>
+<p>项目管理（PM）：Jira、Asana、Taiga、Trello、Basecamp、Pivotal Tracker</p>
+</li>
+</ul></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

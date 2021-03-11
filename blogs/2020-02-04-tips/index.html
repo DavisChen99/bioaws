@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2020-02-04-tips/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>一些实用的命令(持续更新) - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="../../head/">首页</a>
+                            </li>
+                            <li >
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#_1">一些实用的命令(持续更新)</a></li>
+            <li><a href="#_2">开发工具</a></li>
+            <li><a href="#s3">s3</a></li>
+            <li><a href="#ec2">ec2</a></li>
+            <li><a href="#eks">EKS</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="_1">一些实用的命令(持续更新)</h1>
+<blockquote>
+<p>其实都是aws cli里面的内容，aws doc上也都有，整理一些常用的作为备忘。</p>
+<p>-- D.C</p>
+</blockquote>
+<h2 id="_2">开发工具</h2>
+<ul>
+<li>
+<p><a href="https://docs.amazonaws.cn/index.html?nc2=h_l2_su">中国区文档</a></p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/">Global 文档</a></p>
+</li>
+<li>
+<p>AWS 命令行工具 <a href="https://docs.aws.amazon.com/zh_cn/cli/index.html">AWS Command Line Interface</a></p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/cli/latest/reference/#available-services">AWS CLI 完整命令参考</a></p>
+</li>
+<li>
+<p><a href="https://boto3.amazonaws.com/v1/documentation/api/latest/index.html">Python SDK boto3</a></p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/cdk/latest/guide/work-with.html">AWS Cloud Development Kit (AWS CDK)</a></p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/cli/latest/reference/batch/">AWS CLI 批量计算</a></p>
+</li>
+</ul>
+<h3 id="cloudwatch">CloudWatch</h3>
+<p>获取特定实例的 CPU 利用率 (AWS CLI) : 使用 get-metric-statistics 命令获取指定实例的 CPUUtilization 指标（使用指定周期和时间间隔）</p>
+<pre><code class="batch">aws cloudwatch get-metric-statistics --namespace AWS/EC2 --metric-name CPUUtilization  --period 3600 \
+--statistics Maximum --dimensions Name=InstanceId,Value=i-1234567890abcdef0 \
+--start-time 2020-10-18T23:18:00 --end-time 2020-10-19T23:18:00
+</code></pre>
+
+<h2 id="s3">s3</h2>
+<h3 id="s3_1">看看s3上用了多少空间</h3>
+<ul>
+<li>To find the canonical user ID using the AWS CLI, 这个在设置桶的ACL权限的时候需要用到，一般要求输入要共享数据的其他用户的aws canonical user ID。</li>
+</ul>
+<pre><code>aws s3api list-buckets --query Owner.ID --output text
+</code></pre>
+
+<ul>
+<li>列出桶的大小和文件数量。</li>
+</ul>
+<p>格式：<code>aws s3api list-objects --bucket BUCKETNAME --output json --query "[sum(Contents[].Size), length(Contents[])]"</code></p>
+<pre><code class="bash">$ aws s3api list-objects --bucket mytestbucket --output json --query &quot;[sum(Contents[].Size), length(Contents[])]&quot;
+[
+   201509112, # 桶内文件大小
+   8  # 桶内文件数量
+]
+</code></pre>
+
+<ul>
+<li>列出桶内每个文件大小和总占用</li>
+</ul>
+<p>格式：<code>aws s3 ls --summarize --human-readable --recursive s3://YOUR_BUCKET_NAME</code>   </p>
+<pre><code class="bash">$ aws s3 ls --summarize --human-readable --recursive s3://91package/
+2020-02-01 21:03:49    0 Bytes 1
+2019-12-06 22:33:16  160.0 MiB AtomSetup-x64.exe
+2019-12-06 22:33:43  836.2 MiB Docker Desktop Installer.exe
+2019-12-18 23:38:36   87.3 MiB GitHubDesktopSetup.exe
+
+Total Objects: 4
+   Total Size: 1.1 GiB
+</code></pre>
+
+<ul>
+<li>根据关键字查找桶内文件</li>
+</ul>
+<pre><code>$ aws s3api list-objects --bucket 桶名 --query &quot;Contents[?contains(Key, '文件名称')]&quot;
+
+$ aws s3 ls s3://xxx --recursive | grep xxx | cut -c 32-
+</code></pre>
+
+<ul>
+<li>查找某天修改过的文件</li>
+</ul>
+<pre><code>$ aws s3api list-objects --bucket &lt;bucket name&gt; --query &quot;Contents[?contains(LastModified) &gt; '2017-08-03')]&quot;
+</code></pre>
+
+<ul>
+<li>查找某天到某天时间段内修改过的文件</li>
+</ul>
+<pre><code>$ aws s3api list-objects --bucket &lt;bucket name&gt; --query &quot;Contents[?LastModified &gt; '2017-08-03T23' &amp;&amp; LastModified &lt; '2017-08-03T23:15']&quot;
+</code></pre>
+
+<ul>
+<li>查找xxx桶内所有深度归档的名字里有pdf的</li>
+</ul>
+<pre><code>aws s3api list-objects-v2     --bucket xxx桶     --query &quot;Contents[?StorageClass
+=='DEEP_ARCHIVE']&quot; --output text | awk '{print $2}' | grep 'pdf'
+</code></pre>
+
+<ul>
+<li>命令行归档命令</li>
+</ul>
+<p>方法1 - 用<code>cp</code>命令,原地变身为归档类型</p>
+<p><code>aws s3 cp s3://exampe/ s3://exampe/ --storage-class GLACIER --recursive</code></p>
+<p>方法2 - 用<code>mv</code>命令，转移到专门归档的桶</p>
+<p><code>aws s3 mv s3://xxx/xxx/ s3://xxx/xxx/ --recursive --storage-class DEEP_ARCHIVE</code></p>
+<p>Storage Class: STANDARD | REDUCED_REDUNDANCY | STANDARD_IA | ONEZONE_IA | INTELLIGENT_TIERING | GLACIER | DEEP_ARCHIVE. Defaults to 'STANDARD'</p>
+<ul>
+<li>取回归档的文件</li>
+</ul>
+<p>还原lovevideo桶里的xxx.exe，保留10天。</p>
+<p><code>aws s3api restore-object --bucket lovevideo --key xxx.exe --restore-request Days=10</code></p>
+<p>恢复lovevideo桶里的dir1下的example.obj文件到standard（无冗余类），保留25天后删除，原归档文件不变。</p>
+<p><code>$ aws s3api restore-object --bucket lovevideo --key dir1/example.obj --restore-request '{"Days":25,"GlacierJobParameters":{"Tier":"Standard"}}'</code></p>
+<p>查看还原状态：</p>
+<pre><code>$ aws s3api head-object --bucket lovevideo --key xxx.exe
+{
+    &quot;AcceptRanges&quot;: &quot;bytes&quot;,
+    &quot;Restore&quot;: &quot;ongoing-request=\&quot;true\&quot;&quot;,
+    &quot;LastModified&quot;: &quot;2020-05-22T07:08:51+00:00&quot;,
+    &quot;ContentLength&quot;: 167780896,
+    &quot;ETag&quot;: &quot;\&quot;a65d3003c998dawd8a9d8ae47a9ebc51-21\&quot;&quot;,
+    &quot;ContentType&quot;: &quot;application/x-msdownload&quot;,
+    &quot;Metadata&quot;: {},
+    &quot;StorageClass&quot;: &quot;DEEP_ARCHIVE&quot;
+}
+</code></pre>
+
+<p>还原完成的提示信息：</p>
+<pre><code>{
+    &quot;Restore&quot;: &quot;ongoing-request=\&quot;false\&quot;, expiry-date=\&quot;Sun, 13 Aug 2017 00:00:00 GMT\&quot;&quot;,
+    ...
+    &quot;StorageClass&quot;: &quot;DEEP_ARCHIVE&quot;,
+    &quot;Metadata&quot;: {}
+}
+</code></pre>
+
+<p>详细参考 <a href="https://aws.amazon.com/cn/premiumsupport/knowledge-center/restore-s3-object-glacier-storage-class/">点我</a></p>
+<ul>
+<li>批量归档小脚本，使用 <code>bash test.sh folder1 folder2 folder3 ...</code></li>
+</ul>
+<pre><code class="bash">#!/bin/bash
+for arg in &quot;$@&quot; # 文件夹名
+do
+        echo $arg
+        aws s3 sync /xxx/$arg  s3://xxx/$arg --storage-class DEEP_ARCHIVE
+done
+</code></pre>
+
+<h2 id="ec2">ec2</h2>
+<h3 id="instance">查看instance信息</h3>
+<p><code>aws ec2 describe-instances</code> 输出的内容太多，后面用管道加个<code>awk</code>吧。</p>
+<p>如：
+<code>aws ec2 describe-instances | awk -F\" '/InstanceId/{print $4}'</code></p>
+<h2 id="eks">EKS</h2>
+<h3 id="k8s-installing">k8s installing</h3>
+<p><code>https://kubernetes.io/docs/tasks/tools/install-kubectl/#before-you-begin</code></p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

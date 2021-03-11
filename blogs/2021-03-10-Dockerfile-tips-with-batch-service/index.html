@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2021-03-10-Dockerfile-tips-with-batch-service/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>使用Batch服务一些提示 - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="../../head/">首页</a>
+                            </li>
+                            <li >
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#batch">使用Batch服务一些提示</a></li>
+            <li><a href="#_1">介绍之前</a></li>
+            <li><a href="#_2">计算环境配置</a></li>
+            <li><a href="#docker">Docker镜像</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="batch">使用Batch服务一些提示</h1>
+<blockquote>
+<p>听说AWS和阿里云都有Batch（阿里云叫批量计算）服务，当时介绍说可以理解为云端PBS。
+然后看了官方介绍视频，我理解更多的是任务切分和用适合的资源来进行调度。
+当然，用这个服务还是有一些学习成本。
+-- Sam</p>
+</blockquote>
+<h3 id="_1">介绍之前</h3>
+<p>AWS官方的Batch介绍和<a href="https://docs.amazonaws.cn/batch/latest/userguide/what-is-batch.html">文档</a>是个很好的学习资源，另外Davis同学写的<a href="../2020-01-14-how-to-use-aws-batch-china/">容器！利器！批量计算AWS Batch</a>给生信人员举了很好的例子。</p>
+<p>但文档是一回事，这篇文章简单介绍几个我使用Batch服务过程中学会的几个Tips。</p>
+<h3 id="_2">计算环境配置</h3>
+<h4 id="_3">尽量使用与你需要资源相对应的机型。</h4>
+<p>当初我配置了自动的机型，然后发现我一次性同时开了多个任务，比如每个任务我设定需要4 CPU，7G RAM，同时开4个样本的任务，很可能Batch会给我使用16 CPU的机器。这样倒也不是不行，但有几个问题需要注意：</p>
+<pre><code>- 一台虚拟机执行多个任务的时候资源是共享的，比如我们做比对任务，你需要提起预估总共需要的存储空间；
+- 如果你配置了Docker服务运行时的挂载选项，那多个任务就会同时访问这个挂载点，需要对每个任务设定不同的工作目录。
+</code></pre>
+<p>我的做法是，如果任务需要4 CPU，7G RAM，那就选择c4.xlarge或者c5.xlarge机型，这样可以保证每个虚拟机只执行一个任务。</p>
+<p>I know，我这么做挺小白的，BITE ME!</p>
+<h4 id="ami">自定义AMI</h4>
+<p>如果使用 <strong>按需</strong> 的实例配置，当提交任务时Batch会默认为你开启一台你选定机型的EC2虚拟服务器，系统是AmazonLinux 2，硬盘大小为20 GB。对于NGS分析而言，这个硬盘大小肯定是不够的。</p>
+<p>一般而言，主要有两种解决方法，配置外部存储或者调整虚拟机AMI。</p>
+<p>对于配置外部存储而言，我尝试过使用<a href="../2020-01-31-efs-user-guide-101/">EFS</a>，但的确，我还不太适应，主要性能上我还不太会配置。</p>
+<p>相对而言，调整虚拟机AMI是个简单的解决方法，具体步骤如下：</p>
+<ol>
+<li>首先你得制作一个AMI，参考<a href="../2020-01-25-how-to-create-ec2img/">这篇文章</a>即可。注意，这个时候你需要根据分析流程配置足够性能和足够空间的硬盘；</li>
+<li>请注意，自定义制作的AMI需要符合<a href="https://docs.amazonaws.cn/batch/latest/userguide/create-batch-ami.html">这篇文章</a>的规范；</li>
+<li>在创建计算环境时，在 <strong>实例配置</strong> 中选择 <strong>按需</strong> 实例配置，点开下方 <strong>其他设置：启动模板、用户指定的AMI</strong> 填入上一步制作的系统镜像ID。如下图所示。</li>
+</ol>
+<p><img alt="用户指定AMI" src="../../img/AWS-Batch-Custom-AMI.png" /></p>
+<hr />
+<h3 id="docker">Docker镜像</h3>
+<h4 id="dockerfile">尽量使用Dockerfile</h4>
+<p>听起来像废话，但使用Dockerfile可以让镜像的制作可以追溯，像写代码一样制作镜像让我觉得非常有意思。</p>
+<p>以下是我写的一个非常简单的让Docker拥有阿里云CLI功能的Dockerfile。</p>
+<pre><code class="Dockerfile">FROM amazonlinux:latest
+
+RUN yum update -y
+RUN yum install -y aws-cli wget tar util-linux python3
+
+RUN mkdir -p /biosoftware
+RUN mkdir -p /data
+RUN cd /biosoftware &amp;&amp; wget -O aliyun-cli-linux-latest-amd64.tgz https://aliyuncli.alicdn.com/aliyun-cli-linux-latest-amd64.tgz?spm=a2c4g.11186623.2.11.6a057dbflbfyNj\&amp;file=aliyun-cli-linux-latest-amd64.tgz \
+    &amp;&amp; tar xzvf aliyun-cli-linux-latest-amd64.tgz &amp;&amp; cp aliyun /usr/local/bin/
+
+WORKDIR /data
+</code></pre>
+
+<h4 id="_4">镜像瘦身</h4>
+<p>以上简单的镜像的大小约为900MB，加了一个简单的功能就需要这么大的空间，不可思议对吧？</p>
+<p>别担心，这个镜像上传到AWS ECR之后大概变成400MB，我猜测引用镜像之类的AWS会自动判断出来不占用额外空间。</p>
+<p>同时，使用Docker的<a href="https://docs.docker.com/develop/develop-images/multistage-build/">multi-stage builds</a>技术可以减小镜像体积，以上示例可以修改为以下：</p>
+<pre><code class="Dockerfile">FROM amazonlinux:latest as build
+
+RUN yum install -y aws-cli wget tar util-linux python3
+
+RUN mkdir -p /biosoftware
+RUN mkdir -p /data
+RUN cd /biosoftware &amp;&amp; wget -O aliyun-cli-linux-latest-amd64.tgz https://aliyuncli.alicdn.com/aliyun-cli-linux-latest-amd64.tgz?spm=a2c4g.11186623.2.11.6a057dbflbfyNj\&amp;file=aliyun-cli-linux-latest-amd64.tgz \
+    &amp;&amp; tar xzvf aliyun-cli-linux-latest-amd64.tgz
+
+
+FROM amazonlinux:latest as prod
+
+RUN yum -y install aws-cli tar util-linux python3
+
+RUN mkdir -p /biosoftware
+COPY --from=build /biosoftware/aliyun /usr/local/bin/aliyun
+
+WORKDIR /data
+</code></pre>
+
+<p>从下图可以直观看到镜像体积变化（<code>&lt;untagged&gt;</code>是瘦身后）。</p>
+<p><img alt="Docker镜像瘦身前后对比" src="../../img/Docker-Image-Size-Compare.png" /></p>
+<p>关于镜像瘦身还有其他技术方式，比如使用体积更小alpine基础镜像等。</p>
+<hr />
+<p>本次介绍先到这里，其他Tip会在本文中更新。</p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
