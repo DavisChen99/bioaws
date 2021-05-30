@@ -1,4 +1,4 @@
-# 高阶17 云上自动拆分测序数据
+# 高阶17 云上搭建容器化自动数据拆分流程
 
 > batch是个好东西，批量提交，算完就关机器（跑路），本文以一个基因公司的刚需（分拆数据）为例，
 > 向各位看官介绍如何利用batch，ecs, ecr，lustre，启动模板，ami镜像来打造一个自动化的云上数据拆分流程。
@@ -286,12 +286,12 @@ $aws batch submit-job --job-name testcli --job-queue newsplit2  --job-definition
 
 {
    "jobName": "testcli",
-   "jobArn": "arn:aws-cn:batch:cn-northwest-1:825342065763:job/4ea2bf6a-2b5b-4dd4-afd5-3fadd58f10a7",
-   "jobId": "4ea2bf6a-2b5b-4dd4-afd5-3fadd58f10a7"
+   "jobArn": "arn:aws-cn:batch:cn-northwest-1:83334332343:job/4ea2bf6a-2b5b-4dd4-afd5-3fadd58f10a7",
+   "jobId": "4ea2bf6a-2b5b-4dd4-afd5-34jg7th8gu89"
 }
 
 # 查看状态
-$aws batch describe-jobs --jobs 4ea2bf6a-2b5b-4dd4-afd5-3fadd58f10a7 | grep 'status"'
+$aws batch describe-jobs --jobs 4ea2bf6a-2b5b-4dd4-afd5-34jg7th8gu89 | grep 'status"'
 
 "status": "RUNNING",
 ```
