@@ -78,4 +78,4 @@
 
 - [高阶系列16 AWS上的合规自查神器-Prowler](blogs/2021-03-09-compliance-tool-on-aws.md)
 
-- [高阶17 云上搭建容器化自动数据拆分流程](blogs/2021-05-30-use-batch-to-split-seqdata.md)
+- [高阶系列17 云上搭建容器化自动数据拆分流程](blogs/2021-05-30-use-batch-to-split-seqdata.md)
