@@ -105,7 +105,7 @@
   ...
 </code></pre>
 
-<p>于是是所有的样本就都开始在云端开始拆分，数据放到指定的nas上，并紧接着开始做二级分析出报告。看到这里估计很多人一脸懵，这很正常，如果你都看到了，那么就不要浪费时间再往下看了，饮茶先啦。</p>
+<p>所有的样本就都开始在云端开始拆分，数据放到指定的nas上，并紧接着开始做二级分析出报告。看到这里估计很多人一脸懵，这很正常，如果大家都懂了，那么就不要浪费时间再往下看了，饮茶先啦。</p>
 <h3 id="_2">基本逻辑</h3>
 <p>还是先给大家梳理下基本思路吧：</p>
 <ul>
@@ -120,10 +120,10 @@
 <h4 id="fsx-for-lustre">创建FSx for lustre</h4>
 <p>在AWS console界面搜索 FSx，新建选择for lustre， 按照实际的吞吐需求选择对应的档位，有50M，100M,200M/TiB的，注意nas大小只能在1.2T开始往上加，每次加2.4T。如图可以看到，我配置了一块12T的lustre，吞吐达到了600M/s，这里需要把红圈点一下，复制下来他的id <em>fs-abcdefg</em> 。</p>
 <p><strong>注意</strong>： Lustre在创建时会让你选择安全组，如果用系统默认的话不需要改动，因为是全开的，如果是换了别的安全组，需要确认 inbound 的 0-65535 端口是打开的。</p>
-<p><img alt="lustre" src="../img/splitfq/1.png" /></p>
+<p><img alt="lustre" src="../../img/splitfq/1.png" /></p>
 <h4 id="launch-template">创建启动模板 Launch Template</h4>
 <p>登录EC2的界面，在左侧菜单栏点击Launch Template，进入设置。</p>
-<p><img alt="launchtemplate" src="../img/splitfq/2.png" /></p>
+<p><img alt="launchtemplate" src="../../img/splitfq/2.png" /></p>
 <p>在这一步，只需要做两步设置：</p>
 <ul>
 <li>设定一个安全组，</li>
@@ -151,7 +151,7 @@ mount /dev/nvme1n1 /data
 <p><img alt="launchtemplate" src="../../img/splitfq/3.png" /></p>
 <h4 id="ami">创建新AMI</h4>
 <p>进入EC2的界面，启动新实例，搜索并选择ECS优化过的AMI，宁夏区是 <em>ami-07ddef153d23fcb8a</em>, 其他区域的 <a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-optimized_AMI.html">点我</a>。</p>
-<p>机型随意选择，我默认选了 <em>t2.micro</em>, 启动以后登录进去，做两件事：</p>
+<p>机型随意选择，我默认选了 <em>t2.micro</em>, 启动以后登录进去，做三件事：</p>
 <ul>
 <li>iam权限要能访问S3 （界面设置）</li>
 <li>安装lustre驱动</li>
@@ -167,7 +167,7 @@ sudo yum -y install xfsprogs
 </code></pre>
 
 <p><strong>注意</strong>： 这里mount到lustre是为了创建文件夹fastq和splited，同时为后面提交任务后查看是否有输出预留一个途径。</p>
-<p>做完这些事儿以后，将这台机器打个新的AMI镜像为 <em>ami-123456789</em>, 聪明的小伙伴可能就想到了，这个新AMI起来的机器，再搭配上上一步设置的 启动模板，就能做到启动后自动挂载lustre和nvme磁盘了。</p>
+<p>做完这些事儿以后，将这台机器打个新的AMI镜像为 <em>ami-123456789</em>, 聪明的小伙伴可能就想到了，这个新AMI起来的机器，再搭配上一步设置的 启动模板，就能做到启动后自动挂载lustre和nvme磁盘了。</p>
 <h4 id="_4">创建新容器</h4>
 <p>为什么要创建容器呢，因为batch和ECS都是基于容器的，利用容器可以避免OS带给分析流程的影响，使得兼容性大大加强。为了节约资源，我还是在上一步机器上创建分析流程容器。</p>
 <p>首先pull一个镜像下来,登陆进去：</p>
@@ -259,7 +259,7 @@ docker push 8xxxxxxxxxxxx.dkr.ecr.cn-northwest-1.amazonaws.com.cn/bclsplit:v4
 
 </code></pre>
 
-<p><img alt="container" src="../img/splitfq/4.png" /></p>
+<p><img alt="container" src="../../img/splitfq/4.png" /></p>
 <p><img alt="ecr" src="../../img/splitfq/6.png" /></p>
 <p>到了这步，这台机器的价值就被我们压榨干了，把它放一边，我们需要把ECR上对应的容器地址copy下来，就是上图黄色的部分，在batch设置里会用到。</p>
 <h4 id="batch">重点！配置batch</h4>
