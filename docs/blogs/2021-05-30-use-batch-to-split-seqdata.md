@@ -126,9 +126,6 @@ docker run -it  amazonlinux:latest
 在container内运行命令：
 
 ```
-# 拷贝s3上写好的脚本到container
-aws s3 cp s3://mybucket/split.py /root/ # pre-written script uploaded to S3
-
 # 安装awscli
 yum install unzip -y
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
