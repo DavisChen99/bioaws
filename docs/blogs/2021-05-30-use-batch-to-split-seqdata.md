@@ -24,7 +24,7 @@
 
 ```python
 for id in xxx:
-  command = 'aws batch submit-job --job-name testcli --job-queue newsplit2  --job-definition docker_5 --container-overrides \'vcpus=32,memory=64000,command=["python","/root/split.py","%s"]\'' % id
+  command = 'aws batch submit-job --job-name split_%s --job-queue newsplit2  --job-definition docker_5 --container-overrides \'vcpus=32,memory=64000,command=["python","/root/split.py","%s"]\'' % (id,id)
   os.system(command)
   ...
 ```
@@ -279,7 +279,7 @@ aws console搜索batch并点击进入，设置的顺序如图上箭头方向，�
 - 方法二：本地aws cli命令行。在配置好了本地aws cli的笔记本上，运行命令：
 
 ```batch
-$aws batch submit-job --job-name testcli --job-queue newsplit2  --job-definition docker_5 --container-overrides \'vcpus=32,memory=64000,command=["python","/root/split.py","210126_A01199_0055_ABCDEFG"]'
+$aws batch submit-job --job-name testcli --job-queue newsplit2  --job-definition docker_5 --container-overrides 'vcpus=32,memory=64000,command=["python","/root/split.py","210126_A01199_0055_ABCDEFG"]'
 
 {
    "jobName": "testcli",
