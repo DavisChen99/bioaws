@@ -100,7 +100,7 @@
 <p>先说一个场景吧，实验室主管给我发了一个邮件，说明下机数据和对应的samplesheet都已经按我的要求上传到S3指定的位置，请求进行下一步的拆分和二级分析。</p>
 <p>于是我根据邮件的内容，在自己笔记本上执行了一条命令，大致是这样的：</p>
 <pre><code class="python">for id in xxx:
-  command = 'aws batch submit-job --job-name testcli --job-queue newsplit2  --job-definition docker_5 --container-overrides \'vcpus=32,memory=64000,command=[&quot;python&quot;,&quot;/root/split.py&quot;,&quot;%s&quot;]\'' % id
+  command = 'aws batch submit-job --job-name split_%s --job-queue newsplit2  --job-definition docker_5 --container-overrides \'vcpus=32,memory=64000,command=[&quot;python&quot;,&quot;/root/split.py&quot;,&quot;%s&quot;]\'' % (id,id)
   os.system(command)
   ...
 </code></pre>
@@ -176,10 +176,7 @@ docker run -it  amazonlinux:latest
 </code></pre>
 
 <p>在container内运行命令：</p>
-<pre><code># 拷贝s3上写好的脚本到container
-aws s3 cp s3://mybucket/split.py /root/ # pre-written script uploaded to S3
-
-# 安装awscli
+<pre><code># 安装awscli
 yum install unzip -y
 curl &quot;https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip&quot; -o &quot;awscliv2.zip&quot;
 unzip awscliv2.zip
@@ -299,7 +296,7 @@ docker push 8xxxxxxxxxxxx.dkr.ecr.cn-northwest-1.amazonaws.com.cn/bclsplit:v4
 <ul>
 <li>方法二：本地aws cli命令行。在配置好了本地aws cli的笔记本上，运行命令：</li>
 </ul>
-<pre><code class="batch">$aws batch submit-job --job-name testcli --job-queue newsplit2  --job-definition docker_5 --container-overrides \'vcpus=32,memory=64000,command=[&quot;python&quot;,&quot;/root/split.py&quot;,&quot;210126_A01199_0055_ABCDEFG&quot;]'
+<pre><code class="batch">$aws batch submit-job --job-name testcli --job-queue newsplit2  --job-definition docker_5 --container-overrides 'vcpus=32,memory=64000,command=[&quot;python&quot;,&quot;/root/split.py&quot;,&quot;210126_A01199_0055_ABCDEFG&quot;]'
 
 {
    &quot;jobName&quot;: &quot;testcli&quot;,
