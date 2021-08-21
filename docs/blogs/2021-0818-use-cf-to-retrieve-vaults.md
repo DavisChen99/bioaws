@@ -6,9 +6,9 @@
 
 
 
-### 概念
+### 基本概念
 
-首先理解一下基本概念个：
+首先理解一下基本概念：
 
 - Glacier Vaults，是和S3独立的一个产品，一个存储容器称之为一个Vaults，里面存的是archive，每个region最多可以建1000个，拥有属于自己的一套API命令集合，存储价格比s3 标准便宜，取回费用要贵且耗时，很大一个区别是，Vaults只能用api操作，而S3可以通过console界面去看（list）对象和操作。
 - S3，对象存储服务，我们超过90%的数据都会放在这上面。
@@ -19,7 +19,7 @@
 
 ### 如何使用vaults
 
-#### 创建一个Vaults。
+#### **创建一个Vaults**
 
 在主控制台搜索 **Glacier** 就可以找到对应界面，然后点击 Create Vaults就能创建多个Vaults。
 
@@ -27,7 +27,7 @@
 
 或者，用 [sdk](https://docs.amazonaws.cn/en_us/amazonglacier/latest/dev/creating-vaults.html) 支持Java,.Net,REST,CLI。
 
-#### 上传数据。
+#### **上传数据**
 
 可以使用 AWS CLI 或者SDK。[示例教程](https://docs.aws.amazon.com/zh_cn/cli/latest/userguide/aws-cli.pdf#cli-services-glacier)
 
@@ -35,13 +35,17 @@
 
 ![see_vaults](../img/vaults/2.png)
 
-#### 检索数据。（其实是检索metadata） [文档](https://docs.amazonaws.cn/en_us/amazonglacier/latest/dev/retrieving-vault-info.html)
+#### **检索数据**
+
+其实是检索 metadata, [文档](https://docs.amazonaws.cn/en_us/amazonglacier/latest/dev/retrieving-vault-info.html)
 
 ```
 aws glacier describe-vault --vault-name awsexamplevault --account-id 111122223333
 ```
 
-#### 恢复数据到本地。 (文档)[https://docs.amazonaws.cn/en_us/amazonglacier/latest/dev/retrieving-vault-inventory-cli.html]
+#### **恢复数据到本地**
+
+参考 [文档](https://docs.amazonaws.cn/en_us/amazonglacier/latest/dev/retrieving-vault-inventory-cli.html)
 
 ```
 $ aws glacier initiate-job --vault-name awsexamplevault --account-id 111122223333 --job-parameters '{"Type": "inventory-retrieval"}'
@@ -61,9 +65,9 @@ $ aws glacier describe-job --vault-name awsexamplevault --account-id 11112222333
 }		
 ```
 
-#### 恢复数据到S3（**不出云**）
+#### **恢复数据到S3**（数据不出云）
 
-这里其实就是本文的重点了，会用到 cloudformation的一键部署。具体步骤如下
+这里其实就是本文的 **重点** 了，会用到 cloudformation的一键部署。具体步骤如下
 
 - 海外区域用这个[模板](https://aws.amazon.com/cn/solutions/implementations/amazon-s3-glacier-refreezer/)。
 - 国内区域用这个[模板](../codes/amazon-s3-glacier-refreezer-cn.template)
