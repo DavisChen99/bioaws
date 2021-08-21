@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2021-0818-use-cf-to-retrieve-vaults/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>高阶18 使用cloudformation 自动提取Glacier Vaults 到 S3 - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="../../head/">首页</a>
+                            </li>
+                            <li >
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#18-cloudformation-glacier-vaults-s3">高阶18 使用cloudformation 自动提取Glacier Vaults 到 S3</a></li>
+            <li><a href="#_1">概念</a></li>
+            <li><a href="#vaults">如何使用vaults</a></li>
+            <li><a href="#_3">庞大的集成能力</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="18-cloudformation-glacier-vaults-s3">高阶18 使用cloudformation 自动提取Glacier Vaults 到 S3</h1>
+<blockquote>
+<p>说实话，这个标题相当的绕，初学者估计都不知道在讲什么，先别急，先看使用场景是不是适合你，再
+决定自己需不需要看下去吧。
+-- D.C</p>
+</blockquote>
+<h3 id="_1">概念</h3>
+<p>首先理解一下基本概念个：</p>
+<ul>
+<li>Glacier Vaults，是和S3独立的一个产品，一个存储容器称之为一个Vaults，里面存的是archive，每个region最多可以建1000个，拥有属于自己的一套API命令集合，存储价格比s3 标准便宜，取回费用要贵且耗时，很大一个区别是，Vaults只能用api操作，而S3可以通过console界面去看（list）对象和操作。</li>
+<li>S3，对象存储服务，我们超过90%的数据都会放在这上面。</li>
+<li>S3 Glacier + Deep Archive，S3上的归档和深度归档服务，使用的是console界面或是aws cli命令进行归档和恢复。</li>
+<li>CloudFormation, 简称cf，是代码即基础设施的服务，我们常说的一键部署，就是利用这个服务，因为aws的服务都是api标准化接口的，所以完全可以通过xml或json格式的文件，把部署基础设施的步骤写进去，做到一键部署。</li>
+</ul>
+<p>如何理解？Glacier有两种数据概念，一种是Vaults，另一种一种是Archive。简单来说， object（文件）--[归档]-&gt; archive --[集合]--&gt; Vaults。 Vautls是便于存放管理不同archive集合的容器。</p>
+<h3 id="vaults">如何使用vaults</h3>
+<h4 id="vaults_1">创建一个Vaults。</h4>
+<p>在主控制台搜索 <strong>Glacier</strong> 就可以找到对应界面，然后点击 Create Vaults就能创建多个Vaults。</p>
+<p><img alt="create_vaults" src="../../img/vaults/1.png" /></p>
+<p>或者，用 <a href="https://docs.amazonaws.cn/en_us/amazonglacier/latest/dev/creating-vaults.html">sdk</a> 支持Java,.Net,REST,CLI。</p>
+<h4 id="_2">上传数据。</h4>
+<p>可以使用 AWS CLI 或者SDK。<a href="https://docs.aws.amazon.com/zh_cn/cli/latest/userguide/aws-cli.pdf#cli-services-glacier">示例教程</a></p>
+<p>注意，上传以后，我去console是看不到有文件的，因为Vaults一天刷新一次，所以要过段时间才能看到下面有多少个archive。</p>
+<p><img alt="see_vaults" src="../../img/vaults/2.png" /></p>
+<h4 id="metadata">检索数据。（其实是检索metadata） <a href="https://docs.amazonaws.cn/en_us/amazonglacier/latest/dev/retrieving-vault-info.html">文档</a></h4>
+<pre><code>aws glacier describe-vault --vault-name awsexamplevault --account-id 111122223333
+</code></pre>
+
+<h4 id="httpsdocsamazonawscnen_usamazonglacierlatestdevretrieving-vault-inventory-clihtml">恢复数据到本地。 (文档)[https://docs.amazonaws.cn/en_us/amazonglacier/latest/dev/retrieving-vault-inventory-cli.html]</h4>
+<pre><code>$ aws glacier initiate-job --vault-name awsexamplevault --account-id 111122223333 --job-parameters '{&quot;Type&quot;: &quot;inventory-retrieval&quot;}'
+
+$ aws glacier describe-job --vault-name awsexamplevault --account-id 111122223333 --job-id *** jobid ***
+
+{
+    &quot;InventoryRetrievalParameters&quot;: {
+        &quot;Format&quot;: &quot;JSON&quot;
+    },
+    &quot;VaultARN&quot;: &quot;*** vault arn ***&quot;,
+    &quot;Completed&quot;: false,
+    &quot;JobId&quot;: &quot;*** jobid ***&quot;,
+    &quot;Action&quot;: &quot;InventoryRetrieval&quot;,
+    &quot;CreationDate&quot;: &quot;*** job creation date ***&quot;,
+    &quot;StatusCode&quot;: &quot;InProgress&quot;
+}       
+</code></pre>
+
+<h4 id="s3">恢复数据到S3（<strong>不出云</strong>）</h4>
+<p>这里其实就是本文的重点了，会用到 cloudformation的一键部署。具体步骤如下</p>
+<ul>
+<li>海外区域用这个<a href="https://aws.amazon.com/cn/solutions/implementations/amazon-s3-glacier-refreezer/">模板</a>。</li>
+<li>国内区域用这个<a href="../../codes/amazon-s3-glacier-refreezer-cn.template">模板</a></li>
+<li>在console界面打开cloudformation,点击右上角的 <strong>创建堆栈-with new resources</strong></li>
+</ul>
+<p><img alt="create_vaults" src="../../img/vaults/3.png" /></p>
+<ul>
+<li>依次选择 <em>Template is ready</em> - <em>Upload a template file</em> - <em>choose file</em> , 选中模板，点击下一步。</li>
+<li>设定堆栈名称 <code>getvault</code>, 数据源Vault <code>myvaults</code>, 要恢复到的目标S3桶 <code>lovevideo</code>,取回模式默认是 <em>Bulk</em>，底下的 <em>Confirmation to avoid excessive costs</em> 可以全部选 <code>Yes</code>,根据自己情况设置。</li>
+</ul>
+<p><img alt="set_vaults" src="../../img/vaults/4.png" /></p>
+<ul>
+<li>由于恢复出来的文件名默认是GlacierArchiveID，长这样 <code>WVfrXME2KC6JIedfadJF937412-e</code>, 在最后一个Option选项 <em>[OPTIONAL] External filenames override for ArchiveDescription</em> 这里可以指定S3上存放的ArchiveID和文件名的对应关系，从而直接恢复成human readable的文件名，参考<a href="https://docs.aws.amazon.com/zh_cn/solutions/latest/amazon-s3-glacier-refreezer/creating-custom-file-names-for-s3-objects.html">文档</a></li>
+</ul>
+<pre><code class="csv">GlacierArchiveID,FileName
+WVfrXME2KC6JIedfadJF937412-e,mydata1.txt
+yLam5H76JXYSKKIY34404D-Kwcrk,myfolder/mydata2.txt
+...
+</code></pre>
+
+<ul>
+<li>点击下一步，设置Tag，如果有cloudformation的iam role，这里就选择一下，比如我的叫 <code>rolecfall</code>,因为懒我给它的policy其实就是 <code>AdministratorAccess</code>。如果没有cf的role的话，系统会自动依据你登录的这个账号权限进行部署，所以如果自己不是admin权限，最好让管理员建个 cloudformation的IAM role。</li>
+<li>下一步，review没问题，选择确认框，点击 <strong>Create Stack</strong> 开始部署自动恢复堆栈，大约几分钟。</li>
+<li>console里转到cloudwatch界面，点击左侧的 <em>Dashboards</em>, 可以看到刚刚创建的堆栈 <em>getvault-Amazon-S3-Glacier-ReFreezer</em>， 点进去就能看到对应的 <em>dashboard</em> 信息。由于恢复Vaults是需要很长时间的，后面就要耐心等待了。</li>
+</ul>
+<h3 id="_3">庞大的集成能力</h3>
+<p>最后不得不感叹下AWS服务的强大集成能力，严格而标准的API接口，使得规模化的服务集成成为可能，而且还要保证稳定性，从这一点上看，目前市面上还没有出现够格的挑战者。让我们欣赏下这个cf模板背后“庞大”的结构。 <em>这个庞大只是针对我这种小白来说，在真正的高科技企业内部，也许连渺小都不够格。</em></p>
+<p><img alt="cf_structure" src="../../img/vaults/5.png" /></p>
+<blockquote>
+<p>躬身入局，胜过摇旗呐喊千倍万倍。</p>
+</blockquote></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
