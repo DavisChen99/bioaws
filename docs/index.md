@@ -80,4 +80,6 @@
 
 - [高阶系列17 云上搭建容器化自动数据拆分流程](blogs/2021-05-30-use-batch-to-split-seqdata.md)
 
-- [高阶系列18 使用cloudformation 自动提取Glacier Vaults 到 S3](blogs/2021-0818-use-cf-to-retrieve-vaults.md)
+- [高阶系列18 使用cloudformation 自动提取Glacier Vaults 到 S3](blogs/2021-08-18-use-cf-to-retrieve-vaults.md)
+
+- [高阶系列19 在AWS上跑Alphafold v2进行蛋白质结构预测](blogs/2021-08-19-use-alphafold2-on-aws.md)
