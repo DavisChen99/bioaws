@@ -72,9 +72,9 @@
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
         <li class="main active"><a href="#18-cloudformation-glacier-vaults-s3">高阶18 使用cloudformation 自动提取Glacier Vaults 到 S3</a></li>
-            <li><a href="#_1">概念</a></li>
+            <li><a href="#_1">基本概念</a></li>
             <li><a href="#vaults">如何使用vaults</a></li>
-            <li><a href="#_3">庞大的集成能力</a></li>
+            <li><a href="#_5">庞大的集成能力</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
@@ -85,8 +85,8 @@
 决定自己需不需要看下去吧。
 -- D.C</p>
 </blockquote>
-<h3 id="_1">概念</h3>
-<p>首先理解一下基本概念个：</p>
+<h3 id="_1">基本概念</h3>
+<p>首先理解一下基本概念：</p>
 <ul>
 <li>Glacier Vaults，是和S3独立的一个产品，一个存储容器称之为一个Vaults，里面存的是archive，每个region最多可以建1000个，拥有属于自己的一套API命令集合，存储价格比s3 标准便宜，取回费用要贵且耗时，很大一个区别是，Vaults只能用api操作，而S3可以通过console界面去看（list）对象和操作。</li>
 <li>S3，对象存储服务，我们超过90%的数据都会放在这上面。</li>
@@ -95,19 +95,21 @@
 </ul>
 <p>如何理解？Glacier有两种数据概念，一种是Vaults，另一种一种是Archive。简单来说， object（文件）--[归档]-&gt; archive --[集合]--&gt; Vaults。 Vautls是便于存放管理不同archive集合的容器。</p>
 <h3 id="vaults">如何使用vaults</h3>
-<h4 id="vaults_1">创建一个Vaults。</h4>
+<h4 id="vaults_1"><strong>创建一个Vaults</strong></h4>
 <p>在主控制台搜索 <strong>Glacier</strong> 就可以找到对应界面，然后点击 Create Vaults就能创建多个Vaults。</p>
 <p><img alt="create_vaults" src="../../img/vaults/1.png" /></p>
 <p>或者，用 <a href="https://docs.amazonaws.cn/en_us/amazonglacier/latest/dev/creating-vaults.html">sdk</a> 支持Java,.Net,REST,CLI。</p>
-<h4 id="_2">上传数据。</h4>
+<h4 id="_2"><strong>上传数据</strong></h4>
 <p>可以使用 AWS CLI 或者SDK。<a href="https://docs.aws.amazon.com/zh_cn/cli/latest/userguide/aws-cli.pdf#cli-services-glacier">示例教程</a></p>
 <p>注意，上传以后，我去console是看不到有文件的，因为Vaults一天刷新一次，所以要过段时间才能看到下面有多少个archive。</p>
 <p><img alt="see_vaults" src="../../img/vaults/2.png" /></p>
-<h4 id="metadata">检索数据。（其实是检索metadata） <a href="https://docs.amazonaws.cn/en_us/amazonglacier/latest/dev/retrieving-vault-info.html">文档</a></h4>
+<h4 id="_3"><strong>检索数据</strong></h4>
+<p>其实是检索 metadata, <a href="https://docs.amazonaws.cn/en_us/amazonglacier/latest/dev/retrieving-vault-info.html">文档</a></p>
 <pre><code>aws glacier describe-vault --vault-name awsexamplevault --account-id 111122223333
 </code></pre>
 
-<h4 id="httpsdocsamazonawscnen_usamazonglacierlatestdevretrieving-vault-inventory-clihtml">恢复数据到本地。 (文档)[https://docs.amazonaws.cn/en_us/amazonglacier/latest/dev/retrieving-vault-inventory-cli.html]</h4>
+<h4 id="_4"><strong>恢复数据到本地</strong></h4>
+<p>参考 <a href="https://docs.amazonaws.cn/en_us/amazonglacier/latest/dev/retrieving-vault-inventory-cli.html">文档</a></p>
 <pre><code>$ aws glacier initiate-job --vault-name awsexamplevault --account-id 111122223333 --job-parameters '{&quot;Type&quot;: &quot;inventory-retrieval&quot;}'
 
 $ aws glacier describe-job --vault-name awsexamplevault --account-id 111122223333 --job-id *** jobid ***
@@ -125,8 +127,8 @@ $ aws glacier describe-job --vault-name awsexamplevault --account-id 11112222333
 }       
 </code></pre>
 
-<h4 id="s3">恢复数据到S3（<strong>不出云</strong>）</h4>
-<p>这里其实就是本文的重点了，会用到 cloudformation的一键部署。具体步骤如下</p>
+<h4 id="s3"><strong>恢复数据到S3</strong>（数据不出云）</h4>
+<p>这里其实就是本文的 <strong>重点</strong> 了，会用到 cloudformation的一键部署。具体步骤如下</p>
 <ul>
 <li>海外区域用这个<a href="https://aws.amazon.com/cn/solutions/implementations/amazon-s3-glacier-refreezer/">模板</a>。</li>
 <li>国内区域用这个<a href="../../codes/amazon-s3-glacier-refreezer-cn.template">模板</a></li>
@@ -152,7 +154,7 @@ yLam5H76JXYSKKIY34404D-Kwcrk,myfolder/mydata2.txt
 <li>下一步，review没问题，选择确认框，点击 <strong>Create Stack</strong> 开始部署自动恢复堆栈，大约几分钟。</li>
 <li>console里转到cloudwatch界面，点击左侧的 <em>Dashboards</em>, 可以看到刚刚创建的堆栈 <em>getvault-Amazon-S3-Glacier-ReFreezer</em>， 点进去就能看到对应的 <em>dashboard</em> 信息。由于恢复Vaults是需要很长时间的，后面就要耐心等待了。</li>
 </ul>
-<h3 id="_3">庞大的集成能力</h3>
+<h3 id="_5">庞大的集成能力</h3>
 <p>最后不得不感叹下AWS服务的强大集成能力，严格而标准的API接口，使得规模化的服务集成成为可能，而且还要保证稳定性，从这一点上看，目前市面上还没有出现够格的挑战者。让我们欣赏下这个cf模板背后“庞大”的结构。 <em>这个庞大只是针对我这种小白来说，在真正的高科技企业内部，也许连渺小都不够格。</em></p>
 <p><img alt="cf_structure" src="../../img/vaults/5.png" /></p>
 <blockquote>
