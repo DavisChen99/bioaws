@@ -34,7 +34,7 @@ AlphaFold是DEEPMIND开发的一个能根据蛋白质序列预测构象的深度
 
 ![use-alphafold-for-protein-structure-prediction-on-aws3](../img/alphafold/4.png)
 
-- 实例创建完成后登录系统，格式化并挂载3T的数据盘到/data，具体操作参考[这个帖子](https://www.bioaws.com/blogs/2020-02-02-ec2-ebs-attach/)
+- 实例创建完成后登录系统，格式化并挂载3T的数据盘到/data，具体操作参考[这个帖子：如何让 EC2 “妻妾成群”？挂载更多磁盘并实现自动挂载！](https://www.bioaws.com/blogs/2020-02-02-ec2-ebs-attach/)
 
 ![use-alphafold-for-protein-structure-prediction-on-aws5](../img/alphafold/5.png)
 
