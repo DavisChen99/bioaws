@@ -15,7 +15,7 @@
 - S3 Glacier + Deep Archive，S3上的归档和深度归档服务，使用的是console界面或是aws cli命令进行归档和恢复。
 - CloudFormation, 简称cf，是代码即基础设施的服务，我们常说的一键部署，就是利用这个服务，因为aws的服务都是api标准化接口的，所以完全可以通过xml或json格式的文件，把部署基础设施的步骤写进去，做到一键部署。
 
-如何理解？Glacier有两种数据概念，一种是Vaults，另一种一种是Archive。简单来说， object（文件）--[归档]-> archive --[集合]--> Vaults。 Vautls是便于存放管理不同archive集合的容器。
+如何理解？Glacier有两种数据概念，一种是Vaults，另一种是Archive。简单来说， object（文件）--[归档]-> archive --[集合]--> Vaults。 Vautls是便于存放管理不同archive集合的容器。
 
 ### 如何使用vaults
 
