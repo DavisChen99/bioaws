@@ -243,19 +243,13 @@ nohup python3 docker/run_docker.py --fasta_paths=T1050-2.fasta --max_template_da
 </code></pre>
 
 <ul>
-<li>
-<p>GPU监控</p>
-</li>
-<li>
-<p>下载python脚本</p>
-</li>
+<li>GPU监控</li>
 </ul>
+<p>1.下载python脚本</p>
 <pre><code>wget https://s3.amazonaws.com/aws-bigdata-blog/artifacts/GPUMonitoring/gpumon.py
 </code></pre>
 
-<ol>
-<li>vim gpumon.py</li>
-</ol>
+<p>2.vim gpumon.py</p>
 <pre><code>修改
 
 ### 选择区域 ####
@@ -275,9 +269,7 @@ sleep_interval = 10
 store_reso = 60
 </code></pre>
 
-<ol>
-<li>安装python2的依赖</li>
-</ol>
+<p>3.安装python2的依赖</p>
 <pre><code>wget https://bootstrap.pypa.io/pip/2.7/get-pip.py
 
 python get-pip.py
@@ -287,9 +279,7 @@ pip install nvidia-ml-py
 pip install boto3
 </code></pre>
 
-<ol>
-<li>执行</li>
-</ol>
+<p>4.执行</p>
 <pre><code>nohup python gpumon.py &amp;
 </code></pre>
 
