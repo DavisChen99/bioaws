@@ -185,13 +185,13 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-c
 
 - GPU监控
 
-1. 下载python脚本
+1.下载python脚本
 
 ```
 wget https://s3.amazonaws.com/aws-bigdata-blog/artifacts/GPUMonitoring/gpumon.py
 ```
 
-2. vim gpumon.py
+2.vim gpumon.py
 
 ```
 修改
@@ -213,7 +213,7 @@ sleep_interval = 10
 store_reso = 60
 ```
 
-3. 安装python2的依赖
+3.安装python2的依赖
 
 ```
 wget https://bootstrap.pypa.io/pip/2.7/get-pip.py
@@ -225,7 +225,7 @@ pip install nvidia-ml-py
 pip install boto3
 ```
 
-4. 执行
+4.执行
 
 ```
 nohup python gpumon.py &
