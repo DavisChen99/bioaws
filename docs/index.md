@@ -1,6 +1,6 @@
 ## 文章列表
 
-- [善物1 一些实用的链接和命令(持续更新)](blogs/2020-02-04-tips.md)
+- [善物1 AWS实用的链接和命令(持续更新)](blogs/2020-02-04-tips.md)
 
 - [善物2 解决 ssh 连接服务器掉线问题](blogs/2020-02-21-keep-ssh-alive.md)
 
@@ -11,6 +11,8 @@
 - [善物5 UI界面实时查询EC2价格](blogs/2021-01-25-GUI-to-search-ec2pri.md)
 
 - [善物6 使用Batch服务的一些提示](blogs/2021-03-10-Dockerfile-tips-with-batch-service.md)
+
+- [善物7 NCBI上的数据直接导入AWS](blogs/2021-08-22-use-ncbi-data-on-aws.md)
 
 - [入门系列1 如何创建服务器并用命令行登录](blogs/2020-01-19-how-to-launch-ec2.md )
 
