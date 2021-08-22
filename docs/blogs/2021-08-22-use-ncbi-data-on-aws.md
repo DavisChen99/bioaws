@@ -51,7 +51,7 @@
 
 ### 确认数据类型
 
-- 回到NCBI的Deliver  *Deliver data*即可。
+- 回到NCBI页面，进入下一步确认要copy的数据类型，然后点击 *Deliver data* 即可。
 
 ![step3-1](../img/ncbi/8.png)
 ![step3-2](../img/ncbi/9.png)
@@ -67,6 +67,7 @@ Cloud bucket delivery: 1.3 GB requested from remaining 40.0 TB
 It may take up to 48 hours to deliver this data to your bucket. Once you submit your request, it cannot be paused or cancelled.
 * 30-day rolling window limit for SRA data requests will reset 2021-09-21
 ```
+
 ![step4](../img/ncbi/10.png)
 
 ### 等待数据的到来
