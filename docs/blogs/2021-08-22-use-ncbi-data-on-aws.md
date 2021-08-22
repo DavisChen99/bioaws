@@ -73,6 +73,12 @@ It may take up to 48 hours to deliver this data to your bucket. Once you submit 
 
 官方说 *up to 48 hours*，实测几个小时我的桶就出现了数据，具体可能要看这个数据本身是不是已经被ncbi冻起来了。
 
+### 数据回国
+
+如果要将数据拉回国内的AWS分析，请参考这篇文章[高阶11 使用S3数据同步神器，数据尽在我手](https://www.bioaws.com/blogs/2020-08-20-sync_data_use_S3tools/)
+
+或者，懒人一键部署版 [Data Replication Hub](https://github.com/awslabs/data-transfer-hub)，你没猜错，背后还是cloudformtaion ：）
+
 完 & Enjoy~
 
 > 总须脚踏实地，克勤小物，乃可日起而有功。
