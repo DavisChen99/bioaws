@@ -85,3 +85,5 @@
 - [高阶系列18 使用cloudformation 自动提取Glacier Vaults 到 S3](blogs/2021-08-18-use-cf-to-retrieve-vaults.md)
 
 - [高阶系列19 在AWS上跑Alphafold v2进行蛋白质结构预测](blogs/2021-08-19-use-alphafold2-on-aws.md)
+
+- [成功案例1](blogs/2021-08-19-use-alphafold2-on-aws.md)
