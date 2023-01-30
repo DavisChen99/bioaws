@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2021-05-30-use-batch-to-split-seqdata/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>高阶17 云上搭建容器化自动数据拆分流程 - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="../../head/">首页</a>
+                            </li>
+                            <li >
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#17">高阶17 云上搭建容器化自动数据拆分流程</a></li>
+            <li><a href="#_1">引子</a></li>
+            <li><a href="#_2">基本逻辑</a></li>
+            <li><a href="#_3">直奔主题</a></li>
+            <li><a href="#_6">自动化整合</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="17">高阶17 云上搭建容器化自动数据拆分流程</h1>
+<blockquote>
+<p>batch是个好东西，批量提交，算完就关机器（跑路），本文以一个基因公司的刚需（分拆数据）为例，
+向各位看官介绍如何利用batch，ecs, ecr，lustre，启动模板，ami镜像来打造一个自动化的云上数据拆分流程。
+当然，如果你能掌握本文的技巧，那么无疑打开了一扇大门。
+-- D.C</p>
+</blockquote>
+<h3 id="_1">引子</h3>
+<p>本文会介绍到一些AWS的产品如下：</p>
+<ul>
+<li>batch 批量计算服务</li>
+<li>ECS 容器服务</li>
+<li>ECR 容器注册服务</li>
+<li>FSx for lustre  Nas服务</li>
+<li>S3  存储服务</li>
+<li>nvme  云端有些机型会自带物理盘，一般型号里面会带d，比如本文用到的机器 <code>c5d.9xlarge</code>,就自带一块900G的nvme磁盘</li>
+</ul>
+<p>先说一个场景吧，实验室主管给我发了一个邮件，说明下机数据和对应的samplesheet都已经按我的要求上传到S3指定的位置，请求进行下一步的拆分和二级分析。</p>
+<p>于是我根据邮件的内容，在自己笔记本上执行了一条命令，大致是这样的：</p>
+<pre><code class="python">for id in xxx:
+  command = 'aws batch submit-job --job-name split_%s --job-queue newsplit2  --job-definition docker_5 --container-overrides \'vcpus=32,memory=64000,command=[&quot;python&quot;,&quot;/root/split.py&quot;,&quot;%s&quot;]\'' % (id,id)
+  os.system(command)
+  ...
+</code></pre>
+
+<p>所有的样本就都开始在云端开始拆分，数据放到指定的nas上，并紧接着开始做二级分析出报告。看到这里估计很多人一脸懵，这很正常，如果大家都懂了，那么就不要浪费时间再往下看了，饮茶先啦。</p>
+<h3 id="_2">基本逻辑</h3>
+<p>还是先给大家梳理下基本思路吧：</p>
+<ul>
+<li>首先用FSx for Lustre 创建一个NAS盘，用来存放拆分后的数据以及作为后续二级分析的input、中间文件和结果文件的临时存放地。</li>
+<li>利用ECS优化过的ami镜像，安装必要的连接lustre的工具以及Nvme盘的工具，生成新的AMI镜像，洗净待用~</li>
+<li>创建一个EC2的启动模板，利用里面的Userdata设置，可以让EC2启动的时候自动连接Lustre和自动挂载Nvme盘(实例自带的物理盘，IO很高，拆分速度快)。</li>
+<li>新建一个容器，内部安装好miniconda和bcl2fastq，以及自己写的运行拆分的脚本，打成新的镜像，注册到ECR的库中，洗净待用~</li>
+<li>配置Batch里面的 计算环境，任务队列，任务定义，这三项会用到以上步骤准备的前菜哦。</li>
+<li>最后提交批量分析任务，enjoy code as infra的快感吧。</li>
+</ul>
+<h3 id="_3">直奔主题</h3>
+<h4 id="fsx-for-lustre">创建FSx for lustre</h4>
+<p>在AWS console界面搜索 FSx，新建选择for lustre， 按照实际的吞吐需求选择对应的档位，有50M，100M,200M/TiB的，注意nas大小只能在1.2T开始往上加，每次加2.4T。如图可以看到，我配置了一块12T的lustre，吞吐达到了600M/s，这里需要把红圈点一下，复制下来他的id <em>fs-abcdefg</em> 。</p>
+<p><strong>注意</strong>： Lustre在创建时会让你选择安全组，如果用系统默认的话不需要改动，因为是全开的，如果是换了别的安全组，需要确认 inbound 的 0-65535 端口是打开的。</p>
+<p><img alt="lustre" src="../../img/splitfq/1.png" /></p>
+<h4 id="launch-template">创建启动模板 Launch Template</h4>
+<p>登录EC2的界面，在左侧菜单栏点击Launch Template，进入设置。</p>
+<p><img alt="launchtemplate" src="../../img/splitfq/2.png" /></p>
+<p>在这一步，只需要做两步设置：</p>
+<ul>
+<li>设定一个安全组，</li>
+<li>在Advanced details里，设置User Data:</li>
+</ul>
+<pre><code>MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary=&quot;==BOUNDARY==&quot;
+
+--==BOUNDARY==
+Content-Type: text/x-shellscript; charset=&quot;us-ascii&quot;
+
+#!/bin/bash
+mkdir /fsx
+mkdir /data
+mount -t lustre -o noatime,flock fs-abcdef.fsx.cn-northwest-1.amazonaws.com@tcp:/zxktnbmv /fsx
+file -s /dev/nvme1n1
+mkfs -t xfs /dev/nvme1n1
+mount /dev/nvme1n1 /data
+
+--==BOUNDARY==--
+</code></pre>
+
+<p><strong>注意</strong>： 这个Userdata里面设置的命令，会在EC2启动之后以root的身份执行，这样就自动附加了磁盘和NAS了。</p>
+<p>设置完毕，会生成一个launch template，我们只需要记住它的name是 <em>split-simple</em>, 以及它的版本号 <em>6</em> 。</p>
+<p><img alt="launchtemplate" src="../../img/splitfq/3.png" /></p>
+<h4 id="ami">创建新AMI</h4>
+<p>进入EC2的界面，启动新实例，搜索并选择ECS优化过的AMI，宁夏区是 <em>ami-07ddef153d23fcb8a</em>, 其他区域的 <a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-optimized_AMI.html">点我</a>。</p>
+<p>机型随意选择，我默认选了 <em>t2.micro</em>, 启动以后登录进去，做三件事：</p>
+<ul>
+<li>iam权限要能访问S3 （界面设置）</li>
+<li>安装lustre驱动</li>
+<li>安装xfsprogs</li>
+</ul>
+<p>第二三步命令如下：</p>
+<pre><code class="bash">sudo amazon-linux-extras install -y lustre2.10
+sudo mkdir -p /fsx
+sudo mount -t lustre -o noatime,flock fs-abcdef.fsx.cn-northwest-1.amazonaws.com@tcp:/zxktnbmv /fsx
+sudo mkdir /fsx/fastq
+sudo mkdir /fsx/splited
+sudo yum -y install xfsprogs
+</code></pre>
+
+<p><strong>注意</strong>： 这里mount到lustre是为了创建文件夹fastq和splited，同时为后面提交任务后查看是否有输出预留一个途径。</p>
+<p>做完这些事儿以后，将这台机器打个新的AMI镜像为 <em>ami-123456789</em>, 聪明的小伙伴可能就想到了，这个新AMI起来的机器，再搭配上一步设置的 启动模板，就能做到启动后自动挂载lustre和nvme磁盘了。</p>
+<h4 id="_4">创建新容器</h4>
+<p>为什么要创建容器呢，因为batch和ECS都是基于容器的，利用容器可以避免OS带给分析流程的影响，使得兼容性大大加强。为了节约资源，我还是在上一步机器上创建分析流程容器。</p>
+<p>首先pull一个镜像下来,登陆进去：</p>
+<pre><code>docker pull  amazonlinux:latest
+docker run -it  amazonlinux:latest
+</code></pre>
+
+<p>在container内运行命令：</p>
+<pre><code># 安装awscli
+yum install unzip -y
+curl &quot;https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip&quot; -o &quot;awscliv2.zip&quot;
+unzip awscliv2.zip
+cd /aws &amp;&amp; ./install
+aws configure set region cn-northwest-1
+
+# 安装miniconda和bcl2fastq
+wget -c https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+chmod 777 Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh -b
+chown -R ec2-user:ec2-user /miniconda3
+chmod 777 miniconda3/bin/activate
+. /miniconda3/bin/activate
+conda install -c dranew bcl2fastq -y
+
+# 拷贝s3上写好的脚本到container
+aws s3 cp s3://mybucket/split.py ./ # pre-written script uploaded to S3
+</code></pre>
+
+<p><strong>注意</strong>： s3上写好的脚本命令如下，仅仅是给大家一个参考而已，另外把脚本提前拷贝到容器内再打成新镜像，并不是一个最佳的做法，仅仅针对像data split这种比较固化的流程。最好是把脚本放到s3，每次启动分析任务的时候再去拷贝脚本到容器内，这样后期维护脚本也会非常方便。</p>
+<p>本文数据存放路径(仅做参考)：</p>
+<p>bcl文件夹: s3://mybucket/abcdef</p>
+<p>samplesheet: s3://mybucket/abcdef.csv</p>
+<pre><code class="python"># coding: utf-8
+import os
+import sys
+
+from optparse import OptionParser
+parser = OptionParser()
+parser.add_option('-t','--type',type='str',default = 's', help = 'Split or Copy')
+option,args = parser.parse_args(sys.argv)
+
+mode = option.type
+names = args[1:]
+print(mode)
+print(names)
+
+if mode == 's':
+        samplename = names[0]
+
+        rundir = '/data/' + samplename
+        samplesheet = '/data/' + samplename + '\.csv'
+        outdir = '/fsx/splited/' + samplename
+
+        getdata = 'aws s3 sync s3://mybucket/%s /data/%s' % (samplename,samplename)
+        getsheet = 'aws s3 cp s3://mybucket/%s\.csv /data/%s\.csv' % (samplename,samplename)
+
+        runsplit = '. /root/miniconda3/bin/activate &amp;&amp; bcl2fastq --runfolder-dir=%s --sample-sheet %s  --output-dir=%s --tiles s_1 --barcode-mismatches 0 --ignore-missing-bcls -l WARNING -r 32 -w 32 -p 32  --use-bases-mask Y151,I8,N8,Y151 &gt;/dev/null' % (rundir,samplesheet,outdir)
+        print('%s\n%s\n%s\n' % (getdata,getsheet,runsplit))
+        os.system(getdata)
+        os.system(getsheet)
+        os.system(runsplit)
+elif mode == 'r':
+        samplename = names[0]
+        rundir = '/data/' + samplename
+        samplesheet = '/data/' + samplename + '\.csv'
+        outdir = '/fsx/splited/' + samplename
+        runsplit = '. /root/miniconda3/bin/activate &amp;&amp; bcl2fastq --runfolder-dir=%s --sample-sheet %s  --output-dir=%s --tiles s_1 --barcode-mismatches 0 --ignore-missing-bcls -l WARNING -r 32 -w 32 -p 32  --use-bases-mask Y151,I8,N8,Y151 &gt;/dev/null' % (rundir,samplesheet,outdir)
+        print(runsplit)
+        os.system(runsplit)
+elif mode == 'c':
+        for samplename in names:
+                copydata = 'aws s3 sync s3://mybucket/%s /fsx/fastq/%s' % (samplename, samplename)
+                print(copydata)
+                os.system(copydata)
+</code></pre>
+
+<p>重新开一个终端，登录到这台机器上，查看当前正在运行的容器id，然后创建新镜像：</p>
+<pre><code class="bash">docker conainer list
+docker commit -m 'for data split' &lt;容器ID&gt; bclsplit:v4
+</code></pre>
+
+<p>再把镜像注册到ECR服务上去。ECR的用法这里就不多说了，可以参考博客上的另一篇文章内的说明<a href="../2020-01-14-how-to-use-aws-batch-china/">容器！利器！批量计算AWS Batch</a></p>
+<pre><code class="bash">aws ecr get-login-password --region cn-northwest-1 | docker login --username AWS --password-stdin 8xxxxxxxxxxxxxx.dkr.ecr.cn-northwest-1.amazonaws.com.cn
+docker tag bclsplit:v4 8xxxxxxxxxxxx.dkr.ecr.cn-northwest-1.amazonaws.com.cn/bclsplit:v4
+docker push 8xxxxxxxxxxxx.dkr.ecr.cn-northwest-1.amazonaws.com.cn/bclsplit:v4
+
+</code></pre>
+
+<p><img alt="container" src="../../img/splitfq/4.png" /></p>
+<p><img alt="ecr" src="../../img/splitfq/6.png" /></p>
+<p>到了这步，这台机器的价值就被我们压榨干了，把它放一边，我们需要把ECR上对应的容器地址copy下来，就是上图黄色的部分，在batch设置里会用到。</p>
+<h4 id="batch">重点！配置batch</h4>
+<p>aws console搜索batch并点击进入，设置的顺序如图上箭头方向，依次是 计算环境-任务队列-任务定义-运行任务。</p>
+<p><img alt="batch" src="../../img/splitfq/7.png" /></p>
+<ul>
+<li>首先是计算环境设置，如下图设置,记得要点开additional setting，里面都是重点：</li>
+</ul>
+<p><img alt="ComuteENV" src="../../img/splitfq/8.png" /></p>
+<p><strong>注意</strong>： 下图中指定了固定机型 <em>c5d.9xlarge</em>，以后分析这个计算环境就只会启动这类实例。</p>
+<p><img alt="ComuteENV" src="../../img/splitfq/9.png" /></p>
+<p><strong>注意</strong>： 下图中指定了上面步骤中准备好的 <em>启动模板</em> 和 <em>ami镜像</em>。</p>
+<p><img alt="ComuteENV" src="../../img/splitfq/10.png" /></p>
+<ul>
+<li>配置任务队列，相对比较简单，只需要选择这个队列跑在哪个计算环境里，选择刚刚创建的 <em>newtest2</em>,保存。</li>
+</ul>
+<p><img alt="jobque" src="../../img/splitfq/11.png" /></p>
+<ul>
+<li><strong>重要！配置任务定义</strong>。</li>
+</ul>
+<p><img alt="jobdef" src="../../img/splitfq/12.png" /></p>
+<p><strong>注意</strong>：下图指定ECR上的镜像ID，以及想要在容器中运行的命令（可以不设），设定任务会用到的CPU数和内存数。</p>
+<p><img alt="jobdef" src="../../img/splitfq/13.png" /></p>
+<p><strong>注意</strong>：下图指定运行任务需要的角色（默认），这里<strong>关键</strong>的知识点来了！之前我们做到了让运行容器的机器能自动挂载nvme和lustre，但是容器怎么连到外面机器上的路径呢，如果用命令行，我们一般是这么干： <code>docker run -it -v /data:/data -v /fsx:/fsx bcl2split:v4</code>, 在这一步我们就得如下这么设置。</p>
+<p>可以这么理解： 把容器外的机器的路径 <em>/data</em> 和 <em>/fsx</em> 设置成两块磁盘名字叫 <em>nvme</em> 和 <em>lustre</em>, 之后再将这两块盘挂载到容器上，挂载点的容器路径分别为 <em>/data</em> 和 <em>/fsx</em>。</p>
+<p><img alt="jobdef" src="../../img/splitfq/14.png" /></p>
+<p><img alt="jobdef" src="../../img/splitfq/15.png" /></p>
+<p>之后这个任务定义就创建好了。</p>
+<p><img alt="jobdefdone" src="../../img/splitfq/16.png" /></p>
+<h4 id="_5">创建分析任务</h4>
+<ul>
+<li>方法一：通过console界面创建。点击菜单上的 <em>任务 - 提交任务</em>,选择任务定义，任务队列，重试次数。</li>
+</ul>
+<p><img alt="jobsub" src="../../img/splitfq/17.png" /></p>
+<p>输入运行的命令，CPU和内存设置会沿用 <em>任务定义</em> 的设置, 点击提交即可。</p>
+<p><img alt="jobsub" src="../../img/splitfq/18.png" /></p>
+<ul>
+<li>方法二：本地aws cli命令行。在配置好了本地aws cli的笔记本上，运行命令：</li>
+</ul>
+<pre><code class="batch">$aws batch submit-job --job-name testcli --job-queue newsplit2  --job-definition docker_5 --container-overrides 'vcpus=32,memory=64000,command=[&quot;python&quot;,&quot;/root/split.py&quot;,&quot;210126_A01199_0055_ABCDEFG&quot;]'
+
+{
+   &quot;jobName&quot;: &quot;testcli&quot;,
+   &quot;jobArn&quot;: &quot;arn:aws-cn:batch:cn-northwest-1:83334332343:job/4ea2bf6a-2b5b-4dd4-afd5-3fadd58f10a7&quot;,
+   &quot;jobId&quot;: &quot;4ea2bf6a-2b5b-4dd4-afd5-34jg7th8gu89&quot;
+}
+
+# 查看状态
+$aws batch describe-jobs --jobs 4ea2bf6a-2b5b-4dd4-afd5-34jg7th8gu89 | grep 'status&quot;'
+
+&quot;status&quot;: &quot;RUNNING&quot;,
+</code></pre>
+
+<ul>
+<li>实际拆分效率，使用c5d.9xlarge （36vCPU72G内存）拆分 Illumina Novaseq S4芯片的一条lane （大约450G），只需要67分钟，即使是按最贵的按需的价格来算，成本在10元出头一些。（c5d.9xlarge 按需价格10.721元/小时）</li>
+</ul>
+<h3 id="_6">自动化整合</h3>
+<p>本文介绍到此处，仅当抛砖引玉，各位看官可以结合自己的具体场景，举一反三。既然自动化整合大门已经打开，后期可以再结合S3的事件监测，以及无服务器函数服务 Lambda，未来有无限可能~</p>
+<blockquote>
+<p>人贵有恒，有恒者断无不成之事。</p>
+</blockquote></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

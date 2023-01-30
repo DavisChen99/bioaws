@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2021-08-22-use-ncbi-data-on-aws/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>善物7 - NCBI上的数据直接导入AWS - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="../../head/">首页</a>
+                            </li>
+                            <li >
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#7-ncbiaws">善物7 - NCBI上的数据直接导入AWS</a></li>
+            <li><a href="#_1">关于公开数据集</a></li>
+            <li><a href="#_2">关于准备工作</a></li>
+            <li><a href="#ncbi">NCBI 上的数据</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="7-ncbiaws">善物7 - NCBI上的数据直接导入AWS</h1>
+<blockquote>
+<p>云是未来，全世界有很多公开数据集保存在AWS上，称之为aws的opendata，NCBI自然不例外，
+现在ncbi已经支持提供数据从他的S3桶直接导入到用户自己的S3桶。
+-- D.C</p>
+</blockquote>
+<h2 id="_1">关于公开数据集</h2>
+<p>查看这篇帖子<a href="https://www.bioaws.com/blogs/2020-02-09-aws-public-dataset/">入门系列14 福音！用好AWS公开数据集</a></p>
+<h2 id="_2">关于准备工作</h2>
+<ul>
+<li>知道你要的数据，废话</li>
+<li>有个AWS海外账号</li>
+<li>在弗吉尼亚区建个S3桶</li>
+</ul>
+<h2 id="ncbi">NCBI 上的数据</h2>
+<h3 id="ncbi_1">登录NCBI</h3>
+<p>登录NCBI<a href="https://www.ncbi.nlm.nih.gov/Traces/cloud-delivery/">这个网址</a>,点击log in，登录。</p>
+<p><img alt="ncbilog" src="../../img/ncbi/1.png" /></p>
+<h3 id="_3">选中数据</h3>
+<p>点击 <em>Choose data to deliver in Run Selector</em> , 页面会跳转到data select 界面，假如说我选择这个数据 <em>SRP000002</em>,就会出现如下界面。</p>
+<p><img alt="ncbi_dataselector" src="../../img/ncbi/2.png" /></p>
+<ul>
+<li>step1: 勾选我们要下载的数据</li>
+<li>step2: 点击 <em>Selected</em></li>
+<li>step3: 点击 <em>Deliver Data</em></li>
+</ul>
+<p>可以看到第一步选中数据已经完成。</p>
+<p><img alt="step1" src="../../img/ncbi/3.png" /></p>
+<h3 id="s3">设置S3桶</h3>
+<ul>
+<li>由于目前NCBI支持的AWS区域为 <strong>弗吉尼亚区，US East (N. Virginia)</strong> ，所以这里需要选择对应这个区的桶，比如我的叫 <code>lovevideo</code>,系统会同步生成一段 <em>桶策略</em>，用来给到我这个桶允许ncbi往里面推送数据的权限。</li>
+</ul>
+<p><img alt="step2-1" src="../../img/ncbi/4.png" /></p>
+<ul>
+<li>接下来copy这个桶策略，将其粘贴到AWS console界面的S3桶的permission里，点击 <em>Save Changes</em>。</li>
+</ul>
+<p><img alt="step2-2" src="../../img/ncbi/5.png" />
+<img alt="step2-3" src="../../img/ncbi/6.png" />
+<img alt="step2-4" src="../../img/ncbi/7.png" /></p>
+<h3 id="_4">确认数据类型</h3>
+<ul>
+<li>回到NCBI页面，进入下一步确认要copy的数据类型，然后点击 <em>Deliver data</em> 即可。</li>
+</ul>
+<p><img alt="step3-1" src="../../img/ncbi/8.png" />
+<img alt="step3-2" src="../../img/ncbi/9.png" /></p>
+<ul>
+<li>接着会跳出确认框，告诉我每个账户有个30天的周期limit：</li>
+</ul>
+<pre><code>NCBI will deliver 4 files (1.1 GB) to: lovevideo (AWS)
+Your request to deliver the following data will count against your NCBI 30-day limits for complimentary data transfer*
+
+Cold storage retrieval: 983.4 MB requested from remaining 10.0 TB
+Cloud bucket delivery: 1.3 GB requested from remaining 40.0 TB
+It may take up to 48 hours to deliver this data to your bucket. Once you submit your request, it cannot be paused or cancelled.
+* 30-day rolling window limit for SRA data requests will reset 2021-09-21
+</code></pre>
+
+<p><img alt="step4" src="../../img/ncbi/10.png" /></p>
+<h3 id="_5">等待数据的到来</h3>
+<p>官方说 <em>up to 48 hours</em>，实测几个小时我的桶就出现了数据，具体可能要看这个数据本身是不是已经被ncbi冻起来了。</p>
+<h3 id="_6">数据回国</h3>
+<p>如果要将数据拉回国内的AWS分析，请参考这篇文章<a href="https://www.bioaws.com/blogs/2020-08-20-sync_data_use_S3tools/">高阶11 使用S3数据同步神器，数据尽在我手</a></p>
+<p>或者，懒人一键部署版 <a href="https://github.com/awslabs/data-transfer-hub">Data Replication Hub</a>，你没猜错，背后还是cloudformation ：）</p>
+<p>完 &amp; Enjoy~</p>
+<blockquote>
+<p>总须脚踏实地，克勤小物，乃可日起而有功。</p>
+</blockquote></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

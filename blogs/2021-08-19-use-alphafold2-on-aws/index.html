@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2021-08-19-use-alphafold2-on-aws/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>高阶19 在AWS上安装运行Alphafold v2进行蛋白质结构预测 - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="../../head/">首页</a>
+                            </li>
+                            <li >
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#19-awsalphafold-v2">高阶19 在AWS上安装运行Alphafold v2进行蛋白质结构预测</a></li>
+            <li><a href="#alphafold">AlphaFold</a></li>
+            <li><a href="#ec2">EC2实例设置</a></li>
+            <li><a href="#_1">数据库下载</a></li>
+            <li><a href="#alphafold_1">运行AlphaFold</a></li>
+            <li><a href="#_2">监控配置</a></li>
+            <li><a href="#_3">测试结果分析</a></li>
+            <li><a href="#_4">参考</a></li>
+            <li><a href="#_5">一些配置信息</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="19-awsalphafold-v2">高阶19 在AWS上安装运行Alphafold v2进行蛋白质结构预测</h1>
+<blockquote>
+<p>最近AI界平地一声雷，DEEPMIND的Alphafold v2版本横空出世，最好的预测精度号称能达到结构生物学实验的测量精度，要知道这玩意儿可是上千万美金的冷冻电镜才能做出来的，一时间舆论大起，有认为划时代的，有认为没啥用的，唇枪舌剑不可开交。愚以为，有，总比没有好！
+-- D.C</p>
+</blockquote>
+<p><img alt="pdb" src="../../img/alphafold/1.png" /></p>
+<p>本文转自AWS官方博客<a href="https://aws.amazon.com/cn/blogs/china/use-alphafold-for-protein-structure-prediction-on-aws/">在AWS上使用AlphaFold进行蛋白质结构预测</a>，由于存在不可描述的原因，这个地址经常打不开，所以我就搬过来了。</p>
+<h2 id="alphafold">AlphaFold</h2>
+<p>AlphaFold是DEEPMIND开发的一个能根据蛋白质序列预测构象的深度学习模型，和两年前的一代目相比，AlphaFold2的主要变化是直接训练蛋白质结构的原子坐标，而不是用以往常用的、简化了的原子间距或者接触图。这也使得AlphaFold2在解析蛋白结构的速度上有了进一步的提高。</p>
+<p>而在传统上，蛋白质结构预测可以分为基于模板和从头预测，但是AlphaFold2只用同一种方法—就是机器学习，对几乎所有的蛋白质都预测出了正确的拓扑学的结构，其中有大约2/3的蛋白质预测精度达到了结构生物学实验的测量精度。</p>
+<p>2021年7月，DeepMind开源了升级版本AlphaFold v2.0，本文简要描述了如何在AWS上使用AlphaFold进行蛋白质结构预测。</p>
+<p>本着是骡子是马，总要自己骑了才知道的朴素科学观，利用aws云端资源，可以快速构建出AlphaFold2的pipeline。</p>
+<h2 id="ec2"><strong>EC2实例设置</strong></h2>
+<ul>
+<li>
+<p>运行AlphaFold需要安装Docker和NVIDIA Container Toolkit，我们可以启动一台运行ECS GPU-optimized AMI的EC2实例，以省去这些工具的安装操作：</p>
+</li>
+<li>
+<p>启动EC2实例，搜索AMI: amzn2-ami-ecs-gpu-hvm-2.0.2021，选择最新的日期的版本(也可以从<a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-optimized_AMI.html">这里</a> 查询对于区域的最新Amazon Linux（GPU）AMI ID)</p>
+</li>
+</ul>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws1" src="../../img/alphafold/2.png" /></p>
+<ul>
+<li>如果要使用NVIDIA A100则实例类型可选择p4d.24xlarge，本例测试选择具有4块NVIDIA V100 GPU的p3.8xlarge。</li>
+</ul>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws2" src="../../img/alphafold/3.png" /></p>
+<ul>
+<li>系统卷100G，增加一个3T的数据卷，卷类型均为gp3</li>
+</ul>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws3" src="../../img/alphafold/4.png" /></p>
+<ul>
+<li>实例创建完成后登录系统，格式化并挂载3T的数据盘到/data，具体操作参考<a href="https://www.bioaws.com/blogs/2020-02-02-ec2-ebs-attach/">这个帖子：如何让 EC2 “妻妾成群”？挂载更多磁盘并实现自动挂载！</a></li>
+</ul>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws5" src="../../img/alphafold/5.png" /></p>
+<h2 id="_1"><strong>数据库下载</strong></h2>
+<ul>
+<li>安装依赖</li>
+</ul>
+<pre><code>sudo rpm http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum install aria2 rsync git vim wget -y
+</code></pre>
+
+<ul>
+<li>修改/data目录权限</li>
+</ul>
+<pre><code>sudo chown ec2-user:ec2-user -R /data
+</code></pre>
+
+<ul>
+<li>克隆AlphaFold 代码库并进入alphafold目录 <a href="https://github.com/deepmind/alphafold">github 地址</a></li>
+</ul>
+<pre><code>git clone https://github.com/deepmind/alphafold.git
+</code></pre>
+
+<ul>
+<li>下载数据到/data，因为数据下载加解压可能需要十几个小时的时间，所以使用nohup让下载任务在后台执行</li>
+</ul>
+<pre><code>nohup scripts/download_all_data.sh /data &amp;
+</code></pre>
+
+<p>完成之后在下载目录会有如下文件生成:</p>
+<pre><code class="bash">$DOWNLOAD_DIR/                          # Total: ~ 2.2 TB (download: 438 GB)
+    bfd/                                   # ~ 1.7 TB (download: 271.6 GB)
+        # 6 files.
+    mgnify/                                # ~ 64 GB (download: 32.9 GB)
+        mgy_clusters_2018_12.fa
+    params/                                # ~ 3.5 GB (download: 3.5 GB)
+        # 5 CASP14 models,
+        # 5 pTM models,
+        # LICENSE,
+        # = 11 files.
+    pdb70/                                 # ~ 56 GB (download: 19.5 GB)
+        # 9 files.
+    pdb_mmcif/                             # ~ 206 GB (download: 46 GB)
+        mmcif_files/
+            # About 180,000 .cif files.
+        obsolete.dat
+    small_fbd/                             # ~ 17 GB (download: 9.6 GB)
+        bfd-first_non_consensus_sequences.fasta
+    uniclust30/                            # ~ 86 GB (download: 24.9 GB)
+        uniclust30_2018_08/
+            # 13 files.
+    uniref90/                              # ~ 58 GB (download: 29.7 GB)
+        uniref90.fasta
+</code></pre>
+
+<h2 id="alphafold_1"><strong>运行AlphaFold</strong></h2>
+<ul>
+<li>创建输出目录</li>
+</ul>
+<pre><code>mkdir -p /tmp/alphafold
+</code></pre>
+
+<ul>
+<li>将docker/run_docker.py中的DOWNLOAD_DIR修改为包含下载数据库目录的路径/data, output_dir设置为上一步创建的输出目录</li>
+</ul>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws6" src="../../img/alphafold/6.png" /></p>
+<ul>
+<li>构建Docker镜像</li>
+</ul>
+<pre><code>docker build -f docker/Dockerfile -t alphafold .
+</code></pre>
+
+<p>完成后查看:</p>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws7" src="../../img/alphafold/7.png" /></p>
+<ul>
+<li>安装依赖</li>
+</ul>
+<pre><code>pip3 install -r docker/requirements.txt
+</code></pre>
+
+<ul>
+<li>测试文件</li>
+</ul>
+<p>打开<a href="https://www.predictioncenter.org/casp14/target.cgi?target=T1050">这个网址</a>，复制Sequence的文本到T1050.fasta文件中</p>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws8" src="../../img/alphafold/8.png" /></p>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws9" src="../../img/alphafold/9.png" /></p>
+<ul>
+<li>运行可能需要几个小时时间，可以同样使用nohup命令让任务在后台执行</li>
+</ul>
+<pre><code>nohup python3 docker/run_docker.py --fasta_paths=T1050.fasta --max_template_date=2020-05-14 &amp;
+</code></pre>
+
+<p>一个任务只能使用一块GPU，如果计算实例具有多块GPU，可以利用–gpu_devices参数将多个任务投递到不同的GPU上进行计算，如：</p>
+<pre><code>nohup python3 docker/run_docker.py --fasta_paths=T1050-1.fasta --max_template_date=2020-05-14 --gpu_devices=0 &amp;
+
+nohup python3 docker/run_docker.py --fasta_paths=T1050-2.fasta --max_template_date=2020-05-14 --gpu_devices=1 &amp;
+</code></pre>
+
+<ul>
+<li>完成之后在之前设置的/tmp/alphafold目录下会有结果输出:</li>
+</ul>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws10" src="../../img/alphafold/10.png" /></p>
+<h2 id="_2">监控配置</h2>
+<p>我们可以通过CloudWatch来监控CPU、内存和GPU的使用率，其中CPU监控指标CloudWatch默认就支持，内存监控指标需要通过CloudWatch Agent来实现，GPU监控需要通过一个python程序来实现。</p>
+<ul>
+<li>IAM角色</li>
+</ul>
+<p>新建一个具有ClooudWatchAgentServerPolicy权限的角色，取名CW-Role</p>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws11" src="../../img/alphafold/11.png" /></p>
+<p>将它附加到EC2实例上：</p>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws12" src="../../img/alphafold/12.png" /></p>
+<ul>
+<li>CloudWatch Agent</li>
+</ul>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws13" src="../../img/alphafold/13.png" /></p>
+<p>1.安装</p>
+<pre><code>sudo yum install collectd amazon-cloudwatch-agent -y
+</code></pre>
+
+<p>2.执行如下命令并按提示进行配置，详见附录</p>
+<pre><code>sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-config-wizard
+</code></pre>
+
+<p>3.重新启动agent</p>
+<pre><code>sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json
+</code></pre>
+
+<ul>
+<li>GPU监控</li>
+</ul>
+<p>1.下载python脚本</p>
+<pre><code>wget https://s3.amazonaws.com/aws-bigdata-blog/artifacts/GPUMonitoring/gpumon.py
+</code></pre>
+
+<p>2.vim gpumon.py</p>
+<pre><code>修改
+
+### 选择区域 ####
+
+EC2_REGION = 'us-east-1'
+
+#在此处选择命名空间参数，名字可以随意取###
+
+my_NameSpace = 'AlphaFold'
+
+### 选择推送间隔 ####
+
+sleep_interval = 10
+
+### 选择存储精度 (在 1-60 之间) ####
+
+store_reso = 60
+</code></pre>
+
+<p>3.安装python2的依赖</p>
+<pre><code>wget https://bootstrap.pypa.io/pip/2.7/get-pip.py
+
+python get-pip.py
+
+pip install nvidia-ml-py
+
+pip install boto3
+</code></pre>
+
+<p>4.执行</p>
+<pre><code>nohup python gpumon.py &amp;
+</code></pre>
+
+<ul>
+<li>查看CloudWatch</li>
+</ul>
+<p>在CloudWatch的指标中可以发现CWAgent和AlphaFold两个命名空间，其中包含了我们所需要的内存和GPU监控指标:</p>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws14" src="../../img/alphafold/14.png" /></p>
+<p>创建一个控制面板来统一监控这些指标:</p>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws15" src="../../img/alphafold/15.png" /></p>
+<h2 id="_3">测试结果分析</h2>
+<ul>
+<li>运行命令</li>
+</ul>
+<pre><code>python3 docker/run_docker.py --fasta_paths=T1050.fasta --max_template_date=2020-05-14
+</code></pre>
+
+<p>结果如下：</p>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws16" src="../../img/alphafold/16.png" /></p>
+<p>只有在模型的推理阶段才会用到GPU，而且只用到了4块GPU中的一块，其余阶段都是用的CPU <a href="https://github.com/deepmind/alphafold/issues/67">查看 issue</a></p>
+<ul>
+<li>投递两个任务</li>
+</ul>
+<pre><code>nohup python3 docker/run_docker.py --fasta_paths=T1050-1.fasta --max_template_date=2020-05-14 --gpu_devices=0 &gt; a.out &amp;
+
+nohup python3 docker/run_docker.py --fasta_paths=T1050-2.fasta --max_template_date=2020-05-14 --gpu_devices=1 &gt; b.out &amp;
+</code></pre>
+
+<p>结果如下：</p>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws17" src="../../img/alphafold/17.png" /></p>
+<p>可以看到用到了2块GPU。</p>
+<h2 id="_4">参考</h2>
+<p>更详细的AlphaFold使用请参考：https://github.com/deepmind/alphafold</p>
+<h2 id="_5">一些配置信息</h2>
+<p>CloudWatch Agent配置示例</p>
+<p><img alt="use-alphafold-for-protein-structure-prediction-on-aws18" src="../../img/alphafold/18.png" />
+<img alt="use-alphafold-for-protein-structure-prediction-on-aws19" src="../../img/alphafold/19.png" />
+<img alt="use-alphafold-for-protein-structure-prediction-on-aws20" src="../../img/alphafold/20.png" />
+<img alt="use-alphafold-for-protein-structure-prediction-on-aws21" src="../../img/alphafold/21.png" /></p>
+<blockquote>
+<p>社会主流舆论往往是扼杀创新的，如果你有个好点子，你要有被长期误解的心理准备，坚持下去，时间会证明一切。</p>
+</blockquote></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

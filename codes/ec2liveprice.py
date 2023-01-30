@@ -2,6 +2,7 @@ import io
 import sys
 import os
 import re
+import platform
 from optparse import OptionParser
 from bs4 import BeautifulSoup
 
@@ -13,6 +14,7 @@ parser.add_option('-t','--type',type='str',default = 'ri', help = 'od/do/ri/dri/
 parser.add_option('-s','--os',type='str',default = 'li', help = 'li/win/su/rh/wsqs/wsqw/wsqe (li by default)')
 parser.add_option('-r','--region',type='str',default = 'zhy', help = 'bjs/zhy (zhy by default)')
 parser.add_option("-p", action = "store_false",dest = "abb", default = True, help = "print abbrevs to stdout") 
+
 option,args = parser.parse_args(sys.argv)
 
 smode = option.mode
@@ -28,7 +30,7 @@ pathdir = '%s/lib/' % currentdir
 
 # judge the system type then set wgetdir
 wgetdir = ''
-if 'win' in sys.platform:
+if 'Windows' in platform.platform():
     mysystem = 'Windows'
     wgetdir = '%s/bin/wget.exe' %  currentdir
 else:
@@ -132,46 +134,46 @@ myhead = ''
 
 def getablenum(region,instype,os):
     if region == 'bjs':
-        if os == 'wsqe':
+        if os == 'wsqe': # 37
             if instype == 'od':
-                tnum = 7
+                tnum = 19
                 myhead = odhead
             elif instype == 'do':
-                tnum = 8
+                tnum = 20
                 myhead = odhead
             elif instype == 'ri':
-                tnum = 9
+                tnum = 21
                 myhead = rihead
             elif instype == 'dri':
-                tnum = 10
+                tnum = 25
                 myhead = rihead
             elif instype == 'cri':
-                tnum = 11
+                tnum = 29
                 myhead = rihead
             elif instype == 'cdri':
-                tnum = 12
+                tnum = 33
                 myhead = rihead
             else:
                 raise ValueError('wrong instype option, please check usage by <python thisscript.py -h>')
                 sys.exit(0)
-        else:
+        else: # 44
             if instype == 'od':
-                tnum = 6
+                tnum = 22
                 myhead = odhead
             elif instype == 'do':
-                tnum = 7
+                tnum = 23
                 myhead = odhead
             elif instype == 'ri':
-                tnum = 8
+                tnum = 24
                 myhead = rihead
             elif instype == 'dri':
-                tnum = 9
+                tnum = 29
                 myhead = rihead
             elif instype == 'cri':
-                tnum = 10
+                tnum = 34
                 myhead = rihead
             elif instype == 'cdri':
-                tnum = 11
+                tnum = 39
                 myhead = rihead
             else:
                 raise ValueError('wrong instype option, please check usage by <python thisscript.py -h>')
@@ -188,13 +190,13 @@ def getablenum(region,instype,os):
                 tnum = 3
                 myhead = rihead
             elif instype == 'dri':
-                tnum = 4
+                tnum = 7
                 myhead = rihead
             elif instype == 'cri':
-                tnum = 5
+                tnum = 11
                 myhead = rihead
             elif instype == 'cdri':
-                tnum = 6
+                tnum = 15
                 myhead = rihead
             else:
                 raise ValueError('wrong instype option, please check usage by <python thisscript.py -h>')
@@ -210,13 +212,13 @@ def getablenum(region,instype,os):
                 tnum = 2
                 myhead = rihead
             elif instype == 'dri':
-                tnum = 3
+                tnum = 7
                 myhead = rihead
             elif instype == 'cri':
-                tnum = 4
+                tnum = 12
                 myhead = rihead
             elif instype == 'cdri':
-                tnum = 5
+                tnum = 17
                 myhead = rihead
             else:
                 raise ValueError('wrong instype option, please check usage by <python thisscript.py -h>')
@@ -225,7 +227,6 @@ def getablenum(region,instype,os):
         raise ValueError('wrong region option, please check usage by <python thisscript.py -h>')
         sys.exit(0)
     return tnum, myhead
-
 # set public vars
 myurl= []
 addr = ''
@@ -236,8 +237,8 @@ downloader= ''
 
 # search mode :online, offline, update only
 systemlist = ['li','win','su','rh','wsqs','wsqw','wsqe']
-allnum = [0,1,2,3,4,5,6,7,8,9,10,11]
-sqlentnum = [0,2,3,4,5,6,7,8,9,10,11,12]
+allnum = [0,1,2,7,12,17,22,23,24,29,34,39]
+sqlentnum = [0,2,3,7,11,15,19,20,21,25,29,33]
 mygetnum = ''
 
 myurl = geturl(osystem)
@@ -257,31 +258,90 @@ elif smode == 'on':
     os.system(downloader)
     soup = BeautifulSoup(open(htmlfile,encoding='utf-8'),features='html.parser')
     tables = soup.findAll('table')
+    deepfile = '%s_%s.txt' % (parsefile,mygetnum)
     if 'win_sqlent' in parsefile:
-        if mygetnum == '0':
-            deepfile = '%s_%s.txt' % (parsefile,mygetnum)
+        # if mygetnum == '0':
+        #     deepfile = '%s_%s.txt' % (parsefile,mygetnum)
+        # else:
+        mylist = ''
+        if instype in ['od','do']:
+            tab = tables[mygetnum]
+            for tr in tab.tbody.findAll('tr'):
+                for td in tr.findAll('td'):
+                    text = td.getText()
+                    if 'SSD' in text:
+                        mylist += text.ljust(20)
+                    elif 'Upfront' in text:
+                        mylist += text.ljust(18)
+                    elif 'yr' in text:
+                        mylist += text.ljust(6)
+                    else:
+                        mylist += text.ljust(15)
+                    #mylist += text + ' | '
+                mylist += '\n'
+            fp = open(deepfile,"w",encoding='utf-8')
+            fp.write(mylist)
+            fp.close()
         else:
-            deepfile = '%s_%s.txt' % (parsefile,mygetnum-1)
+            for i in range(0,4):
+                mynewnum = mygetnum + i
+                tab = tables[mynewnum]
+                for tr in tab.tbody.findAll('tr'):
+                    for td in tr.findAll('td'):
+                        text = td.getText()
+                        if 'SSD' in text:
+                            mylist += text.ljust(20)
+                        elif 'Upfront' in text:
+                            mylist += text.ljust(18)
+                        elif 'yr' in text:
+                            mylist += text.ljust(6)
+                        else:
+                            mylist += text.ljust(15)
+                        #mylist += text + ' | '
+                    mylist += '\n'
+            fp = open(deepfile,"w",encoding='utf-8')
+            fp.write(mylist)
+            fp.close()
     else:
-        deepfile = '%s_%s.txt' % (parsefile,mygetnum)
-    print ('> updating... ' + deepfile)
-    fp = open(deepfile,"w",encoding='utf-8')
-    mylist = ''
-    tab = tables[mygetnum]
-    for tr in tab.tbody.findAll('tr'):
-        for td in tr.findAll('td'):
-            text = td.getText()
-            if 'SSD' in text:
-                mylist += text.ljust(20)
-            elif 'Upfront' in text:
-                mylist += text.ljust(18)
-            elif 'yr' in text:
-                mylist += text.ljust(6)
-            else:
-                mylist += text.ljust(15)
-        mylist += '\n'
-    fp.write(mylist)
-    fp.close()
+        mylist = ''
+        if instype in ['od','do']:
+            tab = tables[mygetnum]
+            for tr in tab.tbody.findAll('tr'):
+                for td in tr.findAll('td'):
+                    text = td.getText()
+                    if 'SSD' in text:
+                        mylist += text.ljust(20)
+                    elif 'Upfront' in text:
+                        mylist += text.ljust(18)
+                    elif 'yr' in text:
+                        mylist += text.ljust(6)
+                    else:
+                        mylist += text.ljust(15)
+                    #mylist += text + ' | '
+                mylist += '\n'
+            fp = open(deepfile,"w",encoding='utf-8')
+            fp.write(mylist)
+            fp.close()
+        else:
+            for i in range(0,5):
+                mynewnum = mygetnum + i
+                tab = tables[mynewnum]
+                for tr in tab.tbody.findAll('tr'):
+                    for td in tr.findAll('td'):
+                        text = td.getText()
+                        if 'SSD' in text:
+                            mylist += text.ljust(20)
+                        elif 'Upfront' in text:
+                            mylist += text.ljust(18)
+                        elif 'yr' in text:
+                            mylist += text.ljust(6)
+                        else:
+                            mylist += text.ljust(15)
+                        #mylist += text + ' | '
+                    mylist += '\n'
+            fp = open(deepfile,"w",encoding='utf-8')
+            fp.write(mylist)
+            fp.close()
     print ('> updated :)')
 elif smode == 'update':
     print ('[update mode]')
@@ -297,49 +357,88 @@ elif smode == 'update':
         tables = soup.findAll('table')
         if 'win_sqlent' in parsefile:
             for count in sqlentnum: 
-                if count == 0:
-                    deepfile = '%s_%s.txt' % (parsefile,count)
-                else:
-                    deepfile = '%s_%s.txt' % (parsefile,count-1)
-                print ('> updating... ' + deepfile)
-                fp = open(deepfile,"w",encoding='utf-8')
-                mylist = ''
-                tab = tables[count]
-                for tr in tab.tbody.findAll('tr'):
-                    for td in tr.findAll('td'):
-                        text = td.getText()
-                        if 'SSD' in text:
-                            mylist += text.ljust(20)
-                        elif 'Upfront' in text:
-                            mylist += text.ljust(18)
-                        elif 'yr' in text:
-                            mylist += text.ljust(6)
-                        else:
-                            mylist += text.ljust(15)
-                    mylist += '\n'
-                fp.write(mylist)
-                fp.close()
-        else:
-            for count in allnum:   
                 deepfile = '%s_%s.txt' % (parsefile,count)
-                print ('> updating... ' + deepfile)
-                fp = open(deepfile,"w",encoding='utf-8')
                 mylist = ''
-                tab = tables[count]
-                for tr in tab.tbody.findAll('tr'):
-                    for td in tr.findAll('td'):
-                        text = td.getText()
-                        if 'SSD' in text:
-                            mylist += text.ljust(20)
-                        elif 'Upfront' in text:
-                            mylist += text.ljust(18)
-                        elif 'yr' in text:
-                            mylist += text.ljust(6)
-                        else:
-                            mylist += text.ljust(15)
-                    mylist += '\n'
-                fp.write(mylist)
-                fp.close()
+                if count in [0,2,19,20]:
+                    tab = tables[count]
+                    for tr in tab.tbody.findAll('tr'):
+                        for td in tr.findAll('td'):
+                            text = td.getText()
+                            if 'SSD' in text:
+                                mylist += text.ljust(20)
+                            elif 'Upfront' in text:
+                                mylist += text.ljust(18)
+                            elif 'yr' in text:
+                                mylist += text.ljust(6)
+                            else:
+                                mylist += text.ljust(15)
+                            #mylist += text + ' | '
+                        mylist += '\n'
+                    fp = open(deepfile,"w",encoding='utf-8')
+                    fp.write(mylist)
+                    fp.close()
+                else:
+                    for i in range(0,4):
+                        newcount = count + i
+                        tab = tables[newcount]
+                        for tr in tab.tbody.findAll('tr'):
+                            for td in tr.findAll('td'):
+                                text = td.getText()
+                                if 'SSD' in text:
+                                    mylist += text.ljust(20)
+                                elif 'Upfront' in text:
+                                    mylist += text.ljust(18)
+                                elif 'yr' in text:
+                                    mylist += text.ljust(6)
+                                else:
+                                    mylist += text.ljust(15)
+                                #mylist += text + ' | '
+                            mylist += '\n'
+                    fp = open(deepfile,"w",encoding='utf-8')
+                    fp.write(mylist)
+                    fp.close()
+        else:
+            for count in allnum: 
+                deepfile = '%s_%s.txt' % (parsefile,count)
+                mylist = ''
+                if count in [0,1,22,23]:
+                    tab = tables[count]
+                    for tr in tab.tbody.findAll('tr'):
+                        for td in tr.findAll('td'):
+                            text = td.getText()
+                            if 'SSD' in text:
+                                mylist += text.ljust(20)
+                            elif 'Upfront' in text:
+                                mylist += text.ljust(18)
+                            elif 'yr' in text:
+                                mylist += text.ljust(6)
+                            else:
+                                mylist += text.ljust(15)
+                            #mylist += text + ' | '
+                        mylist += '\n'
+                    fp = open(deepfile,"w",encoding='utf-8')
+                    fp.write(mylist)
+                    fp.close()
+                else:
+                    for i in range(0,5):
+                        newcount = count + i
+                        tab = tables[newcount]
+                        for tr in tab.tbody.findAll('tr'):
+                            for td in tr.findAll('td'):
+                                text = td.getText()
+                                if 'SSD' in text:
+                                    mylist += text.ljust(20)
+                                elif 'Upfront' in text:
+                                    mylist += text.ljust(18)
+                                elif 'yr' in text:
+                                    mylist += text.ljust(6)
+                                else:
+                                    mylist += text.ljust(15)
+                                #mylist += text + ' | '
+                            mylist += '\n'
+                    fp = open(deepfile,"w",encoding='utf-8')
+                    fp.write(mylist)
+                    fp.close()
     print ('\n> update job finished :)\n> start your query!')
     sys.exit(0)
 
@@ -354,13 +453,7 @@ lawer = 0
 if index:
     print ('\n[%s - %s - %s]\n' % (translate[region], translate[osystem], translate[instype]))
     print (myhead)
-    if 'win_sqlent' in parsefile:
-        if mygetnum == '0':
-            deepfile = '%s_%s.txt' % (parsefile,mygetnum)
-        else:
-            deepfile = '%s_%s.txt' % (parsefile,mygetnum-1)
-    else:
-        deepfile = '%s_%s.txt' % (parsefile,mygetnum)
+    deepfile = '%s_%s.txt' % (parsefile,mygetnum)
     with open(deepfile,'r',encoding='UTF-8') as a:
         for each_line in a:
             line = each_line.strip('\n')
@@ -369,10 +462,10 @@ if index:
                     print (line)
                     lawer = 1
     if not lawer:
-        print ('no such instance...')
+        print ('no such instance...\n')
 else:
     if option.abb:
-        print ('please tell me instance type...')
+        print ('please tell me instance type...\n')
 
 
 #   0 --- 按需 (OD) 实例  ZHY
