@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="http://www.bioaws.com/blogs/2022-02-04-usecase-Veeva-cn/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>成功案例1-VEEVA的落地中国之路 - BioAWS</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="../..">BioAWS</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="../../head/">首页</a>
+                            </li>
+                            <li >
+                                <a href="../..">文章</a>
+                            </li>
+                            <li >
+                                <a href="../../about/">关于此站</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#1-veeva">成功案例1-VEEVA的落地中国之路</a></li>
+            <li><a href="#veeva">关于Veeva</a></li>
+            <li><a href="#_1">业务痛点和需求</a></li>
+            <li><a href="#aws">为什么选择AWS</a></li>
+            <li><a href="#aws_1">采用的AWS服务</a></li>
+            <li><a href="#_3">参考架构图</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="1-veeva">成功案例1-VEEVA的落地中国之路</h1>
+<blockquote>
+<p>行业内的同学相信对Veeva不会陌生，作为国际知名的制药及生命科学信息系统服务商，
+为全球的制药MNC提供包括eTMF,CRM,KOL,主数据等一系列解决方案，在中国还提供SFA产品，对云的理解颇深。我们来看看它是如何利用AWS来加速业务的。
+-- D.C</p>
+</blockquote>
+<h2 id="veeva">关于Veeva</h2>
+<p>Veeva Systems（以下简称“Veeva”）成立于 2007 年，是全球生命科学行业基于云计算模式的解决方案创新者， 致力于提供创新的技术架构和专业的产品服务。秉承客户成功的理念，通过不断茁壮发展，Veeva 目前已形成研发云、商务云两条业务线，为全球超过 1200 家客户提供涵盖软件、数据、商业咨询等产品与服务，目前，全球前 50 强制药企业中的 47 家都在使用 Veeva 提供的产品与服务。</p>
+<p>作为一家公共利益公司（PBC, Public Benefit Corporation），Veeva 以为生命科学行业打造行业云为愿景，帮助这一行业提高生产力，并在社区中创造高质量的就业机会。 Veeva China SFA 是Veeva 因地制宜、特别为中国市场设计的一款 SaaS 产品，为生命科学行业客户提供涵盖客户拜访管理、学术会议管理、销售运营、市场学术推广、医学信息传递等场景的完整解决方案。而 Veeva OpenData 数据服务则能帮助生命科学企业建立客户数据的标准化管理流程，提升客户相关部门的数据使用体验。</p>
+<h2 id="_1">业务痛点和需求</h2>
+<p>市场竞争白热化，数据安全政策持续优化，医共体建设加速和医改政策加深，内部降本增效压力增加，合规压力进一步凸显……重重挑战下，生命科学企业正在纷纷寻找如何从不确定中求生存、抢先机的方法。Veeva 认为 “与中国市场同频”的产品和技术创新，才能真正赋能在中国市场发展的药企，帮他们应对挑战、突破发展。</p>
+<p>从 2011 年进入中国以来，Veeva 就关注到中国生命科学行业独特的市场规则，其商业观念、市场行为、流程和用户体验与海外有着巨大差别。为了更好的服务跨国制药企业和本土创新药企，Veeva 决定筹建中国本地的产品研发中心，并于 2016 年开始设计本土化 SaaS 产品 China SFA，结合 OpenData 数据服务打造新一代适合中国市场的行业云，助力本地市场的药企客户成功。</p>
+<p><strong>Veeva中国商务产品总经理靳越</strong>认为，在本土创新和产品交付过程中，除要贴合中国市场的业务需求外，还需要关注两点：
+- 重塑满足商业环境的技术架构：China SFA 作为一款本土化 SaaS 产品，不仅要沿用全球研发质量体系，更重要的是其底层云基础架构需要拥有全新的技术栈，能够与本地技术创新融合，如与企业微信、腾讯会议的集成，满足中国用户的使用习惯和体验；
+- 强化数据安全合规能力建设：应用与数据都需要部署在中国境内的数据中心上，做到云上数据安全合规，确保客户在数据安全、个人信息保护和跨境传输等领域都能够符合中国信息安全法律法规的要求。</p>
+<h2 id="aws">为什么选择AWS</h2>
+<p>Veeva本身产品体系是基于云端打造的，其海外就是用的AWS，且AWS的安全和合规是全球制药企业广泛认可的，包括FDA，EMA（欧盟药品管理局）等。</p>
+<p>对于选择与亚马逊云科技合作，靳越也从三个方面作了解释。
+- 第一，亚马逊云科技是 Veeva 全球合作伙伴，一直为 Veeva 提供稳定可靠、安全可信的云服务；
+- 第二，亚马逊云科技的诸多技术规范已成为行业标准，可直接沿用而无需单独学习；
+- 第三，双方的价值观高度契合，Veeva 的目标是通过技术创新，加速药企以高效、低成本的方式研发药物并进行上市营销。“我们不只在技术上都注重创新，双方在服务客户的底层逻辑上也非常一致，即以客户为中心，这是大家建立长远合作关系的前提。” 靳越介绍道。</p>
+<h3 id="_2">未雨绸缪，抢先一步构建云中安全 “堡垒”</h3>
+<p>随着《数据安全法》、《关键信息基础设施安全保护条例》、《个人信息保护法》等系列法律法规的出台，中国对网络安全的高度重视和立法进程正在加速。如今，Veeva China SFA 已经通过由公安部颁发的网络安全等级保护（三级）认证，以确保产品符合中国信息安全规范和法律法规的要求，由此助力生命科学企业利用 China SFA 平台合规拓展中国市场业务。</p>
+<p>目前，China SFA 和 OpenData 均部署在亚马逊云科技中国区，亚马逊云科技在云基础设施和云服务安全方面的优势，使 Veeva 得以快速高效的构建起整体的云中安全合规“堡垒”，应对来自网络攻击、竞争对手及内部信息安全等诸多风险的挑战。比如，针对应用层攻击进行防护的 Amazon WAF，允许 Veeva 根据自身业务自动创建、部署和维护安全规则，建立多层安全防护体系；针对亚马逊云科技账户和工作负载进行防护的 Amazon GuardDuty，允许 Veeva 持续监控其账户、Amazon EC2 实例、Amazon EKS 集群以及存储在 Amazon S3 中的数据是否存在恶意活动。</p>
+<p>谈到最新发布的《数据出境安全评估办法》时，靳越表示，Veeva 对此早已做了相应的准备：“在 2016 年开始打造本土产品 China SFA 时，我们的数据中心就决定部署在亚马逊云科技中国区。我们还准备了一个快速部署包，帮助客户快速地迁移到本地系统上。”</p>
+<p>在谈到亚马逊云科技安全层面提供的服务时，靳越表示，他欣赏亚马逊云科技首创的安全责任共担模型：“在这一模型中，Veeva 只需为自身云业务的安全负责，其余的云基础设施和云服务的安全合规全部交由亚马逊云科技负责，这些基础设施满足了包括等保三级测评在内的多项中国合规监管认证，让我们不用担心底层技术架构和服务的安全性。”</p>
+<h3 id="saas">产品驱动，加速中国本土生命科学行业 SaaS 产品落地</h3>
+<p>Veeva China SFA 基于亚马逊云科技 Amazon Elastic Kubernetes Service (Amazon EKS)、Amazon Relational Database Service (Amazon RDS)、Amazon ElastiCache、Amazon OpenSearch Service 等产品和服务构建，是集合业务系统、服务、数据和基础平台为一体的移动 CRM 解决方案；OpenData 则采用亚马逊云科技的 Amazon EKS、Amazon Elastic MapReduce (Amazon EMR)等服务，为企业搭建起高质量的医学专业人士、医疗机构、附属机构及合规数据的信息数据库。</p>
+<p>在开发过程中，Veeva 使用 SDK 接入亚马逊云科技，并且通过 Amazon CloudFormation 对基础设施代码化，从而提高技术架构复用率并降低运维成本。在数据分析应用层面，Veeva 利用 Amazon EKS 集群搭建了 China SFA 和 OpenData 完整的生产系统，并采用 Amazon EMR 完成了大数据分析。此外，在疫情期间，Veeva 还通过 Amazon WorkSpaces 预置了基于云的虚拟桌面，方便员工随时随地安全可靠地远程接入云环境。</p>
+<h2 id="aws_1">采用的AWS服务</h2>
+<ul>
+<li>Amazon EKS： 托管的Kubernetes <a href="https://www.amazonaws.cn/eks/">EKS</a></li>
+<li>Amazon RDS：托管的关系型数据库 <a href="https://www.amazonaws.cn/rds/">RDS</a></li>
+<li>Amazon EC2：云上服务器实例，这个大家应该都知道。</li>
+<li>Amazon ElastiCache：分布式内存数据存储或缓存,适用于亚毫秒级响应时间的应用 <a href="https://www.amazonaws.cn/elasticache/">ElastiCache</a></li>
+<li>Amazon OpenSearch：托管的OpenSearch 集群，为一系列使用场景（如日志分析、应用程序搜索、企业搜索，等等）轻松地提取、保护、搜索、聚合、查看以及分析数据。 <a href="https://aws.amazon.com/cn/opensearch-service/">OpenSearch</a></li>
+<li>Amazon SDK：基于code的云端开发工具, C++,Java,JavaScript,.Net,PHP,Python,Ruby,Eclipse,Visual Studio,PowerShell. 总有一款适合你。 <a href="https://www.amazonaws.cn/en/tools/">SDK</a></li>
+<li>Amazon CloudFormation：一键化部署云上基础设置，这个对各家云商底层的标准化要求很高。</li>
+<li>Amazon EMR：行业领先的云大数据平台，用于使用 Apache Spark、Apache Hive、Apache HBase、Apache Flink、Apache Hudi 和 Presto 之类的开源工具处理海量数据。 <a href="https://www.amazonaws.cn/elasticmapreduce/">EMR</a></li>
+<li>Amazon SageMaker：托管的云上机器学习工具套件，端到端解决方案，适用于每个开发人员和数据科学家。 <a href="https://www.amazonaws.cn/sagemaker/">SageMaker</a></li>
+<li>Amazon WAF：安全相关，Web 应用程序防火墙。可以和负载均衡搭配使用。<a href="https://www.amazonaws.cn/waf/">WAF</a></li>
+<li>Amazon GuardDuty：托管型威胁检测服务，可持续监控恶意活动和未经授权的行为。 <a href="https://www.amazonaws.cn/guardduty/">GuardDuty</a></li>
+<li>Amazon WorkSpaces： 托管的云端桌面 （Desktop as a service） <a href="https://www.amazonaws.cn/workspaces/">WorkSpaces</a></li>
+</ul>
+<p>靳越认可亚马逊云科技的专业技术团队“客户至上”的专业态度：“在选择数据分析引擎时，亚马逊云科技架构师没有选择自有数仓产品进行推荐，而是根据实际的业务场景需求，推荐选择开源的列式数据库管理系统 ClickHouse，并将其直接部署在 Amazon Elastic Compute Cloud (Amazon EC2)环境中，帮助我们快速地完成项目迁移。”</p>
+<p>近期，Veeva 还试用了亚马逊云科技全托管的机器学习服务 Amazon SageMaker，希望在 China SFA 以及 OpenData 等产品线上进行一些基于机器学习的创新业务尝试，比如检测识别医药代表上传的图片真伪、自动化从海量文本中提取 HCO 信息等。并且，Veeva 还计划实施 Amazon Lambda 无服务器技术来增加业务敏捷性，构建其他创新应用。</p>
+<h2 id="_3">参考架构图</h2>
+<ul>
+<li>Veeva China SFA 基于亚马逊云科技的系统架构示意图（值得注意的是，Veeva是典型的SaaS架构，而且很重视安全，一排的安全服务）</li>
+</ul>
+<p><img alt="veevacn" src="../../img/ref-veeva/arch-cn-1.png" /></p>
+<ul>
+<li>Veeva OpenData 基于亚马逊云科技的系统架构示意图</li>
+</ul>
+<p><img alt="veevacn" src="../../img/ref-veeva/arch-cn-2.png" /></p>
+<h3 id="_4">收益</h3>
+<p>中国是 Veeva 全球最重要的市场之一，超过 100 家全球性的跨国制药企业和本土创新药企都在中国使用 Veeva 的产品。近两年，Veeva 中国的业务持续增长，其背后原因，与 Veeva 全力以赴投入中国行业云产品线的决心和行动密不可分。<strong>在过去两年，Veeva 中国的产研团队人数翻了三倍，专注于本土化产品线 China SFA 的打造。以及基于 China SFA 每年 12 次的产品迭代，涵盖大量针对本土市场的产品功能。以过去一年为例，与中国市场相关的功能就上线了 900 多个。</strong></p>
+<p>从技术角度看，使用亚马逊云科技后，Veeva 推进了 China SFA 和 OpenData 产品的研发和交付进程，开发、测试、运维效率获得显著提升，具体包括：
+- 提升业务创新能力：亚马逊云科技拥有完善的云上服务，服务配置与机型种类丰富，且充分兼容第三方产品，可以为 Veeva 不同的产品线搭配最合适的方案，且服务按需计费，研发试错成本低，支持 Veeva 快速完成业务验证，提高产品迭代效率和业务创新能力；
+- 简化运维、降本增效：通过 Amazon RDS 托管 MySQL，借助 Amazon EKS 托管 Kubernetes 服务，Veeva 的 IT 人员无需复杂操作，即可通过控制面板查看各个节点的运行情况，且费用明细清晰，简化了运维，并降低维护成本；
+- 保障业务安全合规性：亚马逊云科技可靠的服务、高 SLA（服务级别协议）的承诺，确保 Veeva 业务安全稳定运行。亚马逊云科技的云平台采用冗余、多副本机制，专用企业级防火墙 Amazon WAF 可自定义安全等级部署，保障 Veeva 的 Web 应用程序免受攻击。</p>
+<p>“通过与亚马逊云科技合作， Veeva 还获得了一个非常重要的收获，那就是激发了员工的积极性，”靳越表示，“我们的员工可以使用业界领先的云技术方案来解决问题，这将帮助团队在技术上越来越成熟，工作效率也越来越高，员工的成长是我们收获的最大财富。”</p>
+<p>Veeva 的愿景是“为生命科学行业打造行业云”。未来，Veeva 希望继续应用亚马逊云科技更多的创新服务，探索更多全新的业务模式和方向，在遵循中国本土安全合规的基础上，为整个医药行业提供更适合中国市场的应用。</p>
+<p><em>官方案例Link：https://www.amazonaws.cn/en/customer-stories/health/veeva/</em></p>
+<blockquote>
+<p>博学切问，所以广知。</p>
+</blockquote></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
