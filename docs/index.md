@@ -1,5 +1,7 @@
 ## 文章列表
 
+- [成功案例1 VEEVA的落地中国之路](blogs/2022-02-04-usecase-Veeva-cn.md)
+
 - [善物1 AWS实用的链接和命令(持续更新)](blogs/2020-02-04-tips.md)
 
 - [善物2 解决 ssh 连接服务器掉线问题](blogs/2020-02-21-keep-ssh-alive.md)
@@ -54,21 +56,21 @@
 
 - [高阶系列3 BAM文件放云上好了，本地IGV很方便](blogs/2020-01-31-put-bam-on-s3.md)
 
-- [高阶系列4 10分钟一键创建HPC集群-pcluster](blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws.md)
+- [高阶系列4 云上浏览BAM文件需要解决的问题](blogs/2020-03-18-igv-monitor-with-s3.md)
 
-- [高阶系列5 容器！利器！AWS Batch批量计算](blogs/2020-01-14-how-to-use-aws-batch-china.md)
+- [高阶系列5 10分钟一键创建HPC集群-pcluster](blogs/2019-12-27-10-mins-to-create-a-cluster-on-aws.md)
 
-- [高阶系列6 构建基于Batch和wdl语言的分析流程](blogs/2020-01-06-wdl-and-cromwell-on-aws-batch-china.md)
+- [高阶系列6 容器！利器！AWS Batch批量计算](blogs/2020-01-14-how-to-use-aws-batch-china.md)
 
-- [高阶系列7 Kubernetes on AWS - EKS 服务](blogs/2020-04-15-use-k8s-on-aws-EKS.md)
+- [高阶系列7 构建基于Batch和wdl语言的分析流程](blogs/2020-01-06-wdl-and-cromwell-on-aws-batch-china.md)
 
-- [高阶系列8 鼠标党福音！给EC2安装桌面GUI](blogs/2020-05-12-install_GUI_on_EC2.md)
+- [高阶系列8 Kubernetes on AWS - EKS 服务](blogs/2020-04-15-use-k8s-on-aws-EKS.md)
 
-- [高阶系列9 自动同步本地数据与S3 (ubuntu + 软件)](blogs/2020-08-06-sync_data_local_S3.md)
+- [高阶系列9 鼠标党福音！给EC2安装桌面GUI](blogs/2020-05-12-install_GUI_on_EC2.md)
 
-- [高阶系列10 利用windows定时任务自动同步本地数据与S3](blogs/2020-11-01-S3-sync-windows.md)
+- [高阶系列10 自动同步本地数据与S3 (ubuntu + 软件)](blogs/2020-08-06-sync_data_local_S3.md)
 
-- [高阶系列11 云上浏览BAM文件需要解决的问题](blogs/2020-03-18-igv-monitor-with-s3.md)
+- [高阶系列11 利用windows定时任务自动同步本地数据与S3](blogs/2020-11-01-S3-sync-windows.md)
 
 - [高阶系列12 使用S3数据同步神器，数据尽在我手](blogs/2020-08-20-sync_data_use_S3tools.md)
 
@@ -85,5 +87,3 @@
 - [高阶系列18 使用cloudformation 自动提取Glacier Vaults 到 S3](blogs/2021-08-18-use-cf-to-retrieve-vaults.md)
 
 - [高阶系列19 在AWS上跑Alphafold v2进行蛋白质结构预测](blogs/2021-08-19-use-alphafold2-on-aws.md)
-
-- [成功案例1 VEEVA的落地中国之路](blogs/2022-02-04-usecase-Veeva-cn.md)
