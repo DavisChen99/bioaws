@@ -80,7 +80,7 @@ Veeva China SFA 基于亚马逊云科技 Amazon Elastic Kubernetes Service (Amaz
 
 ![veevacn](../img/ref-veeva/arch-cn-2.png)
 
-### 收益
+## 收益
 
 中国是 Veeva 全球最重要的市场之一，超过 100 家全球性的跨国制药企业和本土创新药企都在中国使用 Veeva 的产品。近两年，Veeva 中国的业务持续增长，其背后原因，与 Veeva 全力以赴投入中国行业云产品线的决心和行动密不可分。**在过去两年，Veeva 中国的产研团队人数翻了三倍，专注于本土化产品线 China SFA 的打造。以及基于 China SFA 每年 12 次的产品迭代，涵盖大量针对本土市场的产品功能。以过去一年为例，与中国市场相关的功能就上线了 900 多个。**
 
