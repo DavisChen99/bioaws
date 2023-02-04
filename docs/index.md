@@ -86,4 +86,4 @@
 
 - [高阶系列19 在AWS上跑Alphafold v2进行蛋白质结构预测](blogs/2021-08-19-use-alphafold2-on-aws.md)
 
-- [成功案例1](blogs/2021-08-19-use-alphafold2-on-aws.md)
+- [成功案例1 VEEVA的落地中国之路](blogs/2022-02-04-usecase-Veeva-cn.md)
